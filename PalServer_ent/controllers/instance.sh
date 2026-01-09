@@ -50,7 +50,9 @@ services:
     environment:
       - PORT=$PORT
       - QUERY=$QUERY
-      - RESTAPI=$REST_PORT
+      - RESTAPI=$REST_PORT      
+    networks:
+      - paladmin-net
     ports:
       - "$PORT:8211/udp"
       - "$QUERY:27015/udp"

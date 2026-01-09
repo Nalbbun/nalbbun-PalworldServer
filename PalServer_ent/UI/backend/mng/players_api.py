@@ -13,8 +13,8 @@ router = APIRouter(prefix="/api/players", tags=["players"])
 
 
 def get_pal_rest_endpoint(instance: str) -> str:
-    port = get_rest_port(instance)
-    return f"http://127.0.0.1:{port}"
+    # instance == docker container name
+    return f"http://{instance}:8212"
 
 
 def get_players(instance: str, username: str, password: str):

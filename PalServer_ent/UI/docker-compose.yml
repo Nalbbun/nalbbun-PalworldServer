@@ -1,5 +1,7 @@
 services:
   paladmin-backend:
+    networks:
+      - paladmin-net
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -14,6 +16,8 @@ services:
     restart: always
 
   paladmin-frontend:
+    networks:
+      - paladmin-net
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -23,6 +27,8 @@ services:
     restart: always
 
   paladmin-proxy:
+    networks:
+      - paladmin-net
     image: nginx:alpine
     container_name: paladmin-proxy
     ports:
