@@ -40,7 +40,7 @@ services:
       - paladmin-frontend
       - paladmin-backend
     restart: always
-    
+
 networks:
   paladmin-net:
-    driver: bridge
+    external: true

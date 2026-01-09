@@ -61,7 +61,7 @@ services:
       - $PALSERVER_BASE_DIR/instances/$INSTANCE/Saved:/home/steam/palworld/Pal/Saved
 networks:
   paladmin-net:
-    driver: bridge
+    external: true
 EOF
 
     echo "[INSTANCE] $INSTANCE created (port=$PORT)(query=$QUERY)(version=$VERSION)"
