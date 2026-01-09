@@ -64,6 +64,19 @@ echo "[BUILD] Building Palworld Docker Image (palworld_server_steam:$VERSION)...
 docker build -t palworld_server_steam:$VERSION -f Dockerfile .
 
 # ===================================================
+# 5-1. latest  
+# ===================================================
+echo "Do you want to tag this version as 'latest'? (y/n)"
+read -r TAG_LATEST
+
+if [[ "$TAG_LATEST" == "y" ]]; then
+  echo "[TAG] Tagging palworld_server_steam:$VERSION as latest"
+  docker tag palworld_server_steam:$VERSION palworld_server_steam:latest
+else
+  echo "[SKIP] latest tag skipped"
+fi
+
+# ===================================================
 # 6.    
 # ===================================================
 mkdir -p "$TARGET_DIR"
