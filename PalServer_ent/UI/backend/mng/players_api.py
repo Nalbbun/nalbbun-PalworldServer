@@ -22,10 +22,12 @@ def get_players(instance: str, username: str, password: str):
     base = get_pal_rest_endpoint(instance)
     url = f"{base}/v1/api/players"
 
-    print(url)
+    print(f"[players URL] = {url} {username} {password}") 
+    
     resp = requests.get(url, auth=HTTPBasicAuth(username, password), timeout=3)
 
-    print(resp)
+    print(f"[players resp] = {resp}")
+    
     resp.raise_for_status()
     return resp.json()
 
