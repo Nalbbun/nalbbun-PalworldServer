@@ -45,17 +45,19 @@ def get_players(instance: str, username: str, password: str):
 def players(name: str, user=Depends(require_auth)):
     # 1. instance run?
     if not is_instance_running(name):
-        return {"status": "STOPPED", "raw": None}
+        return {"status": "STOPPED", "players": None}
 
     # 2. call Palworld REST API
     try:
-        print("[players] Output:")
-
         raw = get_players(name, "admin", "admin")
-
-        print(raw)
-
     except requests.exceptions.RequestException as e:
-        raise HTTPException(status_code=502, detail=f"Palworld REST API error: {e}")
+        raise HTTPException(
+            status_code=502,
+            detail=f"Palworld REST API error: {e}"
+        ) 
 
-    return {"status": "RUNNING", "raw": raw}
+    return {
+        "status": "RUNNING",
+        "count": len(raw.get("players", [])),
+        "players": raw.get("players", [])
+    }
