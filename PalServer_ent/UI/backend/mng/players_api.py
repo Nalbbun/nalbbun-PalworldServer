@@ -24,11 +24,14 @@ def get_players(instance: str, username: str, password: str):
 
     print(f"[players URL] = {url} {username} {password}") 
     
-    resp = requests.get(url, auth=HTTPBasicAuth(username, password), timeout=3)
+    payload={}
+    headers = {
+    'Accept': 'application/json'
+    }
+    resp = requests.request("GET", url, headers=headers, data=payload)
 
-    print(f"[players resp] = {resp}")
-    
-    resp.raise_for_status()
+    print(f"[players resp] = {resp}") 
+     
     return resp.json()
 
 
