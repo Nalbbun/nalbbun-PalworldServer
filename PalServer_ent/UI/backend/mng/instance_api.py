@@ -1,4 +1,4 @@
-from mng.com import INSTANCE_DIR, APP_BASE_DIR, CONTROLLER_DIR, log
+from mng.com import INSTANCE_DIR, APP_BASE_DIR, CONTROLLER_DIR, log, run_cmd
 from mng.docker_utils import (
     is_instance_stop,
     is_instance_start,

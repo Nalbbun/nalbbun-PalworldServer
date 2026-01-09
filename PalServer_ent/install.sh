@@ -12,7 +12,7 @@ BASE_DIR=$(pwd)
 LOG_FILE="./log/palserver-install.log"
 
 #############################################
-# 0. ∑Œ±◊ √ ±‚»≠
+# 0. Î°úÍ∑∏ Ï¥àÍ∏∞Ìôî
 #############################################
 mkdir -p log
 touch "$LOG_FILE"
@@ -29,7 +29,7 @@ echo "[INFO] Base Dir   : $BASE_DIR"
 echo "----------------------------------------------"
 
 #############################################
-# 0. OS √º≈©
+# 0. OS Ï≤¥ÌÅ¨
 #############################################
 if ! grep -qiE "debian|ubuntu" /etc/os-release; then
   echo "[ERROR] This installer supports Debian/Ubuntu only."
@@ -37,7 +37,7 @@ if ! grep -qiE "debian|ubuntu" /etc/os-release; then
 fi
 
 #############################################
-# 1. Docker º≥ƒ° »Æ¿Œ
+# 1. Docker ÏÑ§Ïπò ÌôïÏù∏
 #############################################
 if ! command -v docker >/dev/null 2>&1; then
   echo "[INSTALL] Docker not found. Installing docker.io..."
@@ -59,7 +59,7 @@ else
 fi
 
 #############################################
-# 2. Docker Compose (v2 plugin) »Æ¿Œ
+# 2. Docker Compose (v2 plugin) ÌôïÏù∏
 #############################################
 if ! docker compose version >/dev/null 2>&1; then
   echo "[INSTALL] Docker Compose plugin not found. Installing..."
@@ -73,7 +73,7 @@ else
 fi
 
 #############################################
-# 3. docker ±◊∑Ï ±««— (º±≈√)
+# 3. docker Í∑∏Î£π Í∂åÌïú (ÏÑ†ÌÉù)
 #############################################
 if ! groups "$USER" | grep -q docker; then
   echo "[INFO] Adding user '$USER' to docker group..."
@@ -82,7 +82,7 @@ if ! groups "$USER" | grep -q docker; then
 fi
 
 #############################################
-# 4. paladmin º≥ƒ°
+# 4. paladmin ÏÑ§Ïπò
 #############################################
 SOURCE_FILE="$BASE_DIR/bin/paladmin.sh"
 
@@ -102,7 +102,7 @@ echo "[INFO] Installed -> /usr/local/bin/paladmin"
 echo "[INFO] Source     -> $SOURCE_FILE"
 
 #############################################
-# 5. Web UI Ω««‡
+# 5. Web UI Ïã§Ìñâ
 #############################################
 echo "[INSTALL] Starting Web UI (Frontend + Backend)..."
 export PALSERVER_BASE_DIR="$BASE_DIR"
@@ -110,7 +110,7 @@ docker compose -f UI/docker-compose.yml up -d --build --force-recreate --remove-
 
 
 #############################################
-# 6. (º±≈√) Palworld ¿ÃπÃ¡ˆ ª˝º∫
+# 6. (ÏÑ†ÌÉù) Palworld Ïù¥ÎØ∏ÏßÄ ÏÉùÏÑ±
 #############################################
 echo "----------------------------------------------"
 read -r -p "Do you want to build Palworld server image now? (y/N): " BUILD_IMAGE
