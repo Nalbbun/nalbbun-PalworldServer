@@ -126,7 +126,8 @@ export default function Config() {
 				  <input
 					type="text"
 					className="w-full p-2 bg-gray-800 rounded"
-					value={String(v).replace(/^"|"$/g, "")}
+					//value={String(v).replace(/^"|"$/g, "")}
+          value={String(v)}
 					onChange={(e) =>
 					  setOptions({ ...options, [k]: e.target.value })
 					}
