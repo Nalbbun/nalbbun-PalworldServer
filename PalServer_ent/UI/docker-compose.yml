@@ -43,4 +43,4 @@ services:
 
 networks:
   paladmin-net:
-    external: true
+    driver: bridge
