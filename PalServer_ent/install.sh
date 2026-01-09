@@ -104,6 +104,9 @@ echo "[INFO] Source     -> $SOURCE_FILE"
 #############################################
 # 5. Web UI 실행
 #############################################
+echo "[Network] Network paladmin-net (instance + Frontend + Backend)..."
+docker network create paladmin-net
+
 echo "[INSTALL] Starting Web UI (Frontend + Backend)..."
 export PALSERVER_BASE_DIR="$BASE_DIR"
 docker compose -f UI/docker-compose.yml up -d --build --force-recreate --remove-orphans

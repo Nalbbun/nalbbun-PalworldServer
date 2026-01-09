@@ -180,7 +180,7 @@ export default function ServerTable({
                   {t("btnupdate")}
                   </button>
                   <button
-                    disabled={!loading}
+                    disabled={loading}
                     onClick={() => nav(`/config/${ins.name}`)}
                     className={btn(!loading, "bg-emerald-600")}
                   >
