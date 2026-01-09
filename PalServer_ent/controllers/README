@@ -1,0 +1,8 @@
+paladmin update-offline <version> [instance]
+
+)
+paladmin update-offline v0.2.0 world1
+ world1   Docker  .
+
+paladmin update-offline v0.2.0
+    (   )

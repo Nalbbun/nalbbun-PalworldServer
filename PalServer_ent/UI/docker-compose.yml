@@ -1,0 +1,36 @@
+services:
+  paladmin-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: paladmin-backend
+    environment:
+      PALSERVER_BASE_DIR: ${PALSERVER_BASE_DIR}
+    volumes:
+      - ${PALSERVER_BASE_DIR}:/app/${PALSERVER_BASE_DIR}
+      - /var/run/docker.sock:/var/run/docker.sock    #  
+    ports:
+      - "8000:8000"
+    restart: always
+
+  paladmin-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: paladmin-frontend
+    expose:
+      - "80"
+    restart: always
+
+  paladmin-proxy:
+    image: nginx:alpine
+    container_name: paladmin-proxy
+    ports:
+      - "8443:8443"
+    volumes:
+      - ./proxy/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./cert/certs:/etc/nginx/certs
+    depends_on:
+      - paladmin-frontend
+      - paladmin-backend
+    restart: always

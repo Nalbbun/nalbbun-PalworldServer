@@ -1,0 +1,10 @@
+      :
+steamcmd  Palworld  
+Docker  
+offline_repo  tar  
+manifest.json  
+latest    
+
+./build.sh v0.1.0
+  offline_repo/v0.1.0 Docker tar  manifest 
+ offline_repo/latest  v0.1.0   

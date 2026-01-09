@@ -1,0 +1,54 @@
+📁 E:\PALSERVER_ENT 프로젝트 루트
+Palworld Enterprise 전용 서버 운영 패키지의 최상위 경로.
+
+📄 dir-all.txt
+→ 전체 폴더 구조를 문서화한 메타 파일.
+
+📄 install-paladmin.sh
+→ paladmin CLI(통합 관리자 명령어)를 /usr/local/bin/paladmin 으로 설치하는 스크립트.
+→ 서버 운영자는 이 명령어로 모든 Palworld 서버 관리 가능.
+
+📁 /bin (실행 및 서비스 제어용 스크립트)
+docker-compose.yml
+→ Palworld API 서버 + Web UI + 컨테이너 기반 실행용 compose 파일.
+
+paladmin.sh
+→ 최상위 관리자 CLI.
+→ instance 생성/시작/중지/백업/버전교체 등 모든 기능은 여기서 시작됨.
+
+📁 /controllers (paladmin CLI의 기능 모듈)
+파일	설명
+backup.sh	인스턴스 save/config 전체 백업 수행
+rollback.sh	특정 백업 폴더를 지정하여 롤백
+cache_clean.sh	steamcmd 캐시 제거
+instance.sh	Palworld 인스턴스 생성기, compose 템플릿 자동 생성
+update_offline.sh	offline_repo 기반 버전 교체
+update_online.sh	steamcmd 기반 온라인 업데이트 (옵션)
+
+📁 /instances
+→ world1, world2, asia1 등 Palworld 개별 서버의 save/config 저장 경로.
+→ paladmin create world1 8211 명령을 통해 자동 생성됨.
+
+📁 /offline_repo
+완전 오프라인 업데이트용 패키지 저장소.
+예:
+offline_repo/
+   v0.1.0/
+      palworld_0.1.0.tar
+      manifest.json
+   latest -> v0.1.0
+
+📁 /_online_make-pal-images
+온라인 환경에서 Palworld 서버 Docker 이미지 생성 패키지.
+
+파일	설명
+Dockerfile	steamcmd 포함 이미지 생성 정의
+entrypoint.sh	컨테이너 내부에서 서버 실행
+build.sh	버전별 이미지 제작 자동화
+make_info.txt	제작 정보
+README	패키지 설명 문서
+
+📁 /ui
+
+→ Web 기반 Palworld Admin Dashboard 소스 코드가 들어갈 최종 폴더
+→ frontend(React) · backend(FastAPI) 두 구성으로 이루어짐. 
