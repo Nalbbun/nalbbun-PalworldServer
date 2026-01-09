@@ -182,7 +182,7 @@ export default function ServerTable({
                   <button
                     disabled={!running}
                     onClick={() => nav(`/config/${ins.name}`)}
-                    className={btn(!loading, "bg-emerald-600")}
+                    className={btn(!loading && !running, "bg-emerald-600")}
                   >
                     {t("btnconfig")}
                   </button>
