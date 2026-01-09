@@ -52,14 +52,16 @@ services:
       - QUERY=$QUERY
       - RESTAPI=$REST_PORT      
     networks:
-      paladmin-net:
-        driver: bridge
+      - paladmin-net
     ports:
       - "$PORT:8211/udp"
       - "$QUERY:27015/udp"
       - "$REST_PORT:8212/tcp"
     volumes:
       - $PALSERVER_BASE_DIR/instances/$INSTANCE/Saved:/home/steam/palworld/Pal/Saved
+networks:
+  paladmin-net:
+    driver: bridge
 EOF
 
     echo "[INSTANCE] $INSTANCE created (port=$PORT)(query=$QUERY)(version=$VERSION)"
