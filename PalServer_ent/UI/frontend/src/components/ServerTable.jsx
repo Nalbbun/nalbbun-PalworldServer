@@ -179,12 +179,12 @@ export default function ServerTable({
                   >
                   {t("btnupdate")}
                   </button>
-				          <button
-                    disabled={loading || running}
-                    onClick={() => onDelete(ins.name)}
-                    className={btn(!loading && !running, "bg-red-600")}
+                  <button
+                    disabled={!running}
+                    onClick={() => nav(`/config/${ins.name}`)}
+                    className={btn(!loading, "bg-emerald-600")}
                   >
-                  {t("btnindelete")}
+                    {t("btnconfig")}
                   </button>
                 </div>
 
@@ -211,12 +211,12 @@ export default function ServerTable({
                   >
                     {t("btnplayers")}
                   </button>
-                  <button
-                    disabled={!running}
-                    onClick={() => nav(`/config/${ins.name}`)}
-                    className={btn(running, "bg-emerald-600")}
+				          <button
+                    disabled={loading || running}
+                    onClick={() => onDelete(ins.name)}
+                    className={btn(!loading && !running, "bg-red-600")}
                   >
-                    {t("btnconfig")}
+                  {t("btnindelete")}
                   </button>
                 </div>
               </td>
