@@ -84,3 +84,73 @@ PalServer_ent
 Ubuntu 20.04+
 Docker / Docker Compose
 1000 UID/GID등
+
+2️⃣ 프로젝트 설치
+git clone <this-repo>
+cd PalServer_ent
+chmod +x install.sh
+sudo ./install.sh
+
+
+설치 과정에서:
+paladmin CLI 등록
+Web UI (Frontend + Backend) 기동
+nginx 프록시 설정
+
+🖥️ Web UI 사용법
+접속:
+http://<server-ip>
+https://<server-ip>:8443
+
+기능:
+Dashboard: 서버 상태
+Metrics: CPU / RAM
+Logs: 실시간 로그(WebSocket)
+Players: 접속 플레이어
+Config: PalWorldSettings.ini 수정
+🛠️ CLI 사용법 (paladmin)
+인스턴스 생성
+paladmin create <instance> <game_port> <query_port> <version>
+
+예:
+paladmin create nalbbun 18211 28211 v0.0.2
+
+인스턴스 삭제
+paladmin delete nalbbun
+
+버전 업데이트
+paladmin update v0.0.2 nalbbun
+
+백업
+paladmin backup nalbbun
+
+🔐 인증 구조
+Backend: JWT 기반 인증
+REST API (Palworld): Basic Auth
+
+🌐 Docker 네트워크 설계 (중요)
+
+모든 컨테이너는 공통 external network를 사용합니다.
+
+networks:
+  paladmin-net:
+    external: true
+
+❗ driver: bridge 사용 금지
+❗ docker-compose 프로젝트별 네트워크 분리 방지
+
+🔄 운영 설계 포인트
+
+Backend ↔ Palworld:
+http://<container_name>:8212
+
+Host IP 변경 무관
+멀티 인스턴스 자동 대응
+k8s 이전 시 구조 그대로 유지 가능
+
+🚧 향후 확장 예정
+플레이어 Kick / Ban
+SSE 기반 실시간 상태
+Auto Scaling
+k8s Helm Chart
+Multi-Node 지원
