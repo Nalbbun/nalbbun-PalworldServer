@@ -95,8 +95,7 @@ export default function ServerTable({
 
 		const running = s.status === "RUNNING" || s.status?.startsWith("Up");
 
-        const ports = normalizePorts(s.ports);
-		// 핵심: Dashboard에서 내려준 구조 기준 
+    const ports = normalizePorts(s.ports); 
 		const version = ins.version || "unknown";		  
 
         return (
@@ -143,7 +142,7 @@ export default function ServerTable({
               </td>
 
               <td className="p-3 space-y-2">
-                {/* CONTROL */}
+                {/* Server CONTROL */}
                 <div className="flex gap-2 justify-center">
                   <button
                     disabled={loading || running}
@@ -186,9 +185,16 @@ export default function ServerTable({
                   >
                     {t("btnconfig")}
                   </button>
+                  <button
+                    disabled={loading || running}
+                    onClick={() => onDelete(ins.name)}
+                    className={btn(!loading && !running, "bg-red-600")}
+                  >
+                  {t("btnindelete")}
+                  </button>
                 </div>
 
-                {/* VIEW */}
+                {/* Server Info + RESTAPI Info */}
                 <div className="flex gap-2 justify-center">
                   <button
                     disabled={!running}
@@ -210,13 +216,6 @@ export default function ServerTable({
                     className={btn(running, "bg-indigo-600")}
                   >
                     {t("btnplayers")}
-                  </button>
-				          <button
-                    disabled={loading || running}
-                    onClick={() => onDelete(ins.name)}
-                    className={btn(!loading && !running, "bg-red-600")}
-                  >
-                  {t("btnindelete")}
                   </button>
                 </div>
               </td>

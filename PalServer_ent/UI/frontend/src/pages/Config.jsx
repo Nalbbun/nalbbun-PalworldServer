@@ -64,9 +64,9 @@ export default function Config() {
 
   return (
     <div className="p-8 bg-gray-900 text-white">
-	  <LangToggle />     
+	    <LangToggle />     
       <button className="mb-4 px-4 py-2 bg-gray-700 rounded" onClick={() => navigate("/")}>
- 		{t("btndashboard")}
+ 		    {t("btndashboard")}
       </button>
       <h1 className="text-3xl mb-6"> {instance}  : {t("labConfig")}</h1>  
       {isDefault && (

@@ -34,8 +34,7 @@ export default function Players() {
   }, [instance]);
 
   return (
-    <div className="p-8 bg-gray-900 text-white min-h-screen"> 
-  <LangToggle /> 
+    <div className="p-8 bg-gray-900 text-white min-h-screen">
       <button
         className="mb-4 px-4 py-2 bg-gray-700 rounded"
         onClick={() => navigate("/")}
