@@ -1,6 +1,7 @@
 export default {
   tlLogin: "Nalbbun PalWorld Admin Login",
   tldashboard: "Nalbbun PalWorld Admin Dashboard",
+  tlNotice: "Server Notice",
 
   btnlogin: "Login",
   btndashboard: "Dashboard",
@@ -10,7 +11,7 @@ export default {
   btnstop: "Stop",
   btnbackup: "Backup",
   btnupdate: "Update",
-    btnallupdate: "All Update",
+  btnallupdate: "All Update",
   btnlogs: "Logs",
   btnmetrics: "Resources",
   btnplayers: "Players",
@@ -22,6 +23,7 @@ export default {
   btnapply: "Restart Server",
   btnsave: "Save",
   btndefault: "Load Default Settings",
+  btnNotice: "Server Notice",
 
   labid: "Username",
   labConfig: "Server Config Info",
@@ -47,6 +49,7 @@ export default {
   labLatestUp: "Upload Version",
   labselectVersionDesc: "Select the PalWorld version to install on the server.",
 
+  msgNoticeInput: "Please enter the notice message to be displayed on the server",
   msgLoading: "Loading...",
   msgnoinstance: "No servers have been created. Please create a server.",
   msgProcessing: "Processing...",
@@ -88,4 +91,5 @@ export default {
   msgUpdateFail: "Update failed. Please check logs.",
   msgUpdateStarted: "Update has started.",
   msgUpdating: "Updating...",
+  msgProcessFail: "Processing failed. Please try again.",
 };

@@ -22,22 +22,20 @@ def get_players(instance: str, username: str, password: str):
     base = get_pal_rest_endpoint(instance)
     url = f"{base}/v1/api/players"
 
-    print(f"[players URL] = {url} {username} {password}") 
-    
+    # print(f"[players URL] = {url} {username} {password}")
+
     resp = requests.get(
         url,
         auth=HTTPBasicAuth(username, password),
-        headers={
-            "Accept": "application/json"
-        },
-        timeout=3
+        headers={"Accept": "application/json"},
+        timeout=3,
     )
 
-    print(f"[players status] = {resp.status_code}")
-    print(f"[players body] = {resp.text}")
+    # print(f"[players status] = {resp.status_code}")
+    # print(f"[players body] = {resp.text}")
 
     resp.raise_for_status()
-     
+
     return resp.json()
 
 
@@ -51,13 +49,10 @@ def players(name: str, user=Depends(require_auth)):
     try:
         raw = get_players(name, "admin", "admin")
     except requests.exceptions.RequestException as e:
-        raise HTTPException(
-            status_code=502,
-            detail=f"Palworld REST API error: {e}"
-        ) 
+        raise HTTPException(status_code=502, detail=f"Palworld REST API error: {e}")
 
     return {
         "status": "RUNNING",
         "count": len(raw.get("players", [])),
-        "players": raw.get("players", [])
+        "players": raw.get("players", []),
     }

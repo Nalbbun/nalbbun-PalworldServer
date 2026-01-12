@@ -2,12 +2,17 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useLang } from "../context/LangContext"; 
 import { createWS, safeCloseWS } from "../utils/ws";
+import NoticeModal from "../components/NoticeModal";
 
 const MAX_LINES = 10000;
 
 export default function Logs() {
   const { instance } = useParams();
   const navigate = useNavigate();
+ 
+  const [showNotice, setShowNotice] = useState(false);
+  const [sendingNotice, setSendingNotice] = useState(false);
+
   
   const [lines, setLines] = useState([]);
   const [wsState, setWsState] = useState("connecting");
@@ -70,17 +75,35 @@ export default function Logs() {
 		window.__ACTIVE_WS__ = null;
 	  }
 	navigate("/", { replace: true });
-  };
+  }; 
+	 
+  const sendNotice = async (message) => {
+	setSendingNotice(true);
+	try {
+		await fetch(`/api/server/notice/${instance}`, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ message }),
+		});
 
-    return (
+		setShowNotice(false);
+	} catch (e) {
+		alert( t("msgProcessFail") );
+	} finally {
+		setSendingNotice(false);
+	}
+	};
+	
+  return (
     <div className="p-6 bg-gray-900 text-white min-h-screen"> 
-      <button
-        className="mb-4 px-4 py-2 bg-gray-700 rounded"
-        onClick={goDashboard}
-      >
+      <button className="mb-4 px-4 py-2 bg-gray-700 rounded" 
+	  		  onClick={goDashboard} >
         {t("btndashboard")}
       </button>
-
+	<button className="px-4 py-2 bg-blue-600 rounded hover:bg-blue-500" 
+			onClick={() => setShowNotice(true)}>
+		📢 {t("btnNotice")}
+	</button>
       <h2 className="text-3xl font-bold mb-4">
         {t("lablogs")} :{" "}<span className="text-blue-400">{instance}</span>
       </h2>
@@ -99,6 +122,12 @@ export default function Logs() {
           </span>
         )}
       </div>
+	  	<NoticeModal
+			open={showNotice}
+			loading={sendingNotice}
+			onClose={() => setShowNotice(false)}
+			onSubmit={sendNotice} 	/>
     </div>
+
   );
 }

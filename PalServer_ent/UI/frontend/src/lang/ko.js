@@ -1,6 +1,7 @@
 export default {
     tlLogin: "Nalbbun PalWorld 관리자 로그인",
     tldashboard: "Nalbbun PalWorld 관리자 대시보드",
+    tlNotice: "서버 공지",
 	
     btnlogin: "로그인",
     btndashboard: "대시보드",
@@ -22,6 +23,7 @@ export default {
     btnapply: "서버재시작",
     btnsave: "저장",
     btndefault: "기본 설정 불러오기",
+    btnNotice: "서버 공지",
 	
     labid: "아이디",
     labConfig: "서버 설정 정보",
@@ -47,6 +49,7 @@ export default {
 	labLatestUp: "버전 최신 업데이트",
     labselectVersionDesc: "서버에 설치할 PalWorld 버전을 선택하세요.",
 	
+    msgNoticeInput: "서버에 표시할 공지 메시지를 입력하세요",
     msgLoading: "로딩 중",   
     msgnoinstance: "생성 된 서버가 없습니다. 서버를 생성 하세요..",
     msgProcessing: "처리 중",
@@ -81,4 +84,5 @@ export default {
     msgUpdateFail: "업데이트 실패 하였습니다. 로그를 확인하세요.",	
     msgUpdateStarted: "업데이트가 시작되었습니다",
     msgUpdating: "업데이트 중 입니다.",
+    msgProcessFail: "처리 실패 하였습니다. 다시 시도하세요.",
 };
