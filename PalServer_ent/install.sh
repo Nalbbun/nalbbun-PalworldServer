@@ -102,10 +102,41 @@ echo "[INFO] Installed -> /usr/local/bin/paladmin"
 echo "[INFO] Source     -> $SOURCE_FILE"
 
 #############################################
+# Network: paladmin-net 초기화
+#############################################
+echo "[Network] Preparing docker network: paladmin-net"
+
+# 기존 네트워크 존재 여부 확인
+if docker network inspect paladmin-net >/dev/null 2>&1; then
+  echo "[WARN] Network 'paladmin-net' already exists."
+
+  # 연결된 컨테이너 확인
+  CONNECTED_CONTAINERS=$(docker network inspect paladmin-net \
+    --format '{{ range .Containers }}{{ .Name }} {{ end }}')
+
+  if [[ -n "$CONNECTED_CONTAINERS" ]]; then
+    echo "[INFO] Connected containers:"
+    echo "       $CONNECTED_CONTAINERS"
+    echo "[INFO] Removing connected containers first is required."
+  fi
+
+  echo "[INFO] Removing existing network 'paladmin-net'..."
+  docker network rm paladmin-net || {
+    echo "[ERROR] Failed to remove network 'paladmin-net'."
+    echo "[HINT] Stop related containers and retry."
+    exit 1
+  }
+else
+  echo "[INFO] Network 'paladmin-net' does not exist. Creating new one."
+fi
+
+# 네트워크 재생성
+docker network create paladmin-net
+echo "[OK] Network 'paladmin-net' created."
+
+#############################################
 # 5. Web UI 실행
 #############################################
-echo "[Network] Network paladmin-net (instance + Frontend + Backend)..."
-docker network create paladmin-net
 
 echo "[INSTALL] Starting Web UI (Frontend + Backend)..."
 export PALSERVER_BASE_DIR="$BASE_DIR"
