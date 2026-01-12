@@ -1,0 +1,12 @@
+* 첫 UI 버전 기능 적으로 문제가 없는 버전 
+
+
+- Docker 내부 네트워크 기반 안정적 통신
+- 멀티 Palworld 서버 인스턴스 관리
+- Offline Docker Image Repository CLI 기반 
+- JWT 인증 기반 Admin
+- Web Admin UI (Dashboard / Metrics / Logs / Players)
+  - 인스턴스 생성/삭제 (paladmin) CLI 기반 
+  - 버전 관리 & 롤백 CLI 기반 
+  - 월드 데이터 백업 CLI 기반 
+  - 게임 설정(Web 기반) 수정 및 적용
