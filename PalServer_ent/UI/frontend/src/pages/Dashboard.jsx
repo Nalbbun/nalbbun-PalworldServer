@@ -100,27 +100,35 @@ export default function Dashboard() {
 	loadInstances();  
   };
 	  
-  const startInstance = (n) =>
-    action(`${t("msgInstanceStarting")} ${n}...`, 
-      async () => {
-        const r = await api.post(`/instance/${n}/start`);
-         setMessage(r.result || `${t("msgStarting")}.......!!`);
-      });
+  const startInstance = async (n) => {
+	const ok = window.confirm(` ${t("msgConfirmInsStart")}`);
+	if (!ok) return;
 
-  const stopInstance = (n) =>
-    action(`${t("msgInstanceStopping")} ${n}...`, 
-      async () => {
-        const r = await api.post(`/instance/${n}/stop`);
-       setMessage(r.result || `${t("msgStopping")}.......!!`);
-      });
+		action(`${t("msgInstanceStarting")} ${n}...`, 
+		async () => {
+			const r = await api.post(`/instance/${n}/start`);
+			setMessage(r.result || `${t("msgStarting")}.......!!`);
+		});
+	};
+  const stopInstance = async (n) => {
+	const ok = window.confirm(` ${t("msgConfirmInsStop")}`);
+	if (!ok) return;
+		action(`${t("msgInstanceStopping")} ${n}...`, 
+		async () => {
+			const r = await api.post(`/instance/${n}/stop`);
+		setMessage(r.result || `${t("msgStopping")}.......!!`);
+		});
+	};
+  const backupInstance = async (n) => {
+	const ok = window.confirm(` ${t("msgConfirmInsBackup")}`);
+	if (!ok) return;
+		action(`${t("msgInstanceBackup")} ${n}...`, 
+		async () => {
+		const r = await api.post(`/instance/${n}/backup`);
+		setMessage(r.result || `${t("msgBackupComplete")} !!!`);
+		}); 
+  	};
 
-  const backupInstance = (n) =>
-    action(`${t("msgInstanceBackup")} ${n}...`, 
-      async () => {
-      const r = await api.post(`/instance/${n}/backup`);
-      setMessage(r.result || `${t("msgBackupComplete")} !!!`);
-    }); 
-  
   const handleVersionAction = async ({ version, mode, target }) => { 	
 	  try {
 		setUpdating(true);

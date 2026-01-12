@@ -69,7 +69,9 @@ export default {
     "Do you want to restart the server to apply the configuration?",
   msgServerRestarted: "Server has been restarted.",
   msgConfirmInsDel: "Do you want to delete the server ?(Server stop> backup> delete)",
-
+  msgConfirmInsStart: "Do you want to start the server?",
+  msgConfirmInsStop: "Do you want to stop the server?",
+  msgConfirmInsBackup: "Do you want to backup(files) the server?",
   msgDefalutConfLoaded:
     "The configuration file was empty. Default configuration has been loaded.",
 
