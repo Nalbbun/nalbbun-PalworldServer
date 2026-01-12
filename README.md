@@ -1,5 +1,6 @@
-PalServer_ent
+[ DEV v 1.0 ]
 
+PalServer_ent 
 Palworld Enterprise Server Management Platform
 
 PalServer_ent는 Palworld 전용 엔터프라이즈 서버 운영을 위한 통합 관리 플랫폼입니다.
