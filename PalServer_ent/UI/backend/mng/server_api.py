@@ -6,7 +6,7 @@ from requests.auth import HTTPBasicAuth
 from pydantic import BaseModel
 import requests
 
-router = APIRouter(prefix="/api/server", tags=["servers"])
+router = APIRouter(prefix="/api/server", tags=["server"])
 
 # =========================================================
 # Models
@@ -34,11 +34,13 @@ def get_notice(instance: str, message: str, username: str, password: str):
 
     print(f"[announce URL] = {url} {username} {password}")
 
-    resp = requests.get(
+    resp = requests.post(
         url,
         auth=HTTPBasicAuth(username, password),
         headers={"Accept": "application/json"},
-        data={"message": message},
+        json={
+            "message": message,
+        },
         timeout=3,
     )
 
