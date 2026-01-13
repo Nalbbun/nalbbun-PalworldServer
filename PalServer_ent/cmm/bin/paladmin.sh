@@ -1,25 +1,15 @@
 #!/bin/bash
 set -e
-
+# ENV LOAD (ONLY THIS)
+source "$(dirname "$0")/../env/env.load.sh"
+  
 # ==========================================================
-# 1) REAL BASE DIR 계산 (중요!)
-# /usr/local/bin/paladmin → 원본 스크립트 위치로 이동
+# 2) Args
 # ==========================================================
-SOURCE="${BASH_SOURCE[0]}"
-
-while [ -h "$SOURCE" ]; do
-  DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
-  SOURCE="$(readlink "$SOURCE")"
-  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
-done
-
-BASE_DIR="$(cd -P "$(dirname "$SOURCE")/.." && pwd)"
-CTRL_DIR="$BASE_DIR/controllers"
-
-CMD=$1
-ARG1=$2
-ARG2=$3
-ARG3=$4
+CMD="${1:-}"
+ARG1="${2:-}"
+ARG2="${3:-}"
+ARG3="${4:-}"
 
 
 # ==========================================================
@@ -68,6 +58,11 @@ Palworld Admin CLI
 EOF
 }
 
+# ==========================================================
+# 4) Guard
+# ==========================================================
+[[ -z "$CMD" ]] && usage
+
 
 # ==========================================================
 # 3) Command dispatcher
@@ -75,45 +70,50 @@ EOF
 case "$CMD" in
 
   create)
-    bash "$CTRL_DIR/instance.sh" create "$ARG1" "$ARG2" "$ARG3" "$ARG4"
+    bash "$CTRL_ROOT/instance.sh" create "$ARG1" "$ARG2" "$ARG3" "$ARG4"
     ;;
 	
   delete)
-    bash "$CTRL_DIR/instance.sh" delete "$ARG1"
+    bash "$CTRL_ROOT/instance.sh" delete "$ARG1"
     ;;
 
-  start)
-    docker compose -f "$BASE_DIR/docker-compose-$ARG1.yml" up -d
-    ;;
 
-  stop)
-    docker compose -f "$BASE_DIR/docker-compose-$ARG1.yml" down
-    ;;
+  start|stop|restart)
+    COMPOSE_FILE="$SERVER_ROOT/docker-compose-$ARG1.yml"
 
-  restart)
-    docker compose -f "$BASE_DIR/docker-compose-$ARG1.yml" down
-    docker compose -f "$BASE_DIR/docker-compose-$ARG1.yml" up -d
+    [[ -z "$ARG1" ]] && { echo "[ERROR] instance name required"; exit 1; }
+    [[ ! -f "$COMPOSE_FILE" ]] && { echo "[ERROR] $COMPOSE_FILE not found"; exit 1; }
+
+    case "$CMD" in
+      start)   docker compose -f "$COMPOSE_FILE" up -d ;;
+      stop)    docker compose -f "$COMPOSE_FILE" down ;;
+      restart)
+        docker compose -f "$COMPOSE_FILE" down
+        docker compose -f "$COMPOSE_FILE" up -d
+        ;;
+    esac
     ;;
 
   list)
     echo "[Instances]"
-    ls "$BASE_DIR/instances"
+    [[ -d "$INSTANCE_ROOT" ]] || { echo "(none)"; exit 0; }
+    ls "$INSTANCE_ROOT"
     ;;
 
   backup)
-    bash "$CTRL_DIR/backup.sh" "$ARG1"
+    bash "$CTRL_ROOT/backup.sh" "$ARG1"
     ;;
 
   rollback)
-    bash "$CTRL_DIR/rollback.sh" "$ARG1" "$ARG2"
+    bash "$CTRL_ROOT/rollback.sh" "$ARG1" "$ARG2"
     ;;
 
   clean)
-    bash "$CTRL_DIR/cache_clean.sh"
+    bash "$CTRL_ROOT/cache_clean.sh"
     ;;
 
   update)
-    bash "$CTRL_DIR/update.sh" "$ARG1" "$ARG2"
+    bash "$CTRL_ROOT/update.sh" "$ARG1" "$ARG2"
     ;;
 
   *)

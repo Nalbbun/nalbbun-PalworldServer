@@ -1,25 +1,18 @@
 #!/bin/bash
 set -e
+source "$(dirname "$0")/../env/env.load.sh"
 
 CMD=$1
 INSTANCE=$2
 PORT=$3
 QUERY=$4
 VERSION=$5
-
-PUID=1000
-PGID=1000
-
-BASE_DIR=$(dirname "$0")/..
-
-PALSERVER_BASE_DIR="${PALSERVER_BASE_DIR}"
-
+  
 echo "[INFO] Base Dir = $PALSERVER_BASE_DIR"
 echo "[INFO] app Base Dir = $BASE_DIR"
-
-APP_BASE="$BASE_DIR"
-BACKUP_BASE="$APP_BASE/backup"
-INST_DIR="$APP_BASE/instances/$INSTANCE"
+ 
+BACKUP_BASE="$BASE_DIR/backup"
+INST_PATH="$INSTANCE_ROOT/$INSTANCE"
 
 timestamp() {
   date +"%Y%m%d-%H%M%S"
@@ -32,19 +25,19 @@ case "$CMD" in
       exit 1
     fi
 
-    SAVE_DIR="$APP_BASE/instances/$INSTANCE/Saved" 
+    SAVED_PATH="$INST_PATH/$SAVE_DIR" 
 
-    mkdir -p "$SAVE_DIR" 
+    mkdir -p "$SAVED_PATH" 
 
-chown -R ${PUID}:${PGID} "$APP_BASE/instances/$INSTANCE" 
+chown -R ${PUID}:${PGID} "$INST_PATH" 
 
-REST_PORT=$((QUERY + 1000))
+REST_PORT=$((QUERY + PAL_REST_PORT_OFFSET))
 
-cat <<EOF > "$APP_BASE/docker-compose-$INSTANCE.yml"
+cat <<EOF > "$SERVER_ROOT/docker-compose-$INSTANCE.yml"
 version: "3.9"
 services:
   $INSTANCE:
-    image: palworld_server_steam:$VERSION
+    image: $PAL_IMAGE:$VERSION
     container_name: $INSTANCE
     restart: always
     environment:
@@ -52,15 +45,15 @@ services:
       - QUERY=$QUERY
       - RESTAPI=$REST_PORT      
     networks:
-      - paladmin-net
+      - $PAL_NETWORKS
     ports:
-      - "$PORT:8211/udp"
-      - "$QUERY:27015/udp"
-      - "$REST_PORT:8212/tcp"
+      - "$PORT:$PAL_GAME_PORT/udp"
+      - "$QUERY:$PAL_QUERY_PORT/udp"
+      - "$REST_PORT:$PAL_RESTAPI_PORT/tcp"
     volumes:
-      - $PALSERVER_BASE_DIR/instances/$INSTANCE/Saved:/home/steam/palworld/Pal/Saved
+      - $INST_PATH/$SAVE_DIR:/home/steam/palworld/Pal/Saved
 networks:
-  paladmin-net:
+  $PAL_NETWORKS:
     external: true
 EOF
 
@@ -74,7 +67,7 @@ delete)
       exit 1
     fi
 
-    COMPOSE_FILE="$APP_BASE/docker-compose-$INSTANCE.yml"
+    COMPOSE_FILE="$SERVER_ROOT/docker-compose-$INSTANCE.yml"
 
     echo "[DELETE] instance=$INSTANCE"
 
@@ -85,21 +78,21 @@ delete)
     fi
 
     #
-    if [[ -d "$INST_DIR" ]]; then
+    if [[ -d "$INST_PATH" ]]; then
       TS=$(timestamp)
-      BACKUP_DIR="$BACKUP_BASE/$INSTANCE-$TS"
+      BACKUP_PATH="$BACKUP_ROOT/$INSTANCE-$TS"
 
-      echo "[DELETE] backup -> $BACKUP_DIR"
-      mkdir -p "$BACKUP_BASE"
-      cp -a "$INST_DIR" "$BACKUP_DIR"
-      chown -R ${PUID}:${PGID} "$BACKUP_DIR"
+      echo "[DELETE] backup -> $BACKUP_PATH"
+      mkdir -p "$BACKUP_PATH"
+      cp -a "$INST_PATH" "$BACKUP_PATH"
+      chown -R ${PUID}:${PGID} "$BACKUP_PATH"
     else
-      echo "[WARN] instance dir not found: $INST_DIR"
+      echo "[WARN] instance dir not found: $INST_PATH"
     fi
 
     # 
     echo "[DELETE] removing instance directory"
-    rm -rf "$INST_DIR"
+    rm -rf "$INST_PATH"
 
     echo "[DELETE] removing compose file"
     rm -f "$COMPOSE_FILE"

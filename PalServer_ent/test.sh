@@ -3,8 +3,10 @@ BASE_DIR=$(pwd)
 export PALSERVER_BASE_DIR="$BASE_DIR"
 echo " => docker compose -f UI/docker-compose.yml down  --remove-orphans"
 docker compose -f UI/docker-compose.yml down
+
 echo " => docker compose -f UI/docker-compose.yml build --no-cache "
 docker compose -f UI/docker-compose.yml build --no-cache 
+
 echo " => docker compose -f UI/docker-compose.yml up -d --force-recreate"
 docker compose -f UI/docker-compose.yml up -d
 

@@ -1,20 +1,16 @@
 #!/bin/bash
-set -e
+set -e 
 
-BASE_DIR=$(pwd)
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+BASE_DIR="$SCRIPT_DIR"
+export PALSERVER_BASE_DIR="$BASE_DIR"
 
-#!/bin/bash
-set -e
-
-BASE_DIR=$(pwd)
- 
-
-LOG_FILE="./log/palserver-install.log"
+LOG_FILE="$BASE_DIR/log/palserver-install.log"
 
 #############################################
 # 0. 로그 초기화
 #############################################
-mkdir -p log
+mkdir -p "$BASE_DIR/log"
 touch "$LOG_FILE"
 chmod 644 "$LOG_FILE"
 
@@ -25,7 +21,7 @@ echo " Palworld Enterprise Server Installer"
 echo "=============================================="
 echo "[INFO] Start Time : $(date)"
 echo "[INFO] Executed By: $USER"
-echo "[INFO] Base Dir   : $BASE_DIR"
+echo "[INFO] PalServer Base Dir : $BASE_DIR"
 echo "----------------------------------------------"
 
 #############################################
@@ -35,6 +31,15 @@ if ! grep -qiE "debian|ubuntu" /etc/os-release; then
   echo "[ERROR] This installer supports Debian/Ubuntu only."
   exit 1
 fi
+#############################################
+# 1. ENV 구조 확인
+#############################################
+ENV_LOADER="$BASE_DIR/cmm/env/env.load.sh"
+ENV_FILE="$BASE_DIR/cmm/env/paladmin.env"
+
+[[ ! -f "$ENV_LOADER" ]] && { echo "[ERROR] env.load.sh missing"; exit 1; }
+[[ ! -f "$ENV_FILE" ]]   && { echo "[ERROR] paladmin.env missing"; exit 1; }
+
 
 #############################################
 # 1. Docker 설치 확인
@@ -84,7 +89,7 @@ fi
 #############################################
 # 4. paladmin 설치
 #############################################
-SOURCE_FILE="$BASE_DIR/bin/paladmin.sh"
+SOURCE_FILE="$BASE_DIR/cmm/bin/paladmin.sh"
 
 if [[ ! -f "$SOURCE_FILE" ]]; then
   echo "[ERROR] paladmin.sh not found at: $SOURCE_FILE"
@@ -104,14 +109,15 @@ echo "[INFO] Source     -> $SOURCE_FILE"
 #############################################
 # Network: paladmin-net 초기화
 #############################################
-echo "[Network] Preparing docker network: paladmin-net"
+NET="paladmin-net"
+echo "[Network] Preparing docker network: $NET"
 
 # 기존 네트워크 존재 여부 확인
-if docker network inspect paladmin-net >/dev/null 2>&1; then
-  echo "[WARN] Network 'paladmin-net' already exists."
+if docker network inspect "$NET" >/dev/null 2>&1; then
+  echo "[WARN] Network '$NET' already exists."
 
   # 연결된 컨테이너 확인
-  CONNECTED_CONTAINERS=$(docker network inspect paladmin-net \
+  CONNECTED_CONTAINERS=$(docker network inspect "$NET" \
     --format '{{ range .Containers }}{{ .Name }} {{ end }}')
 
   if [[ -n "$CONNECTED_CONTAINERS" ]]; then
@@ -120,27 +126,26 @@ if docker network inspect paladmin-net >/dev/null 2>&1; then
     echo "[INFO] Removing connected containers first is required."
   fi
 
-  echo "[INFO] Removing existing network 'paladmin-net'..."
-  docker network rm paladmin-net || {
-    echo "[ERROR] Failed to remove network 'paladmin-net'."
+  echo "[INFO] Removing existing network '$NET'..."
+  docker network rm "$NET" || {
+    echo "[ERROR] Failed to remove network '$NET'."
     echo "[HINT] Stop related containers and retry."
     exit 1
   }
 else
-  echo "[INFO] Network 'paladmin-net' does not exist. Creating new one."
+  echo "[INFO] Network '$NET' does not exist. Creating new one."
 fi
 
 # 네트워크 재생성
-docker network create paladmin-net
-echo "[OK] Network 'paladmin-net' created."
+docker network create "$NET"
+echo "[OK] Network '$NET' created."
 
 #############################################
 # 5. Web UI 실행
 #############################################
 
-echo "[INSTALL] Starting Web UI (Frontend + Backend)..."
-export PALSERVER_BASE_DIR="$BASE_DIR"
-docker compose -f UI/docker-compose.yml up -d --build --force-recreate --remove-orphans
+echo "[INSTALL] Starting Web UI (Frontend + Backend)..." 
+docker compose -f "$BASE_DIR/UI/docker-compose.yml" up -d --build --force-recreate --remove-orphans
 
 
 #############################################
@@ -150,7 +155,7 @@ echo "----------------------------------------------"
 read -r -p "Do you want to build Palworld server image now? (y/N): " BUILD_IMAGE
 
 if [[ "$BUILD_IMAGE" =~ ^[Yyyes]$ ]]; then
-  IMAGE_DIR="$BASE_DIR/_online_make-pal-images"
+  IMAGE_DIR="$BASE_DIR/cmm/make-pal-images"
 
   if [[ ! -d "$IMAGE_DIR" ]]; then
     echo "[ERROR] Image build directory not found: $IMAGE_DIR"
@@ -174,6 +179,20 @@ else
   echo "[SKIP] Image build skipped."
 fi
 
+#############################################
+# 7. (선택) Palworld cmd 자동완성
+#############################################
+echo "----------------------------------------------"
+read -r -p "Do you want to Palworld cmd completion? (y/N): " CMD_COMP
+if [[ "$CMD_COMP" =~ ^[Yyyes]$ ]]; then
+  sudo cp "$BASE_DIR/cmm/completion/paladmin.bash" /etc/bash_completion.d/paladmin
+  sudo chmod 644 /etc/bash_completion.d/paladmin
+  source /etc/bash_completion
+
+  echo "[OK] Command completion installed."
+else
+  echo "[SKIP] Command completion skipped."
+fi
 
 
 #############################################

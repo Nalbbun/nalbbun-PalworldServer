@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
-
-STEAM_HOME="/home/steam"
+source "$(dirname "$0")/../env/env.load.sh"
+ 
 
 echo "[CLEAN] Removing SteamCMD cache..."
 

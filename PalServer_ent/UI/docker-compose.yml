@@ -10,7 +10,7 @@ services:
       PALSERVER_BASE_DIR: ${PALSERVER_BASE_DIR}
     volumes:
       - ${PALSERVER_BASE_DIR}:/app/${PALSERVER_BASE_DIR}
-      - /var/run/docker.sock:/var/run/docker.sock    #  
+      - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "8000:8000"
     restart: always

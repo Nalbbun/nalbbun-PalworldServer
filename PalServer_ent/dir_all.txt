@@ -1,156 +1,128 @@
 PalServer_ent
-├── backup
-├── bin
-│   └── paladmin.sh
-├── controllers
-│   ├── backup.sh
-│   ├── cache_clean.sh
-│   ├── instance.sh
-│   ├── README
-│   ├── rollback.sh
-│   └── update.sh
-├── dir_all.txt
-├── docker-compose-nalbbun.yml
-├── install.sh
-├── instances
-│   ├── DefaultPalWorldSettings.ini
-│   └── nalbbun
-│       └── Saved
-│           ├── Config
-│           │   ├── CrashReportClient
-│           │   └── LinuxServer
-│           │       ├── ApexDestruction.ini
-│           │       ├── CameraCalibrationCore.ini
-│           │       ├── CommonUI.ini
-│           │       ├── Compat.ini
-│           │       ├── Composure.ini
-│           │       ├── ConcertSyncCore.ini
-│           │       ├── ControlRig.ini
-│           │       ├── DatasmithContent.ini
-│           │       ├── DeviceProfiles.ini
-│           │       ├── EditorScriptingUtilities.ini
-│           │       ├── Engine.ini
-│           │       ├── EnhancedInput.ini
-│           │       ├── Flow.ini
-│           │       ├── FullBodyIK.ini
-│           │       ├── Game.ini
-│           │       ├── GameplayTags.ini
-│           │       ├── GameUserSettings.ini
-│           │       ├── GLTFExporter.ini
-│           │       ├── Hardware.ini
-│           │       ├── HoudiniEngine.ini
-│           │       ├── ImGui.ini
-│           │       ├── Input.ini
-│           │       ├── LiveLinkCamera.ini
-│           │       ├── LiveLink.ini
-│           │       ├── MediaIOFramework.ini
-│           │       ├── Metasound.ini
-│           │       ├── Niagara.ini
-│           │       ├── PalWorldSettings.ini
-│           │       ├── Paper2D.ini
-│           │       ├── RuntimeOptions.ini
-│           │       ├── Scalability.ini
-│           │       ├── StreamlineCore.ini
-│           │       ├── StreamlineDeepDVC.ini
-│           │       ├── StreamlineDLSSG.ini
-│           │       ├── StreamlineReflex.ini
-│           │       ├── StructUtils.ini
-│           │       ├── Synthesis.ini
-│           │       ├── VariantManagerContent.ini
-│           │       └── Wwise.ini
-│           ├── ImGui
-│           └── SaveGames
-│               └── 0
-│                   └── 6B26EA41492F34E784F03F860FAEE63E
-├── log
-│   └── palserver-install.log
-├── offline_repo
-│   ├── latest -> v0.0.2
-│   ├── v0.0.1
-│       ├── manifest.json
-│       └── palworld_server_steam_v0.0.1.tar
-├── _online_make-pal-images
-│   ├── build.sh
-│   ├── Dockerfile
-│   ├── entrypoint.sh
-│   └── README
-├── README
-├── test.sh
-├── UI
-│   ├── backend
-│   │   ├── Dockerfile
-│   │   ├── main.py
-│   │   ├── mng
-│   │   │   ├── auth.py
-│   │   │   ├── com.py
-│   │   │   ├── config_api.py
-│   │   │   ├── docker_utils.py
-│   │   │   ├── __init__.py
-│   │   │   ├── instance_api.py
-│   │   │   ├── logs.py
-│   │   │   ├── metrics.py
-│   │   │   └── players_api.py
-│   │   ├── requirements.txt
-│   │   └── users.json
-│   ├── cert
-│   │   ├── certs
-│   │   │   ├── selfsigned.crt
-│   │   │   └── selfsigned.key
-│   │   └── generate-cert.sh
-│   ├── docker-compose.yml
-│   ├── frontend
-│   │   ├── Dockerfile
-│   │   ├── index.html
-│   │   ├── package.json
-│   │   ├── package-lock.json
-│   │   ├── postcss.config.js
-│   │   ├── proxy
-│   │   │   └── nginx.conf
-│   │   ├── src
-│   │   │   ├── App.jsx
-│   │   │   ├── components
-│   │   │   │   ├── BlockingModal.jsx
-│   │   │   │   ├── ChartCard.jsx
-│   │   │   │   ├── InstanceCreateModal.jsx
-│   │   │   │   ├── LangToggle.jsx
-│   │   │   │   ├── LoadingOverlay.jsx
-│   │   │   │   ├── ProtectedRoute.jsx
-│   │   │   │   ├── ServerTable.jsx
-│   │   │   │   ├── ThemeToggle.jsx
-│   │   │   │   ├── Tooltip.jsx
-│   │   │   │   └── VersionSelectModal.jsx
-│   │   │   ├── context
-│   │   │   │   ├── AuthContext.jsx
-│   │   │   │   ├── LangContext.jsx
-│   │   │   │   └── ThemeContext.jsx
-│   │   │   ├── hooks
-│   │   │   │   └── useWebSocket.js
-│   │   │   ├── index.css
-│   │   │   ├── lang
-│   │   │   │   ├── dangerOptions.js
-│   │   │   │   ├── en.js
-│   │   │   │   ├── index.js
-│   │   │   │   ├── ko.js
-│   │   │   │   ├── tip_en.js
-│   │   │   │   ├── tip_ko.js
-│   │   │   │   └── tips.js
-│   │   │   ├── main.jsx
-│   │   │   ├── pages
-│   │   │   │   ├── Config.jsx
-│   │   │   │   ├── Dashboard.jsx
-│   │   │   │   ├── Login.jsx
-│   │   │   │   ├── Logs.jsx
-│   │   │   │   ├── Metrics.jsx
-│   │   │   │   └── Players.jsx
-│   │   │   └── utils
-│   │   │       ├── api.js
-│   │   │       ├── isDangerOption.js
-│   │   │       ├── routeEvents.js
-│   │   │       ├── valueType.js
-│   │   │       └── ws.js
-│   │   ├── tailwind.config.js
-│   │   └── vite.config.js
-│   └── proxy
-│       └── nginx.conf
-├── uninstall.sh
-└── winTolinuxFile.sh 
+    │  dir_all.txt
+    │  install.sh
+    │  README
+    │  test.sh
+    │  uninstall.sh
+    │  winTolinuxFile.sh
+    │
+    ├─cmm
+    │  ├─bin
+    │  │      paladmin.sh
+    │  │
+    │  ├─controllers
+    │  │      backup.sh
+    │  │      cache_clean.sh
+    │  │      instance.sh
+    │  │      README
+    │  │      rollback.sh
+    │  │      update.sh
+    │  │
+    │  └─make-pal-images
+    │          build.sh
+    │          Dockerfile
+    │          entrypoint.sh
+    │          README
+    │
+    ├─log
+    │      palserver-install.log
+    │
+    ├─server
+    │  ├─backup
+    │  │      Saved-1209.zip
+    │  │
+    │  └─instances
+    │          DefaultPalWorldSettings.ini
+    │
+    └─UI
+        │  docker-compose.yml
+        │
+        ├─backend
+        │  │  Dockerfile
+        │  │  main.py
+        │  │  requirements.txt
+        │  │  users.json
+        │  │
+        │  └─mng
+        │          auth.py
+        │          com.py
+        │          config_api.py
+        │          docker_utils.py
+        │          instance_api.py
+        │          logs.py
+        │          metrics.py
+        │          players_api.py
+        │          server_api.py
+        │          __init__.py
+        │
+        ├─cert
+        │  │  generate-cert.sh
+        │  │
+        │  └─certs
+        │          selfsigned.crt
+        │          selfsigned.key
+        │
+        ├─frontend
+        │  │  Dockerfile
+        │  │  index.html
+        │  │  package-lock.json
+        │  │  package.json
+        │  │  postcss.config.js
+        │  │  tailwind.config.js
+        │  │  vite.config.js
+        │  │
+        │  ├─proxy
+        │  │      nginx.conf
+        │  │
+        │  └─src
+        │      │  App.jsx
+        │      │  index.css
+        │      │  main.jsx
+        │      │
+        │      ├─components
+        │      │      BlockingModal.jsx
+        │      │      ChartCard.jsx
+        │      │      InstanceCreateModal.jsx
+        │      │      LangToggle.jsx
+        │      │      LoadingOverlay.jsx
+        │      │      NoticeModal.jsx
+        │      │      ProtectedRoute.jsx
+        │      │      ServerTable.jsx
+        │      │      ThemeToggle.jsx
+        │      │      Tooltip.jsx
+        │      │      VersionSelectModal.jsx
+        │      │
+        │      ├─context
+        │      │      AuthContext.jsx
+        │      │      LangContext.jsx
+        │      │      ThemeContext.jsx
+        │      │
+        │      ├─hooks
+        │      │      useWebSocket.js
+        │      │
+        │      ├─lang
+        │      │      dangerOptions.js
+        │      │      en.js
+        │      │      index.js
+        │      │      ko.js
+        │      │      tips.js
+        │      │      tip_en.js
+        │      │      tip_ko.js
+        │      │
+        │      ├─pages
+        │      │      Config.jsx
+        │      │      Dashboard.jsx
+        │      │      Login.jsx
+        │      │      Logs.jsx
+        │      │      Metrics.jsx
+        │      │      Players.jsx
+        │      │
+        │      └─utils
+        │              api.js
+        │              isDangerOption.js
+        │              routeEvents.js
+        │              valueType.js
+        │              ws.js
+        │
+        └─proxy
+                nginx.conf
