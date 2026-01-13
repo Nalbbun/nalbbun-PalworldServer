@@ -1,4 +1,4 @@
-from mng.com import INSTANCE_DIR, APP_BASE_DIR, log
+from mng.com import INSTANCE_DIR, SERVER_ROOT, log
 from mng.auth import require_auth
 from mng.docker_utils import is_instance_status, is_instance_restart
 from fastapi import HTTPException, Depends, APIRouter
@@ -174,7 +174,7 @@ def update_config(name: str, req: ConfigUpdateRequest, user=Depends(require_auth
 
 @router.post("/apply/{name}")
 def apply_config(name: str, user=Depends(require_auth)):
-    compose = f"{APP_BASE_DIR}/docker-compose-{name}.yml"
+    compose = f"{SERVER_ROOT}/docker-compose-{name}.yml"
 
     # log.info(f"[instances] config apply={compose}")
 

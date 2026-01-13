@@ -1,5 +1,5 @@
 from mng.com import log
-from mng.docker_utils import is_instance_running, get_rest_port
+from mng.docker_utils import is_instance_running
 from mng.auth import require_auth
 from fastapi import HTTPException, Depends, APIRouter
 from requests.auth import HTTPBasicAuth

@@ -1,4 +1,4 @@
-from mng.com import INSTANCE_DIR, APP_BASE_DIR, CONTROLLER_DIR, log, run_cmd
+from mng.com import INSTANCE_DIR, SERVER_ROOT, CONTROLLER_DIR, log, run_cmd
 from mng.docker_utils import (
     is_instance_stop,
     is_instance_start,
@@ -20,7 +20,7 @@ def get_instance_version(name: str, user=Depends(require_auth)):
     if not re.match(r"^[a-zA-Z0-9_-]+$", name):
         raise HTTPException(400, "Invalid instance name")
 
-    compose = os.path.join(APP_BASE_DIR, f"docker-compose-{name}.yml")
+    compose = os.path.join(SERVER_ROOT, f"docker-compose-{name}.yml")
 
     if not os.path.isfile(compose):
         raise HTTPException(404, "Compose not found")
@@ -40,7 +40,7 @@ def get_instance_version(name: str, user=Depends(require_auth)):
 @router.get("/insversions")
 def list_instances_versions(user=Depends(require_auth)):
     result = {}
-    for fn in os.listdir(APP_BASE_DIR):
+    for fn in os.listdir(SERVER_ROOT):
         if fn.startswith("docker-compose-") and fn.endswith(".yml"):
             name = fn.replace("docker-compose-", "").replace(".yml", "")
             try:
@@ -54,7 +54,7 @@ def list_instances_versions(user=Depends(require_auth)):
 # instance select version list
 @router.get("/selectversions")
 def list_versions(user=Depends(require_auth)):
-    repo_dir = os.path.join(APP_BASE_DIR, "offline_repo")
+    repo_dir = os.path.join(SERVER_ROOT, "offline_repo")
 
     if not os.path.isdir(repo_dir):
         return {"versions": []}
@@ -122,7 +122,7 @@ def instance_status(name: str, user=Depends(require_auth)):
 
 @router.post("/{name}/start")
 def start_instance(name: str, user=Depends(require_auth)):
-    compose = f"{APP_BASE_DIR}/docker-compose-{name}.yml"
+    compose = f"{SERVER_ROOT}/docker-compose-{name}.yml"
 
     log.info(f"[instances] start={compose}")
 
@@ -135,7 +135,7 @@ def start_instance(name: str, user=Depends(require_auth)):
 
 @router.post("/{name}/stop")
 def stop_instance(name: str, user=Depends(require_auth)):
-    compose = f"{APP_BASE_DIR}/docker-compose-{name}.yml"
+    compose = f"{SERVER_ROOT}/docker-compose-{name}.yml"
 
     log.info(f"[instances] stop={compose}")
 
