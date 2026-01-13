@@ -46,7 +46,8 @@ def get_notice(instance: str, message: str, username: str, password: str):
 
     resp.raise_for_status()
 
-    return resp.json()
+    # Palworld returns plain 'true'
+    return {"ok": True, "raw": resp.text}
 
 
 @router.post("/notice/{name}")
@@ -57,14 +58,14 @@ def players(name: str, body: NoticeRequest, user=Depends(require_auth)):
 
     # 2. call Palworld REST API
     try:
-        result = get_notice(name, body.message, "admin", "admin")
+        get_notice(name, body.message, "admin", "admin")
     except requests.exceptions.RequestException as e:
-        raise HTTPException(status_code=502, detail=f"Palworld REST API error: {e}")
+        log.error(f"[NOTICE ERROR] {e}")
+        raise HTTPException(502, "Palworld REST API error")
 
     # 3. response
     return {
         "status": "RUNNING",
         "sent": True,
         "message": body.message,
-        "result": result,
     }
