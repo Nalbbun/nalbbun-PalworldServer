@@ -1,6 +1,6 @@
 PalServer_ent
 
-Palworld Enterprise Server Management Platform
+Palworld  Server Management Platform
 
 PalServer_ent는 Palworld 전용 엔터프라이즈 서버 운영을 위한 통합 관리 플랫폼입니다.
 Docker 기반 멀티 인스턴스 Palworld 서버를 CLI + Web UI로 관리하며,
