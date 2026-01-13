@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useLang } from "../context/LangContext"; 
 import { createWS, safeCloseWS } from "../utils/ws";
+import api from "../utils/api";
 import NoticeModal from "../components/NoticeModal";
 
 const MAX_LINES = 10000;
@@ -80,11 +81,8 @@ export default function Logs() {
   const sendNotice = async (message) => {
 	setSendingNotice(true);
 	try {
-		await fetch(`/api/server/notice/${instance}`, {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({ message }),
-		});
+		
+      const data = await api.post(`/api/server/notice/${instance}`, { message }); 
 
 		setShowNotice(false);
 	} catch (e) {

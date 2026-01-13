@@ -17,9 +17,9 @@ export default function Players() {
 	  
 	  if (data.status === "RUNNING" && data.raw?.players) {
 			const players = data.raw.players.map(p => ({
-			name: p.name,
-			level: p.level ?? "-",
-			playtimeMin: Math.round((p.playTimeSeconds ?? 0) / 60),
+          name: p.name,
+          level: p.level ?? "-",
+          playtimeMin: Math.round((p.playTimeSeconds ?? 0) / 60),
 		  }))
 		}
     } catch {
