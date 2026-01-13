@@ -8,6 +8,7 @@ from mng.metrics import router as metrics_router
 from mng.players_api import router as players_router
 from mng.config_api import router as config_router
 from mng.instance_api import router as instance_router
+from mng.server_api import router as server_router
 
 
 app = FastAPI()
@@ -26,3 +27,4 @@ app.include_router(players_router)
 app.include_router(logs_router)
 app.include_router(metrics_router)
 app.include_router(config_router)
+app.include_router(server_router)
