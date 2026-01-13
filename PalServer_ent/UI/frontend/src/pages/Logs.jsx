@@ -82,8 +82,10 @@ export default function Logs() {
 	setSendingNotice(true);
 	try {
 		
-      const data = await api.post(`/api/server/notice/${instance}`, { message }); 
+      const data = await api.post(`/server/notice/${instance}`, { message });
 
+	  console.log("[Notice] ",data.result);
+	
 		setShowNotice(false);
 	} catch (e) {
 		alert( t("msgProcessFail") );
