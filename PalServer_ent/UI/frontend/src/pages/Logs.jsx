@@ -100,14 +100,16 @@ export default function Logs() {
 	  		  onClick={goDashboard} >
         {t("btndashboard")}
       </button>
-	<button className="px-4 py-2 bg-blue-600 rounded hover:bg-blue-500" 
-			onClick={() => setShowNotice(true)}>
-		📢 {t("btnNotice")}
-	</button>
+
       <h2 className="text-3xl font-bold mb-4">
         {t("lablogs")} :{" "}<span className="text-blue-400">{instance}</span>
       </h2>
 
+	  <button className="px-4 py-2 bg-blue-600 rounded hover:bg-blue-500" 
+			onClick={() => setShowNotice(true)}>
+		📢 {t("btnNotice")}
+	  </button>
+	  
       <div className="bg-black p-4 h-[80vh] overflow-auto font-mono text-sm">
         {lines.length ? (
           <pre className="whitespace-pre-wrap text-green-400">
