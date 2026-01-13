@@ -84,7 +84,7 @@ export default function Logs() {
 		
       const data = await api.post(`/server/notice/${instance}`, { message });
 
-	  console.log("[Notice] ",data.result);
+	 //console.log("[Notice] ",data.message);
 	
 		setShowNotice(false);
 	} catch (e) {
@@ -109,7 +109,7 @@ export default function Logs() {
 			onClick={() => setShowNotice(true)}>
 		📢 {t("btnNotice")}
 	  </button>
-	  
+
       <div className="bg-black p-4 h-[80vh] overflow-auto font-mono text-sm">
         {lines.length ? (
           <pre className="whitespace-pre-wrap text-green-400">
