@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLang } from "../context/LangContext";
+import api from "../utils/api";
 
 export default function PasswordConfirmModal({ open, onClose, onSuccess }) {
   const [password, setPassword] = useState("");
