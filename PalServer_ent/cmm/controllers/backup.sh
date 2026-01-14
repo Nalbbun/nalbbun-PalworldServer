@@ -14,6 +14,6 @@ BACKUP_DIR="$BACKUP_ROOT/${INSTANCE}-$(date +%Y%m%d-%H%M)"
 
 mkdir -p "$BACKUP_DIR"
 
-cp -r "$SRC_DIR/$SAVED_DIR" "$BACKUP_DIR/" 
+cp -r "$SRC_DIR" "$BACKUP_DIR/" 
 
 echo "[BACKUP] Created backup at: $BACKUP_DIR"
