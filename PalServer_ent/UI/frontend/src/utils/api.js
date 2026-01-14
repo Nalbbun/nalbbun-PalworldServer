@@ -40,8 +40,7 @@ function onRefreshed(token) {
 /* =========================
  * Response Interceptor
  * ========================= */
-api.interceptors.response.use( (response) => response.data, 
-  async (error) => {
+api.interceptors.response.use( (response) => response.data, async (error) => {
     const original = error.config;
     const status = error.response?.status;
 
