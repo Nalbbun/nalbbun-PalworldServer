@@ -46,7 +46,7 @@ api.interceptors.response.use( (response) => response.data,
     const status = error.response?.status;
 
     console.error("[API][ERR]", status, original?.url);
-    
+
     // 네트워크 자체가 죽은 경우
     if (!error.response) {
       console.error("[API][NETWORK DOWN]");
@@ -107,6 +107,7 @@ api.interceptors.response.use( (response) => response.data,
         return Promise.reject(e);
       }
     }
+
     return Promise.reject(error);
   }
 );
