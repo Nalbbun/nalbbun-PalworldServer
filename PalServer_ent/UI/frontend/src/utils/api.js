@@ -107,11 +107,6 @@ api.interceptors.response.use( (response) => response.data,
         return Promise.reject(e);
       }
     }
-   // 복구 불가
-     if (status === 401) {
-       logoutHard();
-       return Promise.reject(error);
-     }
     return Promise.reject(error);
   }
 );
