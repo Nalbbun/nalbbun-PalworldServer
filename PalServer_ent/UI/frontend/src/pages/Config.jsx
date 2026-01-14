@@ -32,6 +32,18 @@ export default function Config() {
 		});
 	}, [instance]);
 
+  /* ==================== LOAD ==================== */
+	const loadInstances = async () => {
+	  api.get(`/config/${instance}`).then((res) => {  
+		  const { options, isDefault } = res;
+		  setOptions(options || {});
+		  setIsDefault(isDefault === true);
+		})
+		.catch((err) => {
+		  console.error("Config load failed", err);
+		}); 
+  };
+
   const save = async () => {
       if (isDefault) {
       const ok = window.confirm(t("msgConfirmConfSave")); 
@@ -42,7 +54,7 @@ export default function Config() {
       setLoading(true);
       await api.post(`/config/${instance}`, { options });
       alert(t("msgConfSaved")); 
-      navigate("/", { replace: true });
+      loadInstances();
     } finally {
       setLoading(false);
     }
