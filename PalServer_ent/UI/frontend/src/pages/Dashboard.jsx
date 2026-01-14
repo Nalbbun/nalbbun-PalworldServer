@@ -75,7 +75,7 @@ export default function Dashboard() {
 
   const loadStatus = async (ins) => {
     try { 
-      const res = await api.get(`/instance/${ins.name}/status`);
+      const res = await api.get(`/instance/${ins.name}/status`,{ silent: true } );
       setStatus((p) => ({ ...p, [ins.name]: res }));
     } catch (e) { 
 	
@@ -88,6 +88,10 @@ export default function Dashboard() {
 
   const refreshAllStatus = () => {
     instances.forEach(loadStatus);
+  };
+
+  const openConfigWithAuth = (instance) => {
+	setConfirmConfig({ open: true, target: instance });
   };
 
   /* ==================== ACTIONS ==================== */
@@ -119,6 +123,7 @@ export default function Dashboard() {
 			setMessage(r.result || `${t("msgStarting")}.......!!`);
 		});
 	};
+
   const stopInstance = async (n) => {
 	const ok = window.confirm(` ${t("msgConfirmInsStop")}`);
 	if (!ok) return;
@@ -128,6 +133,7 @@ export default function Dashboard() {
 		setMessage(r.result || `${t("msgStopping")}.......!!`);
 		});
 	};
+
   const backupInstance = async (n) => {
 	const ok = window.confirm(` ${t("msgConfirmInsBackup")}`);
 	if (!ok) return;
@@ -137,6 +143,7 @@ export default function Dashboard() {
 		setMessage(r.result || `${t("msgBackupComplete")} !!!`);
 		}); 
   	};
+
   const sumitServerSave = async (n) => {
 	const ok = window.confirm(` ${t("msgConfirmInsSave")}`);
 	if (!ok) return;
@@ -176,11 +183,6 @@ export default function Dashboard() {
 		}, 1500);
 	  }
 	};
- 
-	
-  const openConfigWithAuth = (instance) => {
-	setConfirmConfig({ open: true, target: instance });
-  };
 
   /* ==================== EFFECT ==================== */
   useEffect(() => {

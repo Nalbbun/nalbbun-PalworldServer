@@ -107,6 +107,10 @@ api.interceptors.response.use( (response) => response.data, async (error) => {
       }
     }
 
+    if (status === 401) {
+      logoutHard();
+      return Promise.reject(error);
+    }
     return Promise.reject(error);
   }
 );
@@ -118,7 +122,9 @@ function logoutHard() {
   console.warn("[AUTH] Hard logout");
   localStorage.clear();
   window.dispatchEvent(new Event("auth-logout"));
-  window.location.replace("/admin/login");
+  setTimeout(() => {
+    window.location.href = "/admin/login";
+  }, 0);
 }
 
 export default api;
