@@ -12,7 +12,7 @@ export default function Players() {
 
   const load = async () => {
     try {
-      const data = await api.get(`/players/${instance}`);
+      const data = await api.get(`/server/players/${instance}`);
       setPlayers(data.players || []);
 	  
 	  if (data.status === "RUNNING" && data.raw?.players) {

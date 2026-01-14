@@ -85,4 +85,5 @@ export default {
     msgUpdateStarted: "업데이트가 시작되었습니다",
     msgUpdating: "업데이트 중 입니다.",
     msgProcessFail: "처리 실패 하였습니다. 다시 시도하세요.",
+    msgPasswordIncorrect: "비밀번호가 올바르지 않습니다.",
 };

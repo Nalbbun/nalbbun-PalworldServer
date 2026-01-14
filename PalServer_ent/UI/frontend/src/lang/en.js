@@ -92,4 +92,5 @@ export default {
   msgUpdateStarted: "Update has started.",
   msgUpdating: "Updating...",
   msgProcessFail: "Processing failed. Please try again.",
+  msgPasswordIncorrect: "The password is incorrect.",
 };

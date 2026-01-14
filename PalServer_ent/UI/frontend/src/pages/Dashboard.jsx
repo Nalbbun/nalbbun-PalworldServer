@@ -6,6 +6,7 @@ import VersionSelectModal from "../components/VersionSelectModal";
 import InstanceCreateModal from "../components/InstanceCreateModal";
 import BlockingModal from "../components/BlockingModal";
 import LoadingOverlay from "../components/LoadingOverlay";
+import PasswordConfirmModal from "../components/PasswordConfirmModal";
 import { useLang } from "../context/LangContext";
 import LangToggle from "../components/LangToggle";
 import api from "../utils/api"; 
@@ -30,6 +31,15 @@ export default function Dashboard() {
     target: null,  // instance name
     currentVersion: null,  // current Version
   });
+  
+  const [confirmConfig, setConfirmConfig] = useState({
+	open: false,
+	target: null,
+  });
+
+  const openConfigWithAuth = (instance) => {
+	setConfirmConfig({ open: true, target: instance });
+  };
 
   /* ==================== LOAD ==================== */
 	const loadInstances = async () => {
@@ -255,6 +265,7 @@ export default function Dashboard() {
         onBackup={backupInstance}
         onUpdate={(cfg) => setVersionModal({ ...cfg, open: true })}
 		onDelete={deleteInstance}
+		onConfig={openConfigWithAuth}
       />
 
       <InstanceCreateModal
@@ -282,6 +293,14 @@ export default function Dashboard() {
 		  show={loading} 
 		  message={message}/>
 
+		<PasswordConfirmModal
+		open={confirmConfig.open}
+		onClose={() => setConfirmConfig({ open: false, target: null })}
+		onSuccess={() => {
+			nav(`/config/${confirmConfig.target}`);
+			setConfirmConfig({ open: false, target: null });
+		}}
+		/>
     </div>
   );
 }

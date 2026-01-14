@@ -60,6 +60,7 @@ export default function ServerTable({
   onBackup,
   onUpdate,
   onDelete,
+  onConfig,
 }) {     
   const nav = useNavigate();
 
@@ -180,7 +181,7 @@ export default function ServerTable({
                   </button>
                   <button
                     disabled={loading}
-                    onClick={() => nav(`/config/${ins.name}`)}
+                    onClick={() => onConfig(ins.name)}
                     className={btn(!loading, "bg-emerald-600")}
                   >
                     {t("btnconfig")}

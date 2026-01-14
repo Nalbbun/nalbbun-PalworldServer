@@ -1,6 +1,7 @@
 from mng.com import log
 from datetime import datetime, timedelta
-from fastapi import HTTPException, Header, APIRouter
+from fastapi import HTTPException, Header, APIRouter, Depends
+from pydantic import BaseModel
 from jose import JWTError, jwt
 import json, os
 
@@ -20,6 +21,10 @@ if not isinstance(SECRET_KEY, str):
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 REFRESH_TOKEN_EXPIRE_DAYS = 7
+
+
+class PasswordVerifyReq(BaseModel):
+    password: str
 
 
 # ---------------------------
@@ -42,6 +47,10 @@ def authenticate(username: str, password: str):
         if user["username"] == username and user["password"] == password:
             return user
     return None
+
+
+def verify_password(username: str, password: str) -> bool:
+    return authenticate(username, password) is not None
 
 
 # ---------------------------
@@ -173,6 +182,13 @@ def refresh(data: dict):
     log.info(f"[REFRESH] New access token issued for {user}")
 
     return {"access_token": access}
+
+
+@router.post("/verify-password")
+def verify_password_api(body: PasswordVerifyReq, user=Depends(require_auth)):
+    if not verify_password(user.username, body.password):
+        raise HTTPException(401, "Invalid password")
+    return {"ok": True}
 
 
 @router.post("/logout")
