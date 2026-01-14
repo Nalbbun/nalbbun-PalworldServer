@@ -83,6 +83,26 @@ def get_players(instance: str):
     return resp.json()
 
 
+def get_svrSave(instance: str):
+    password = get_admin_password(instance)
+    url = get_pal_rest_url(instance, "save")
+
+    # print(f"[players URL] = {url} {username} {password}")
+
+    resp = requests.get(
+        url,
+        auth=HTTPBasicAuth(ADIM_USERNAME, password),
+        headers={"Accept": "application/json"},
+        timeout=3,
+    )
+
+    # print(f"[players status] = {resp.status_code}")
+    # print(f"[players body] = {resp.text}")
+
+    resp.raise_for_status()
+    return resp.json()
+
+
 @router.get("/players/{name}")
 def players(name: str, user=Depends(require_auth)):
     # 1. instance run?
@@ -121,4 +141,22 @@ def players(name: str, body: NoticeRequest, user=Depends(require_auth)):
         "status": "RUNNING",
         "sent": True,
         "message": body.message,
+    }
+
+
+@router.post("/svrsave/{name}")
+def serverSave(name: str, user=Depends(require_auth)):
+    # 1. instance run?
+    if not is_instance_running(name):
+        return {"status": "STOPPED", "message": None}
+
+    # 2. call Palworld REST API
+    try:
+        raw = get_svrSave(name)
+    except requests.exceptions.RequestException as e:
+        raise HTTPException(status_code=502, detail=f"Palworld REST API error: {e}")
+
+    return {
+        "status": "RUNNING",
+        "message": raw,
     }

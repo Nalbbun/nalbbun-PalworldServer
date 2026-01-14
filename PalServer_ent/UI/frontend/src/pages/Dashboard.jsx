@@ -39,9 +39,6 @@ export default function Dashboard() {
 	target: null,
   });
 
-  const openConfigWithAuth = (instance) => {
-	setConfirmConfig({ open: true, target: instance });
-  };
 
   /* ==================== LOAD ==================== */
 	const loadInstances = async () => {
@@ -140,6 +137,15 @@ export default function Dashboard() {
 		setMessage(r.result || `${t("msgBackupComplete")} !!!`);
 		}); 
   	};
+  const sumitServerSave = async (n) => {
+	const ok = window.confirm(` ${t("msgConfirmInsSave")}`);
+	if (!ok) return;
+		action(`${t("msgInstanceSaving")} ${n}...`, 
+		async () => {
+		const r = await api.post(`/server/svrsave/${n}`);
+		setMessage(r.result || `${t("msgSaveComplete")} !!!`);
+		}); 
+  	};
 
   const handleVersionAction = async ({ version, mode, target }) => { 	
 	  try {
@@ -171,6 +177,11 @@ export default function Dashboard() {
 	  }
 	};
  
+	
+  const openConfigWithAuth = (instance) => {
+	setConfirmConfig({ open: true, target: instance });
+  };
+
   /* ==================== EFFECT ==================== */
   useEffect(() => {
 	  if (window.__ACTIVE_WS__) {
@@ -242,9 +253,7 @@ export default function Dashboard() {
             {t("btnlogout")}
           </button>
 		  <button
-			  onClick={() =>
-				setVersionModal({ open: true, mode: "update-all", target: null})
-			  }
+			  onClick={() => setVersionModal({ open: true, mode: "update-all", target: null}) }
 				className="px-4 py-2 bg-green-700 rounded hover:bg-green-600"
 		  >
 		   {t("btnallupdate")}
@@ -268,6 +277,7 @@ export default function Dashboard() {
         onUpdate={(cfg) => setVersionModal({ ...cfg, open: true })}
 		onDelete={deleteInstance}
 		onConfig={openConfigWithAuth}
+		onSvrSave={sumitServerSave}
       />
 
       <InstanceCreateModal

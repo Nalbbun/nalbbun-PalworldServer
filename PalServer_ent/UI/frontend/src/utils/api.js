@@ -40,12 +40,13 @@ function onRefreshed(token) {
 /* =========================
  * Response Interceptor
  * ========================= */
-api.interceptors.response.use( (response) => response.data, async (error) => {
+api.interceptors.response.use( (response) => response.data, 
+  async (error) => {
     const original = error.config;
     const status = error.response?.status;
 
     console.error("[API][ERR]", status, original?.url);
-
+    
     // 네트워크 자체가 죽은 경우
     if (!error.response) {
       console.error("[API][NETWORK DOWN]");
@@ -106,7 +107,11 @@ api.interceptors.response.use( (response) => response.data, async (error) => {
         return Promise.reject(e);
       }
     }
-
+   // 복구 불가
+     if (status === 401) {
+       logoutHard();
+       return Promise.reject(error);
+     }
     return Promise.reject(error);
   }
 );

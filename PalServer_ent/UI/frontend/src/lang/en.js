@@ -6,6 +6,7 @@ export default {
   btnlogin: "Login",
   btndashboard: "Dashboard",
   btninstance: "Create Server",
+  btninsSave: "Save",
   btnindelete: "Delete Server",
   btnstart: "Start",
   btnstop: "Stop",
@@ -93,4 +94,7 @@ export default {
   msgUpdating: "Updating...",
   msgProcessFail: "Processing failed. Please try again.",
   msgPasswordIncorrect: "The password is incorrect.",
+  msgSaveComplete: "Server save completed.",
+  msgInstanceSaving: "Server is saving...",
+  msgConfirmInsSave: "Do you want to save the server?",
 };

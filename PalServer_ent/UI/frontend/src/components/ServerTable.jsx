@@ -61,6 +61,7 @@ export default function ServerTable({
   onUpdate,
   onDelete,
   onConfig,
+  onSvrSave,
 }) {     
   const nav = useNavigate();
 
@@ -217,6 +218,13 @@ export default function ServerTable({
                     className={btn(running, "bg-indigo-600")}
                   >
                     {t("btnplayers")}
+                  </button>                  
+                  <button
+                    disabled={!running}
+                    onClick={() => onSvrSave(ins.name)}
+                    className={btn(running, "bg-indigo-600")}
+                  >
+                    {t("btninsSave")}
                   </button>
                 </div>
               </td>

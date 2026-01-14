@@ -6,6 +6,7 @@ export default {
     btnlogin: "로그인",
     btndashboard: "대시보드",
     btninstance: "서버 생성",
+    btninsSave: "서버저장",
     btnindelete: "서버 삭제",
     btnstart: "시작",
     btnstop: "정지",
@@ -86,4 +87,7 @@ export default {
     msgUpdating: "업데이트 중 입니다.",
     msgProcessFail: "처리 실패 하였습니다. 다시 시도하세요.",
     msgPasswordIncorrect: "비밀번호가 올바르지 않습니다.",
+    msgSaveComplete: "서버 저장이 완료되었습니다.",
+    msgInstanceSaving: "서버 저장 중 입니다.",
+    msgConfirmInsSave: "선택하신 서버를 저장 하시겠습니까?",
 };
