@@ -95,7 +95,7 @@ def replace_option_settings(text: str, new_block: str) -> str:
 
 @router.get("/{name}")
 def get_config(name: str, user=Depends(require_auth)):
-    path = f"{INSTANCE_DIR}/{name}/Saved/Config/LinuxServer/PalWorldSettings.ini"
+    path = f"{INSTANCE_DIR}/{name}/Config/LinuxServer/PalWorldSettings.ini"
 
     if not os.path.exists(path):
         log.info(f"[instances] config not found, using default")
@@ -135,7 +135,7 @@ def get_default_config(name: str, user=Depends(require_auth)):
 
 @router.post("/{name}")
 def update_config(name: str, req: ConfigUpdateRequest, user=Depends(require_auth)):
-    path = f"{INSTANCE_DIR}/{name}/Saved/Config/LinuxServer/PalWorldSettings.ini"
+    path = f"{INSTANCE_DIR}/{name}/Config/LinuxServer/PalWorldSettings.ini"
 
     # log.info(f"[instances] config save={path}")
 
