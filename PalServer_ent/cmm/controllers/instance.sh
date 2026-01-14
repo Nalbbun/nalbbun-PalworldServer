@@ -51,7 +51,7 @@ services:
       - "$QUERY:$PAL_QUERY_PORT/udp"
       - "$REST_PORT:$PAL_RESTAPI_PORT/tcp"
     volumes:
-      - $INST_PATH/$SAVE_DIR:/home/steam/palworld/Pal/Saved
+      - $PALSERVER_BASE_DIR/$SERVER_DIR/$INSTANCE_DIR/$INSTANCE/$SAVE_DIR:/home/steam/palworld/Pal/Saved
 networks:
   $PAL_NETWORKS:
     external: true
