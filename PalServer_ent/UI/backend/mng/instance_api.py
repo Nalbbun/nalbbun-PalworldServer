@@ -54,7 +54,7 @@ def list_instances_versions(user=Depends(require_auth)):
 # instance select version list
 @router.get("/selectversions")
 def list_versions(user=Depends(require_auth)):
-    repo_dir = os.path.join(SERVER_ROOT, "offline_repo")
+    repo_dir = os.path.join(SERVER_ROOT, "repo")
 
     if not os.path.isdir(repo_dir):
         return {"versions": []}
