@@ -1,4 +1,5 @@
 import { useEffect, useRef,useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ThemeToggle from "../components/ThemeToggle";
 import ServerTable from "../components/ServerTable";
@@ -24,6 +25,7 @@ export default function Dashboard() {
   const pollingRef = useRef(null); 
   const [updating, setUpdating] = useState(false);
   const [updateMsg, setUpdateMsg] = useState("");
+  const nav = useNavigate(); 
   
   const [versionModal, setVersionModal] = useState({
     open: false,
