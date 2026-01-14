@@ -195,9 +195,12 @@ def refresh(data: dict):
 
 @router.post("/verify-password")
 def verify_password_api(body: PasswordVerifyReq, user=Depends(require_auth)):
-    if not verify_password(user, body.password):
-        raise HTTPException(401, "Invalid password")
-    return {"ok": True}
+    ok = verify_password(user, body.password)
+
+    return {
+        "verified": ok,
+        "reason": None if ok else "invalid_password",
+    }
 
 
 @router.post("/logout")

@@ -11,19 +11,22 @@ export default function PasswordConfirmModal({ open, onClose, onSuccess }) {
   if (!open) return null;
 
   const submit = async () => {
-    try {
-      setLoading(true);
-      setError("");
+    setLoading(true);
+    setError("");
+ 
+     const res = await api.post(
+        "/auth/verify-password",
+        { password: password.trim() },
+        { skipAuthRefresh: true }  
+      );
 
-      await api.post("/auth/verify-password", { password });
-
-      setPassword("");
-      onSuccess();
-    } catch {
-      setError(t("msgPasswordIncorrect"));
-    } finally {
-      setLoading(false);
-    }
+    if (res.verified) {
+        onSuccess();           
+    } else {
+        setError(t("msgPasswordIncorrect"));
+        setPassword("");
+    } 
+    setLoading(false);
   };
 
   return (
@@ -39,6 +42,7 @@ export default function PasswordConfirmModal({ open, onClose, onSuccess }) {
           placeholder={t("labpassword")}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && submit()}
         />
 
         {error && (
