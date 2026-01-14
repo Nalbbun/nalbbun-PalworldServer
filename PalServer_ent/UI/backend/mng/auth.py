@@ -44,13 +44,22 @@ def load_users():
 def authenticate(username: str, password: str):
     users = load_users()
     for user in users:
+        log.info(
+            f"[AUTH DEBUG] user={user['username']} "
+            f"db_pw=[{user['password']}] input_pw=[{password}]"
+        )
         if user["username"] == username and user["password"] == password:
             return user
     return None
 
 
 def verify_password(username: str, password: str) -> bool:
-    return authenticate(username, password) is not None
+    password = password.strip()
+    users = load_users()
+    for user in users:
+        if user["username"] == username and user["password"].strip() == password:
+            return True
+    return False
 
 
 # ---------------------------
