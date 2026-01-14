@@ -2,7 +2,8 @@
 set -e
 
 VERSION=$1
-OFFLINE_REPO="../offline_repo"
+
+OFFLINE_REPO="../../server/repo"
 
 # ===================================================
 # 1.    
