@@ -26,6 +26,18 @@ echo "[1] Stopping and removing Docker services..."
 
 docker compose -f "$BASE_DIR/UI/docker-compose.yml" down --remove-orphans|| true
 
+echo " - Docker instance services stopped and removed."
+
+docker stop ui-paladmin-frontend|| true
+docker stop ui-paladmin-backend|| true 
+docker stop nginx:alpine || true
+docker rm ui-paladmin-frontend|| true
+docker rm ui-paladmin-backend|| true 
+docker rm nginx:alpine || true
+
+echo " - Docker services stopped and removed."
+
+
 echo "----------------------------------------------------"
 echo "[2] Removing Docker images (optional)..."
 read -p "Remove paladmin-related docker images? (yes/no): " RMIMG

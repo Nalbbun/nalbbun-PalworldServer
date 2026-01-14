@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV STEAM_APP_ID=2394010
 ENV SERVER_DIR=/home/steam/palworld
 ENV STEAMCMD_DIR=/home/steam/steamcmd
-ENV STEAM_HOME="/home/steam"
+ENV STEAM_HOME=/home/steam
 
 # --------------------------------------------------
 # OS 

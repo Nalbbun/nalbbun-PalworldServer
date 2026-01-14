@@ -42,5 +42,6 @@ export SERVER_ROOT="$BASE_DIR/$SERVER_DIR"
 export INSTANCE_ROOT="$SERVER_ROOT/$INSTANCE_DIR" 
 export BACKUP_ROOT="$SERVER_ROOT/$BACKUP_DIR"
 export REPO_ROOT="$SERVER_ROOT/$REPO_DIR"
+export REPO_ROOT="$SERVER_ROOT/$REPO_DIR"
 
 # ==========================================================

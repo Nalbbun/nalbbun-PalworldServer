@@ -106,6 +106,40 @@ echo "[INFO] paladmin is now available system-wide."
 echo "[INFO] Installed -> /usr/local/bin/paladmin"
 echo "[INFO] Source     -> $SOURCE_FILE"
 
+
+
+#############################################
+# 6. (선택) Palworld 이미지 생성
+#############################################
+echo "----------------------------------------------"
+read -r -p "Do you want to build Palworld server image now? (y/N): " BUILD_IMAGE
+
+if [[ "$BUILD_IMAGE" =~ ^[Yyyes]$ ]]; then
+  IMAGE_DIR="$BASE_DIR/cmm/make-pal-images"
+
+  if [[ ! -d "$IMAGE_DIR" ]]; then
+    echo "[ERROR] Image build directory not found: $IMAGE_DIR"
+    exit 1
+  fi
+
+  read -r -p "Enter image version (ex: v0.0.1): " IMAGE_VERSION
+
+  if [[ -z "$IMAGE_VERSION" ]]; then
+    echo "[ERROR] Version is required."
+    exit 1
+  fi
+
+  echo "[BUILD] Building Palworld image version: $IMAGE_VERSION"
+  cd "$IMAGE_DIR"
+  chmod +x build.sh
+  ./build.sh "$IMAGE_VERSION"
+
+  echo "[OK] Image build completed."
+else
+  echo "[SKIP] Image build skipped."
+fi
+
+
 #############################################
 # Network: paladmin-net 초기화
 #############################################
@@ -146,38 +180,6 @@ echo "[OK] Network '$NET' created."
 
 echo "[INSTALL] Starting Web UI (Frontend + Backend)..." 
 docker compose -f "$BASE_DIR/UI/docker-compose.yml" up -d --build --force-recreate --remove-orphans
-
-
-#############################################
-# 6. (선택) Palworld 이미지 생성
-#############################################
-echo "----------------------------------------------"
-read -r -p "Do you want to build Palworld server image now? (y/N): " BUILD_IMAGE
-
-if [[ "$BUILD_IMAGE" =~ ^[Yyyes]$ ]]; then
-  IMAGE_DIR="$BASE_DIR/cmm/make-pal-images"
-
-  if [[ ! -d "$IMAGE_DIR" ]]; then
-    echo "[ERROR] Image build directory not found: $IMAGE_DIR"
-    exit 1
-  fi
-
-  read -r -p "Enter image version (ex: v0.0.1): " IMAGE_VERSION
-
-  if [[ -z "$IMAGE_VERSION" ]]; then
-    echo "[ERROR] Version is required."
-    exit 1
-  fi
-
-  echo "[BUILD] Building Palworld image version: $IMAGE_VERSION"
-  cd "$IMAGE_DIR"
-  chmod +x build.sh
-  ./build.sh "$IMAGE_VERSION"
-
-  echo "[OK] Image build completed."
-else
-  echo "[SKIP] Image build skipped."
-fi
 
 #############################################
 # 7. (선택) Palworld cmd 자동완성
