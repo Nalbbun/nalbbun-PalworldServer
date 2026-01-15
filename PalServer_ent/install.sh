@@ -141,40 +141,62 @@ fi
 
 
 #############################################
-# Network: pal-public-net 초기화
+# Network 설정 
+
+PUBLIC_NET="pal-public-net"
+PRIVATE_NET="pal-private-net"
+
+echo "============================================="
+echo "[Network] Preparing docker networks"
+echo "  - public  : $PUBLIC_NET"
+echo "  - private : $PRIVATE_NET"
+echo "============================================="
+
 #############################################
-NET="pal-public-net"
-echo "[Network] Preparing docker network: $NET"
+# 공통 네트워크 초기화 함수
+#############################################
+prepare_network() {
+  local NET_NAME="$1"
+  local NET_OPTS="$2"
 
-# 기존 네트워크 존재 여부 확인
-if docker network inspect "$NET" >/dev/null 2>&1; then
-  echo "[WARN] Network '$NET' already exists."
+  echo ""
+  echo "[Network] Processing: $NET_NAME"
 
-  # 연결된 컨테이너 확인
-  CONNECTED_CONTAINERS=$(docker network inspect "$NET" \
-    --format '{{ range .Containers }}{{ .Name }} {{ end }}')
+  if docker network inspect "$NET_NAME" >/dev/null 2>&1; then
+    echo "[WARN] Network '$NET_NAME' already exists."
 
-  if [[ -n "$CONNECTED_CONTAINERS" ]]; then
-    echo "[INFO] Connected containers:"
-    echo "       $CONNECTED_CONTAINERS"
-    echo "[INFO] Removing connected containers first is required."
+    CONNECTED_CONTAINERS=$(docker network inspect "$NET_NAME" \
+      --format '{{ range .Containers }}{{ .Name }} {{ end }}')
+
+    if [[ -n "$CONNECTED_CONTAINERS" ]]; then
+      echo "[INFO] Connected containers:"
+      echo "       $CONNECTED_CONTAINERS"
+      echo "[INFO] All connected containers must be stopped first."
+    fi
+
+    echo "[INFO] Removing network '$NET_NAME'..."
+    docker network rm "$NET_NAME" || {
+      echo "[ERROR] Failed to remove network '$NET_NAME'"
+      exit 1
+    }
+  else
+    echo "[INFO] Network '$NET_NAME' does not exist."
   fi
 
-  echo "[INFO] Removing existing network '$NET'..."
-  docker network rm "$NET" || {
-    echo "[ERROR] Failed to remove network '$NET'."
-    echo "[HINT] Stop related containers and retry."
-    exit 1
-  }
-else
-  echo "[INFO] Network '$NET' does not exist. Creating new one."
-fi
+  echo "[INFO] Creating network '$NET_NAME' $NET_OPTS"
+  docker network create $NET_OPTS "$NET_NAME"
 
-# 네트워크 재생성
-docker network create "$NET"
-docker network create pal-private-net
+  echo "[OK] Network '$NET_NAME' ready."
+}
 
-echo "[OK] Network '$NET' created."
+#############################################
+# Network 초기화 실행
+#############################################
+prepare_network "$PUBLIC_NET" ""
+prepare_network "$PRIVATE_NET" "--internal"
+
+echo ""
+echo "[DONE] Docker networks initialized successfully."
 
 #############################################
 # 5. Web UI 실행

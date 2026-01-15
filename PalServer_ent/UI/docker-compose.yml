@@ -34,7 +34,7 @@ services:
     expose:
       - "8000"
     networks:
-      - pal-private_net
+      - pal-private-net
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 10s
@@ -63,7 +63,7 @@ services:
        condition: service_healthy
     networks:
       - pal-public-net
-      - pal-private_net
+      - pal-private-net
     restart: unless-stopped
 
 networks:
