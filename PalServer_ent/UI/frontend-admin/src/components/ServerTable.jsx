@@ -24,18 +24,7 @@ function StatusBadge({ status }) {
       {status}
     </span>
   );
-}
-
-function formatPort(p) {
-  // : "0.0.0.0:18211->8211/udp"
-  // : ":::18211->8211/udp"
-
-  const m = p.match(/(\d+)->(\d+)\/(\w+)/);
-  if (!m) return null;
-
-  const [, host, container, proto] = m;
-  return `${host} -> ${container} / ${proto}`;
-}
+} 
 
 function normalizePorts(ports = []) {
   const set = new Set();
@@ -44,7 +33,7 @@ function normalizePorts(ports = []) {
     const m = p.match(/(\d+)->(\d+)\/(\w+)/);
     if (!m) return;
 
-    const [, host, container, proto] = m;
+    const [, host, container, proto, info] = m;
     set.add(`${host}  ${container} / ${proto}`);
   });
 
@@ -93,12 +82,14 @@ export default function ServerTable({
           status: "STOPPED",
           ports: [],
           uptime: null,
+          info: null,
         };
 
 		const running = s.status === "RUNNING" || s.status?.startsWith("Up");
 
     const ports = normalizePorts(s.ports); 
 		const version = ins.version || "unknown";		  
+    const info = s.info || null;  
 
         return (
             <tr key={ins.name} className="border-b border-gray-700"> 
@@ -140,6 +131,13 @@ export default function ServerTable({
                   </div>
                 ) : (
                   <div className="text-xs text-gray-500">{t("labnoPorts")}</div>
+                )}
+                {s.status === "RUNNING" && info && (
+                  <div className="text-sm text-green-400 space-y-1">
+                    <div>Server: {info.servername}</div>
+                    <div>Version: {info.version}</div>
+                    <div>World: {info.worldguid}</div>
+                  </div>
                 )}
               </td>
 

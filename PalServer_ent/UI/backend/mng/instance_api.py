@@ -1,4 +1,5 @@
 from mng.com import INSTANCE_DIR, SERVER_ROOT, CONTROLLER_DIR, log, run_cmd
+from mng.server_api import get_server_info
 from mng.docker_utils import (
     is_instance_stop,
     is_instance_start,
@@ -94,29 +95,36 @@ def instance_status(name: str, user=Depends(require_auth)):
 
     out = is_instance_state(name)
 
-    if not out:
-        return {
-            "instance": name,
-            "status": "STOPPED",
-            "ports": [],
-            "uptime": None,
-        }
-
     status, ports_raw, running_for = out.split("|")
-
     #
     ports = []
     if ports_raw:
-        # : 0.0.0.0:18211->8211/udp
         for p in ports_raw.split(","):
             p = p.strip()
             ports.append(p)
 
+    info = None
+    if status == "RUNNING":
+        try:
+            info = get_server_info(name)
+        except Exception:
+            info = None
+
+    if not out:
+        return {
+            "instance": name,
+            "status": "STOPPED",
+            "uptime": None,
+            "ports": [],
+            "info": None,
+        }
+
     return {
         "instance": name,
         "status": status,
+        "uptime": running_for,
         "ports": ports,
-        "uptime": running_for,  # : "2 hours"
+        "info": info,
     }
 
 

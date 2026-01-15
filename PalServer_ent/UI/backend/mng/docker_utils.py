@@ -41,10 +41,8 @@ def is_instance_state(name: str):
     data = json.loads(inspect)[0]
 
     ports = []
-    port_map = data["NetworkSettings"]["Ports"] or {}
-    for cport, binds in port_map.items():
-        if not binds:
-            continue
+    bindings = data["HostConfig"].get("PortBindings") or {}
+    for cport, binds in bindings.items():
         for b in binds:
             ports.append(f'{b["HostIp"]}:{b["HostPort"]}->{cport}')
 
