@@ -17,9 +17,7 @@ curl -vk https://192.168.1.150:8443/admin/
 
 echo " => docker logs paladmin-backend"
 docker logs paladmin-backend
-echo " => docker logs paladmin-frontend"
-docker logs paladmin-frontend
-echo " => docker logs paladmin-proxy"
-docker logs paladmin-proxy
+echo " => docker logs paladmin-frontend-proxy"
+docker logs paladmin-frontend-proxy
 
 

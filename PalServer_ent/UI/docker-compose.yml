@@ -45,9 +45,9 @@ services:
   # =========================
   # PROXY (STATIC + API)
   # =========================
-  paladmin-proxy:
+  paladmin-frontend-proxy:
     image: nginx:alpine
-    container_name: paladmin-proxy
+    container_name: paladmin-frontend-proxy
     ports:
       - "8443:8443"
     volumes:
