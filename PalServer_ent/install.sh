@@ -172,6 +172,8 @@ fi
 
 # 네트워크 재생성
 docker network create "$NET"
+docker network create pal-private-net
+
 echo "[OK] Network '$NET' created."
 
 #############################################
