@@ -98,7 +98,10 @@ def get_server_info(instance: str):
     resp = requests.get(
         url,
         auth=HTTPBasicAuth(ADIM_USERNAME, password),
-        headers={"Accept": "application/json"},
+        headers={
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
         timeout=3,
     )
 
@@ -190,7 +193,7 @@ def serverSave(name: str, user=Depends(require_auth)):
 
     return {
         "status": "RUNNING",
-        "message": raw,
+        "result": raw,
     }
 
 
@@ -198,7 +201,7 @@ def serverSave(name: str, user=Depends(require_auth)):
 def serverInfo(name: str, user=Depends(require_auth)):
     # 1. instance run?
     if not is_instance_running(name):
-        return {"status": "STOPPED", "message": None}
+        return {"status": "STOPPED", "info": None}
 
     # 2. call Palworld REST API
     try:
@@ -209,5 +212,5 @@ def serverInfo(name: str, user=Depends(require_auth)):
 
     return {
         "status": "RUNNING",
-        "message": raw,
+        "info": raw,
     }

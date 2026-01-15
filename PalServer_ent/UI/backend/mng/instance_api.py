@@ -120,6 +120,8 @@ def instance_status(name: str, user=Depends(require_auth)):
             "info": None,
         }
 
+    print(f"[status ] = {out}")
+
     return {
         "instance": name,
         "status": status,
