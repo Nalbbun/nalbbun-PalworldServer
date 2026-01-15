@@ -24,12 +24,31 @@ def is_instance_resource(name: str):
 
 
 def is_instance_state(name: str):
-    out = run_cmd(
+    # 상태 / 업타임
+    ps = run_cmd(
         "docker ps --filter "
         f"'name=^{name}$' "
-        "--format '{{.Status}}|{{.Ports}}|{{.RunningFor}}'"
-    )
-    return out.strip()
+        "--format '{{.Status}}|{{.RunningFor}}'"
+    ).strip()
+
+    if not ps:
+        return ""
+
+    status, running_for = ps.split("|", 1)
+
+    # 포트는 inspect로
+    inspect = run_cmd(f"docker inspect {name}")
+    data = json.loads(inspect)[0]
+
+    ports = []
+    port_map = data["NetworkSettings"]["Ports"] or {}
+    for cport, binds in port_map.items():
+        if not binds:
+            continue
+        for b in binds:
+            ports.append(f'{b["HostIp"]}:{b["HostPort"]}->{cport}')
+
+    return f"{status}|{','.join(ports)}|{running_for}"
 
 
 def is_instance_start(compose: str) -> bool:

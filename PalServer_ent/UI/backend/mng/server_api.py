@@ -83,12 +83,11 @@ def get_players(instance: str):
     return resp.json()
 
 
-def get_svrSave(instance: str):
-
+def get_server_info(instance: str):
     password = get_admin_password(instance)
-    url = get_pal_rest_url(instance, "save")
+    url = get_pal_rest_url(instance, "info")
 
-    print(f"[save URL] = {url} {ADIM_USERNAME} {password}")
+    # print(f"[info URL] = {url} {ADIM_USERNAME} {password}")
 
     resp = requests.get(
         url,
@@ -97,8 +96,32 @@ def get_svrSave(instance: str):
         timeout=3,
     )
 
-    print(f"[save status] = {resp.status_code}")
-    print(f"[save body] = {resp.text}")
+    # print(f"[info status] = {resp.status_code}")
+    # print(f"[info body] = {resp.text}")
+
+    resp.raise_for_status()
+    return resp.json()
+
+
+def get_svrSave(instance: str):
+
+    password = get_admin_password(instance)
+    url = get_pal_rest_url(instance, "save")
+
+    # print(f"[save URL] = {url} {ADIM_USERNAME} {password}")
+
+    resp = requests.get(
+        url,
+        auth=HTTPBasicAuth(ADIM_USERNAME, password),
+        headers={"Accept": "application/json"},
+        json={
+            "data": "",
+        },
+        timeout=3,
+    )
+
+    # print(f"[save status] = {resp.status_code}")
+    # print(f"[save body] = {resp.text}")
 
     resp.raise_for_status()
     return resp.json()
@@ -147,6 +170,24 @@ def players(name: str, body: NoticeRequest, user=Depends(require_auth)):
 
 @router.post("/svrsave/{name}")
 def serverSave(name: str, user=Depends(require_auth)):
+    # 1. instance run?
+    if not is_instance_running(name):
+        return {"status": "STOPPED", "message": None}
+
+    # 2. call Palworld REST API
+    try:
+        raw = get_svrSave(name)
+    except requests.exceptions.RequestException as e:
+        raise HTTPException(status_code=502, detail=f"Palworld REST API error: {e}")
+
+    return {
+        "status": "RUNNING",
+        "message": raw,
+    }
+
+
+@router.post("/svrinfo/{name}")
+def serverInfo(name: str, user=Depends(require_auth)):
     # 1. instance run?
     if not is_instance_running(name):
         return {"status": "STOPPED", "message": None}
