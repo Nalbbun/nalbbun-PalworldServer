@@ -69,5 +69,5 @@ services:
 networks:
   pal-public-net:
     external: true
-  pal-private_net:
+  pal-private-net:
     external: true
