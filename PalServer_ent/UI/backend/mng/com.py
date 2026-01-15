@@ -20,11 +20,12 @@ INSTANCE_DIR = os.path.join(SERVER_ROOT, "instances")
 
 def run_cmd(cmd: str) -> str:
     try:
+        print("[cmd] cmd:")
         out = subprocess.check_output(
             cmd, shell=True, stderr=subprocess.STDOUT, text=True
         )
-        print("[RESULT] Output:")
-        print(out)
+        # print("[RESULT] Output:")
+        # print(out)
 
         return out.strip()
     except subprocess.CalledProcessError as e:

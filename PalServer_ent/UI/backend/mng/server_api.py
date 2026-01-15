@@ -154,7 +154,7 @@ def players(name: str, body: NoticeRequest, user=Depends(require_auth)):
 
     # 2. call Palworld REST API
     try:
-        get_notice(name, body.message)
+        msg = get_notice(name, body.message)
 
     except requests.exceptions.RequestException as e:
         log.error(f"[NOTICE ERROR] {e}")
@@ -164,7 +164,7 @@ def players(name: str, body: NoticeRequest, user=Depends(require_auth)):
     return {
         "status": "RUNNING",
         "sent": True,
-        "message": body.message,
+        "message": msg,
     }
 
 
@@ -195,6 +195,7 @@ def serverInfo(name: str, user=Depends(require_auth)):
     # 2. call Palworld REST API
     try:
         raw = get_svrSave(name)
+
     except requests.exceptions.RequestException as e:
         raise HTTPException(status_code=502, detail=f"Palworld REST API error: {e}")
 
