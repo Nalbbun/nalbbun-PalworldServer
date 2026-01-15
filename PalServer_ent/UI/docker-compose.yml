@@ -1,7 +1,27 @@
+version: "3.9"
 services:
+  # =========================
+  # ADMIN UI (BUILD ONLY)
+  # =========================
+  admin-ui:
+    build: ./frontend-admin
+    container_name: admin-ui-build
+    volumes:
+      - ./dist/admin:/out
+    command: >
+      sh -c "rm -rf /out/* && cp -r /app/dist/* /out"
+  # =========================
+  # OPERATOR UI (BUILD ONLY)
+  # =========================
+  operator-ui:
+    build: ./frontend-operator
+    container_name: operator-ui-build
+    volumes:
+      - ./dist/operator:/out
+    command: >
+      sh -c "rm -rf /out/* && cp -r /app/dist/* /out"
+
   paladmin-backend:
-    networks:
-      - paladmin-net
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -10,37 +30,44 @@ services:
       PALSERVER_BASE_DIR: ${PALSERVER_BASE_DIR}
     volumes:
       - ${PALSERVER_BASE_DIR}:/app/${PALSERVER_BASE_DIR}
-      - /var/run/docker.sock:/var/run/docker.sock
-    ports:
-      - "8000:8000"
-    restart: always
-
-  paladmin-frontend:
-    networks:
-      - paladmin-net
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: paladmin-frontend
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     expose:
-      - "80"
-    restart: always
-
-  paladmin-proxy:
+      - "8000"
     networks:
-      - paladmin-net
+      - pal-private_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  # =========================
+  # PROXY (STATIC + API)
+  # =========================
+  paladmin-proxy:
     image: nginx:alpine
     container_name: paladmin-proxy
     ports:
       - "8443:8443"
     volumes:
-      - ./proxy/nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./cert/certs:/etc/nginx/certs
+      - ./dist:/usr/share/nginx/html:ro
+      - ./proxy/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./certs:/etc/nginx/certs:ro
     depends_on:
-      - paladmin-frontend
-      - paladmin-backend
-    restart: always
+      admin-ui:
+       condition: service_completed_successfully
+      operator-ui:
+       condition: service_completed_successfully
+      paladmin-backend:
+       condition: service_healthy
+    networks:
+      - pal-public-net
+      - pal-private_net
+    restart: unless-stopped
 
 networks:
-  paladmin-net:
+  pal-public-net:
     external: true
+  pal-private_net:
+    internal: true 

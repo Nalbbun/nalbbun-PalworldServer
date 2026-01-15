@@ -141,9 +141,9 @@ fi
 
 
 #############################################
-# Network: paladmin-net 초기화
+# Network: pal-public-net 초기화
 #############################################
-NET="paladmin-net"
+NET="pal-public-net"
 echo "[Network] Preparing docker network: $NET"
 
 # 기존 네트워크 존재 여부 확인
