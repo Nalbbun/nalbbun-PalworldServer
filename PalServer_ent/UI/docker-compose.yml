@@ -70,4 +70,4 @@ networks:
   pal-public-net:
     external: true
   pal-private_net:
-    internal: true 
+    external: true
