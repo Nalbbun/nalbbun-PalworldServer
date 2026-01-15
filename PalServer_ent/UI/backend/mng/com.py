@@ -20,7 +20,7 @@ INSTANCE_DIR = os.path.join(SERVER_ROOT, "instances")
 
 def run_cmd(cmd: str) -> str:
     try:
-        print("[cmd] cmd:")
+        print("[cmd] cmd:", cmd)
         out = subprocess.check_output(
             cmd, shell=True, stderr=subprocess.STDOUT, text=True
         )
