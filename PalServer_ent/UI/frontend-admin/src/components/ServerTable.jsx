@@ -30,11 +30,12 @@ function normalizePorts(ports = []) {
   const set = new Set();
 
   ports.forEach((p) => {
-    const m = p.match(/(\d+)->(\d+)\/(\w+)/);
+    // 0.0.0.0:18211->8211/udp
+    const m = p.match(/([\d.]+):(\d+)->(\d+)\/(\w+)/);
     if (!m) return;
 
-    const [, host, container, proto, info] = m;
-    set.add(`${host}  ${container} / ${proto}`);
+    const [, hostIp, hostPort, containerPort, proto] = m;
+    set.add(`${hostIp}:${hostPort} → ${containerPort}/${proto}`);
   });
 
   return Array.from(set);
@@ -85,7 +86,7 @@ export default function ServerTable({
           info: null,
         };
 
-		const running = s.status === "RUNNING" || s.status?.startsWith("Up");
+		const running =   s.status &&  (s.status === "RUNNING" || s.status.toUpperCase().startsWith("UP"));
 
     const ports = normalizePorts(s.ports); 
 		const version = ins.version || "unknown";		  
@@ -132,13 +133,20 @@ export default function ServerTable({
                 ) : (
                   <div className="text-xs text-gray-500">{t("labnoPorts")}</div>
                 )}
-                {s.status === "RUNNING" && info && (
-                  <div className="text-sm text-green-400 space-y-1">
-                    <div>Server: {info.servername}</div>
-                    <div>Version: {info.version}</div>
-                    <div>World: {info.worldguid}</div>
-                  </div>
-                )}
+                
+                  {s.status === "RUNNING" && (
+                    info ? (
+                      <div className="text-sm text-green-400 space-y-1">
+                        <div>Server: {info.servername}</div>
+                        <div>Version: {info.version}</div>
+                        <div>World: {info.worldguid}</div>
+                      </div>
+                    ) : (
+                      <div className="text-xs text-yellow-400">
+                        REST API initializing...
+                      </div>
+                    )
+                  )}
               </td>
 
               <td className="p-3 space-y-2">

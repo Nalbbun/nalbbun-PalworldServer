@@ -95,21 +95,6 @@ def instance_status(name: str, user=Depends(require_auth)):
 
     out = is_instance_state(name)
 
-    status, ports_raw, running_for = out.split("|")
-    #
-    ports = []
-    if ports_raw:
-        for p in ports_raw.split(","):
-            p = p.strip()
-            ports.append(p)
-
-    #
-    info = None
-    try:
-        info = get_server_info(name)
-    except Exception:
-        info = None
-
     #
     if not out:
         return {
@@ -120,7 +105,36 @@ def instance_status(name: str, user=Depends(require_auth)):
             "info": None,
         }
 
-    print(f"[status ] = {out}")
+    #
+    try:
+        status, ports_raw, running_for = out.split("|", 2)
+    except ValueError:
+        return {
+            "instance": name,
+            "status": "UNKNOWN",
+            "uptime": None,
+            "ports": [],
+            "info": None,
+        }
+
+    #
+    ports = []
+    if ports_raw:
+        for p in ports_raw.split(","):
+            p = p.strip()
+            if p:
+                ports.append(p)
+
+    #
+    info = None
+    if status.upper().startswith("UP") or status.upper() == "RUNNING":
+        try:
+            info = get_server_info(name)
+        except Exception as e:
+            print(f"[status][info] REST not ready: {e}")
+            info = None
+
+    print(f"[status] instance={name} info={info}")
 
     return {
         "instance": name,
