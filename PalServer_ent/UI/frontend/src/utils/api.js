@@ -122,9 +122,7 @@ function logoutHard() {
   console.warn("[AUTH] Hard logout");
   localStorage.clear();
   window.dispatchEvent(new Event("auth-logout"));
-  setTimeout(() => {
-    window.location.href = "/admin/login";
-  }, 0);
+  window.location.replace("/admin/login");
 }
 
 export default api;
