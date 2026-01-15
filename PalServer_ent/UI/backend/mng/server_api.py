@@ -51,7 +51,10 @@ def get_notice(instance: str, message: str):
     resp = requests.post(
         url,
         auth=HTTPBasicAuth(ADIM_USERNAME, password),
-        headers={"Accept": "application/json"},
+        headers={
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
         json={
             "message": message,
         },
@@ -72,7 +75,10 @@ def get_players(instance: str):
     resp = requests.get(
         url,
         auth=HTTPBasicAuth(ADIM_USERNAME, password),
-        headers={"Accept": "application/json"},
+        headers={
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
         timeout=3,
     )
 
@@ -114,10 +120,11 @@ def get_svrSave(instance: str):
     resp = requests.get(
         url,
         auth=HTTPBasicAuth(ADIM_USERNAME, password),
-        headers={"Accept": "application/json"},
-        json={
-            "data": "",
+        headers={
+            "Content-Type": "application/json",
+            "Accept": "application/json",
         },
+        data="",
         timeout=3,
     )
 

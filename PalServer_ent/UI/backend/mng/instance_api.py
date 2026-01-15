@@ -105,11 +105,10 @@ def instance_status(name: str, user=Depends(require_auth)):
 
     #
     info = None
-    if status == "RUNNING":
-        try:
-            info = get_server_info(name)
-        except Exception:
-            info = None
+    try:
+        info = get_server_info(name)
+    except Exception:
+        info = None
 
     #
     if not out:
