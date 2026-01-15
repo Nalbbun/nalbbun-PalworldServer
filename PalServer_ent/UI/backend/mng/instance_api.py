@@ -103,6 +103,7 @@ def instance_status(name: str, user=Depends(require_auth)):
             p = p.strip()
             ports.append(p)
 
+    #
     info = None
     if status == "RUNNING":
         try:
@@ -110,6 +111,7 @@ def instance_status(name: str, user=Depends(require_auth)):
         except Exception:
             info = None
 
+    #
     if not out:
         return {
             "instance": name,
