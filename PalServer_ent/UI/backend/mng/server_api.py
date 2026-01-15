@@ -84,10 +84,11 @@ def get_players(instance: str):
 
 
 def get_svrSave(instance: str):
+
     password = get_admin_password(instance)
     url = get_pal_rest_url(instance, "save")
 
-    # print(f"[players URL] = {url} {username} {password}")
+    print(f"[players URL] = {url} {username} {password}")
 
     resp = requests.get(
         url,
@@ -96,8 +97,8 @@ def get_svrSave(instance: str):
         timeout=3,
     )
 
-    # print(f"[players status] = {resp.status_code}")
-    # print(f"[players body] = {resp.text}")
+    print(f"[players status] = {resp.status_code}")
+    print(f"[players body] = {resp.text}")
 
     resp.raise_for_status()
     return resp.json()
