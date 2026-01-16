@@ -46,7 +46,7 @@ def get_notice(instance: str, message: str):
     password = get_admin_password(instance)
     url = get_pal_rest_url(instance, "announce")
 
-    print(f"[announce URL] = {url} {ADIM_USERNAME} {password}")
+    # print(f"[announce URL] = {url} {ADIM_USERNAME} {password}")
 
     resp = requests.post(
         url,
@@ -205,7 +205,7 @@ def serverInfo(name: str, user=Depends(require_auth)):
 
     # 2. call Palworld REST API
     try:
-        raw = get_svrSave(name)
+        raw = get_server_info(name)
 
     except requests.exceptions.RequestException as e:
         raise HTTPException(status_code=502, detail=f"Palworld REST API error: {e}")
