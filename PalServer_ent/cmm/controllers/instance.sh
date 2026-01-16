@@ -45,7 +45,8 @@ services:
       - QUERY=$QUERY
       - RESTAPI=$REST_PORT      
     networks:
-      - $PAL_NETWORKS
+      - $PAL_EXNETWORKS
+      - $PAL_INNETWORKS
     ports:
       - "$PORT:$PAL_GAME_PORT/udp"
       - "$QUERY:$PAL_QUERY_PORT/udp"
@@ -53,7 +54,9 @@ services:
     volumes:
       - $PALSERVER_BASE_DIR/$SERVER_DIR/$INSTANCE_DIR/$INSTANCE/$SAVE_DIR:/home/steam/palworld/Pal/Saved
 networks:
-  $PAL_NETWORKS:
+  $PAL_EXNETWORKS:
+    external: true
+  $PAL_INNETWORKS:
     external: true
 EOF
 
