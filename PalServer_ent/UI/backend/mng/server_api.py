@@ -113,38 +113,30 @@ def get_server_info(instance: str):
 
 
 def get_svrSave(instance: str):
-
     password = get_admin_password(instance)
-
     url = get_pal_rest_url(instance, "save")
 
     print(f"[save URL] = {url} {ADIM_USERNAME} {password}")
 
-    resp = requests.get(
-        url,
-        auth=HTTPBasicAuth(ADIM_USERNAME, password),
-        headers={
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Content-Length": "0",
-        },
-        data="",
-        timeout=3,
-    )
-
-    # print(f"[save status] = {resp.status_code}")
-    print(f"[save body] = {resp.text}")
-
-    resp.raise_for_status()
-
-    # Palworld는 true / {} / empty 를 섞어서 줌
-    if not resp.text:
-        return {"result": "ok"}
-
     try:
-        return resp.json()
-    except ValueError:
-        return {"result": resp.text}
+        resp = requests.post(
+            url,
+            auth=HTTPBasicAuth(ADIM_USERNAME, password),
+            headers={
+                "Content-Length": "1",
+            },
+            data="0",
+            timeout=5,
+            stream=True,
+        )
+    except requests.exceptions.RequestException as e:
+        print(f"[save warning] protocol error ignored: {e}")
+        return {"result": "sent"}
+
+    # status_code 접근만 (body 읽지 않음)
+    print(f"[save status] = {resp.status_code}")
+
+    return {"result": "sent"}
 
 
 @router.get("/players/{name}")
