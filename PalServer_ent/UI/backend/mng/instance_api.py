@@ -134,9 +134,7 @@ def instance_status(name: str, user=Depends(require_auth)):
             print(f"[status][info] REST not ready: {e}")
             info = None
 
-    print(
-        f"[status] instance={name} status={status} info={info} ports={ports} running_for={running_for}"
-    )
+    # print(f"[status] instance={name} status={status} info={info} ports={ports} running_for={running_for}")
 
     return {
         "instance": name,

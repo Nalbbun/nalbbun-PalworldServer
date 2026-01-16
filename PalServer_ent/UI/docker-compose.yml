@@ -37,9 +37,10 @@ services:
       - pal-private-net
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 10s
-      timeout: 3s
-      retries: 5
+      start_period: 20s
+      interval: 10m
+      timeout: 2s
+      retries: 3
     restart: unless-stopped
 
   # =========================

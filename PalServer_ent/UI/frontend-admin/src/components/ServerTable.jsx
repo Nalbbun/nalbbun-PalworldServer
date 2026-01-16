@@ -29,17 +29,21 @@ function StatusBadge({ status }) {
 function normalizePorts(ports = []) {
   const set = new Set();
 
-  ports.forEach((p) => {
+  ports.forEach((p) => { 
+    // :18211->8211/udp
     // 0.0.0.0:18211->8211/udp
-    const m = p.match(/([\d.]+):(\d+)->(\d+)\/(\w+)/);
+    const m = p.match(/(?:(\d+\.\d+\.\d+\.\d+):)?(\d+)->(\d+)\/(\w+)/);
     if (!m) return;
 
     const [, hostIp, hostPort, containerPort, proto] = m;
-    set.add(`${hostIp}:${hostPort} → ${containerPort}/${proto}`);
+
+    const host = hostIp ? `${hostIp}:${hostPort}` : `:${hostPort}`;
+    set.add(`${host} → ${containerPort}/${proto}`);
   });
 
   return Array.from(set);
 }
+
 
 export default function ServerTable({
   instances,
