@@ -133,8 +133,8 @@ export default function ServerTable({
                 ) : (
                   <div className="text-xs text-gray-500">{t("labnoPorts")}</div>
                 )}
-                
-                  {s.status === "RUNNING" && (
+
+                  {s.status.toUpperCase().startsWith("UP") && (
                     info ? (
                       <div className="text-sm text-green-400 space-y-1">
                         <div>Server: {info.servername}</div>
