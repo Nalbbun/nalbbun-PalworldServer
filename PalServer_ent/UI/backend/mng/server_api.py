@@ -126,8 +126,9 @@ def get_svrSave(instance: str):
         headers={
             "Content-Type": "application/json",
             "Accept": "application/json",
+            "Content-Length": "0",
         },
-        json={"data": ""},
+        data="",
         timeout=3,
     )
 
@@ -135,7 +136,15 @@ def get_svrSave(instance: str):
     print(f"[save body] = {resp.text}")
 
     resp.raise_for_status()
-    return resp.json()
+
+    # Palworld는 true / {} / empty 를 섞어서 줌
+    if not resp.text:
+        return {"result": "ok"}
+
+    try:
+        return resp.json()
+    except ValueError:
+        return {"result": resp.text}
 
 
 @router.get("/players/{name}")
