@@ -127,7 +127,7 @@ def get_svrSave(instance: str):
             "Content-Type": "application/json",
             "Accept": "application/json",
         },
-        json={},
+        json={"data": ""},
         timeout=3,
     )
 
