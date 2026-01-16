@@ -46,8 +46,6 @@ def is_instance_state(name: str):
         for b in binds:
             ports.append(f'{b["HostIp"]}:{b["HostPort"]}->{cport}')
 
-    print(f"[status ] = {status} {running_for} {ports}")
-
     return f"{status}|{','.join(ports)}|{running_for}"
 
 
