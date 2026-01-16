@@ -95,6 +95,10 @@ export default function ServerTable({
     const ports = normalizePorts(s.ports); 
 		const version = ins.version || "unknown";		  
     const info = s.info || null;  
+      /* btn color
+        bg-blue-600  bg-green-600  bg-red-600  bg-yellow-600  bg-purple-600
+        bg-emerald-600  bg-cyan-600  bg-pink-600  bg-orange-600  bg-teal-600
+      */
 
         return (
             <tr key={ins.name} className="border-b border-gray-700"> 
@@ -232,7 +236,7 @@ export default function ServerTable({
                   <button
                     disabled={!running}
                     onClick={() => onSvrSave(ins.name)}
-                    className={btn(running, "bg-indigo-600")}
+                    className={btn(running, "bg-teal-600")}
                   >
                     {t("btninsSave")}
                   </button>
