@@ -25,6 +25,7 @@ export default {
   btnsave: "Save",
   btndefault: "Load Default Settings",
   btnNotice: "Server Notice",
+  btnduplicateCheck: "Duplicate Check",
 
   labid: "Username",
   labConfig: "Server Config Info",
@@ -97,4 +98,11 @@ export default {
   msgSaveComplete: "Server save completed.",
   msgInstanceSaving: "Server is saving...",
   msgConfirmInsSave: "Do you want to save the server?",
+  msgConnectingDuplicate: "Checking for duplicates...",
+  msgNameAvailable: "✔ Available instance name",
+  msgOverwriteInstance: "⚠ Overwriting existing instance",  
+  msgNameExists: "✖ Duplicate name (creation not allowed)",
+  msgDuplicateCheckFirst: "Please check for duplicates first.",
+  msgNoOverwrite: "Duplicate instance exists and overwriting is not allowed.",
+  msgOverwriteConfirm: "An instance with the same name exists. Do you want to overwrite it?",
 };

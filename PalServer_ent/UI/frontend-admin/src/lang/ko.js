@@ -25,6 +25,7 @@ export default {
     btnsave: "저장",
     btndefault: "기본 설정 불러오기",
     btnNotice: "서버 공지",
+    btnduplicateCheck: "중복 확인",
 	
     labid: "아이디",
     labConfig: "서버 설정 정보",
@@ -89,5 +90,13 @@ export default {
     msgPasswordIncorrect: "비밀번호가 올바르지 않습니다.",
     msgSaveComplete: "서버 저장이 완료되었습니다.",
     msgInstanceSaving: "서버 저장 중 입니다.",
-    msgConfirmInsSave: "선택하신 서버를 저장 하시겠습니까?",
+    msgConfirmInsSave: "선택하신 서버를 저장 하시겠습니까?", 
+    msgConnectingDuplicate: "중복 확인 중...",
+    msgNameAvailable: "✔ 사용 가능한 인스턴스 이름입니다",
+    msgOverwriteInstance: "⚠ 기존 인스턴스를 덮어씁니다",  
+    msgNameExists: "✖ 중복된 이름입니다 (생성 불가)",
+    msgDuplicateCheckFirst: "중복 확인을 먼저 진행하세요.",
+    msgNoOverwrite: "중복 인스턴스가 존재하며 덮어쓰기가 허용되지 않았습니다.",
+    msgOverwriteConfirm: "같은 이름의 인스턴스가 존재합니다. 덮어쓰시겠습니까?",
+
 };

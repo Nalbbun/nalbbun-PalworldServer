@@ -7,12 +7,14 @@ INSTANCE=$2
 PORT=$3
 QUERY=$4
 VERSION=$5
+OVERWRITE=${6:-false}
   
 echo "[INFO] Base Dir = $PALSERVER_BASE_DIR"
 echo "[INFO] app Base Dir = $BASE_DIR"
  
 BACKUP_BASE="$BASE_DIR/backup"
 INST_PATH="$INSTANCE_ROOT/$INSTANCE"
+COMPOSE_FILE="$SERVER_ROOT/docker-compose-$INSTANCE.yml"
 
 timestamp() {
   date +"%Y%m%d-%H%M%S"
@@ -25,13 +27,20 @@ case "$CMD" in
       exit 1
     fi
 
-    SAVED_PATH="$INST_PATH/$SAVE_DIR" 
+    if [[ -d "$INST_PATH" || -f "$COMPOSE_FILE" ]]; then
+      if [[ "$OVERWRITE" != "true" ]]; then
+        echo "[ERROR] Instance already exists: $INSTANCE"
+        exit 2
+      fi
+      echo "[WARN] Overwrite enabled. Removing existing instance..."
+      bash "$0" filedelete "$INSTANCE"
+    fi
 
+    SAVED_PATH="$INST_PATH/$SAVE_DIR"
     mkdir -p "$SAVED_PATH" 
+    chown -R ${PUID}:${PGID} "$INST_PATH" 
 
-chown -R ${PUID}:${PGID} "$INST_PATH" 
-
-REST_PORT=$((QUERY + PAL_REST_PORT_OFFSET))
+    REST_PORT=$((QUERY + PAL_REST_PORT_OFFSET))
 
 cat <<EOF > "$SERVER_ROOT/docker-compose-$INSTANCE.yml"
 version: "3.9"
@@ -46,7 +55,6 @@ services:
       - RESTAPI=$REST_PORT      
     networks:
       - $PAL_EXNETWORKS
-      - $PAL_INNETWORKS
     ports:
       - "$PORT:$PAL_GAME_PORT/udp"
       - "$QUERY:$PAL_QUERY_PORT/udp"
@@ -101,6 +109,22 @@ delete)
     rm -f "$COMPOSE_FILE"
 
     echo "[DELETE] completed: $INSTANCE"
+    ;; 
+
+filedelete)
+    if [[ -z "$INSTANCE" ]]; then
+      echo "Usage: paladmin file delete <instance>"
+      exit 1
+    fi
+
+    COMPOSE_FILE="$SERVER_ROOT/docker-compose-$INSTANCE.yml"
+
+    echo "[DELETE] instance file =$INSTANCE" 
+
+    echo "[DELETE] removing compose file"
+    rm -f "$COMPOSE_FILE"
+
+    echo "[DELETE] file completed: $INSTANCE"
     ;; 
 
   *)

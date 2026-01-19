@@ -176,6 +176,18 @@ class InstanceCreateRequest(BaseModel):
     port: str
     query: str
     version: str
+    overwrite: bool = False
+
+
+@router.get("/exists/{name}")
+def instance_exists(name: str, user=Depends(require_auth)):
+    if not re.match(r"^[a-zA-Z0-9_-]+$", name):
+        raise HTTPException(400, "Invalid instance name")
+
+    inst_path = os.path.join(INSTANCE_DIR, name)
+    compose = os.path.join(SERVER_ROOT, f"docker-compose-{name}.yml")
+
+    return {"exists": os.path.isdir(inst_path) or os.path.isfile(compose)}
 
 
 @router.post("/create")
@@ -185,7 +197,9 @@ def create_instance(req: InstanceCreateRequest, user=Depends(require_auth)):
     if not os.path.exists(script):
         raise HTTPException(500, "instance.sh not found")
 
-    cmd = f"bash {script} create {req.name} {req.port} {req.query} {req.version}"
+    overwrite_flag = "true" if req.overwrite else "false"
+
+    cmd = f"bash {script} create {req.name} {req.port} {req.query} {req.version}  {overwrite_flag}"
 
     log.info(f"[instances] create={script}/{cmd}")
 

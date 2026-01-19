@@ -11,7 +11,7 @@ Docker 기반 멀티 인스턴스 Palworld 서버를 CLI + Web UI로 관리하�
 
 🚀 멀티 Palworld 서버 인스턴스 관리
 
-🖥️ Web Admin UI (Dashboard / Metrics / Logs / Players)
+🖥️ Web Admin UI (Dashboard / Metrics / Logs / Players / Server Contorl)
 
 🔧 CLI 기반 인스턴스 생성/삭제 (paladmin)
 
