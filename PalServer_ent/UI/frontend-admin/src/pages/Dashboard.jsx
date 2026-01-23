@@ -15,16 +15,39 @@ import api from "../utils/api";
 import { safeCloseWS } from "../utils/ws";
 import { ROUTE_EVENTS, onRouteChange } from "../utils/routeEvents";
 
+// [추가] 새로고침 아이콘 (SVG)
+const RefreshIcon = ({ spin }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className={`w-5 h-5 ${spin ? "animate-spin" : ""}`}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+    />
+  </svg>
+);
+
 export default function Dashboard() {
   const { logout } = useAuth();
   const { t } = useLang();
+
   const [instances, setInstances] = useState([]);
   const [status, setStatus] = useState({});
+
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [message, setMessage] = useState("");
+
   const [createOpen, setCreateOpen] = useState(false);
   const pollingRef = useRef(null); 
   const [updating, setUpdating] = useState(false);
+  
   const [updateMsg, setUpdateMsg] = useState("");
   const [imgMngOpen, setImgMngOpen] = useState(false);  
   const [authForImg, setAuthForImg] = useState(false);  
@@ -92,7 +115,15 @@ export default function Dashboard() {
   const refreshAllStatus = () => {
     instances.forEach(loadStatus);
   };
-
+  
+// [추가] 수동 새로고침 핸들러
+  const handleManualRefresh = async () => {
+    if (refreshing) return;
+    setRefreshing(true); // 버튼만 뱅글뱅글 돌게 함
+    await loadInstances();    // 인스턴스 목록 갱신
+    await refreshAllStatus(); // 상태 갱신
+    setTimeout(() => setRefreshing(false), 500); // 너무 빨리 끝나면 어색하므로 0.5초 유지
+  };
   const openConfigWithAuth = (instance) => {
 	setConfirmConfig({ open: true, target: instance });
   };
