@@ -2,6 +2,7 @@ export default {
   tlLogin: "Nalbbun PalWorld Admin Login",
   tldashboard: "Nalbbun PalWorld Admin Dashboard",
   tlNotice: "Server Notice",
+  tlImageMng: "Instance Image Management",
 
   btnlogin: "Login",
   btndashboard: "Dashboard",
@@ -54,7 +55,7 @@ export default {
   labCurrentVersion: "Current version",
   labLatestUp: "Upload Version",
   labselectVersionDesc: "Select the PalWorld version to install on the server.",
-  labRepositoryList: "Repository List",
+  labRepositoryList: "Repository List", 
 
   msgNoticeInput: "Please enter the notice message to be displayed on the server",
   msgLoading: "Loading...",
@@ -113,4 +114,12 @@ export default {
   msgNoImages: "No images found.",
   msgBuildDesc: "* Builds a new Docker image from steamcmd. Takes several minutes.",
   msgCreatImage :"Create New Image",
+  msgFailedToLoadImages: "Failed to load images",
+  msgVersionFormat: "Version format must be v0.0.0",
+  msgConfirmBuild: "Build new image?",
+  msgBuilding: "Building Image...",
+  msgBuildingDesc: "This may take a while",
+  msgBuildComplete: "Build Complete!",
+  msgBuildFailed: "Build Failed. Check server logs.",
+  msgDeleteFailed: "Delete Failed",
 };

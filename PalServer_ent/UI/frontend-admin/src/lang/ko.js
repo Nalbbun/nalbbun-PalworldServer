@@ -2,6 +2,7 @@ export default {
     tlLogin: "Nalbbun PalWorld 관리자 로그인",
     tldashboard: "Nalbbun PalWorld 관리자 대시보드",
     tlNotice: "서버 공지",
+    tlImageMng: "인스턴스 이미지 관리",
 	
     btnlogin: "로그인",
     btndashboard: "대시보드",
@@ -54,7 +55,7 @@ export default {
     labCurrentVersion: "현재 버전",
 	labLatestUp: "버전 최신 업데이트",
     labselectVersionDesc: "서버에 설치할 PalWorld 버전을 선택하세요.",
-    labRepositoryList: "저장소 목록",
+    labRepositoryList: "저장소 목록", 
 	
     msgNoticeInput: "서버에 표시할 공지 메시지를 입력하세요",
     msgLoading: "로딩 중",   
@@ -106,5 +107,13 @@ export default {
     msgNoImages: "이미지가 없습니다.",
     msgBuildDesc: "* steamcmd로부터 새로운 도커 이미지를 빌드합니다. 몇 분 정도 소요될 수 있습니다.",
     msgCreatImage :"새 이미지 생성",
+    msgFailedToLoadImages: "이미지 불러오기 실패",
+    msgVersionFormat: "버전 형식은 v0.0.0 이어야 합니다",
+    msgConfirmBuild: "새 이미지를 빌드하시겠습니까?",
+    msgBuilding: "이미지 빌드 중...",
+    msgBuildingDesc: "이 작업은 시간이 걸릴 수 있습니다.",
+    msgBuildComplete: "빌드 완료 !",
+    msgBuildFailed: "빌드 실패. 서버 로그를 확인하세요.",
+    msgDeleteFailed: "삭제 실패",
 
 };

@@ -34,6 +34,7 @@ services:
     expose:
       - "8000"
     networks:
+      - pal-public-net
       - pal-private-net
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]

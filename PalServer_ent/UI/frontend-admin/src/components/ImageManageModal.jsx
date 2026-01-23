@@ -30,31 +30,31 @@ export default function ImageManageModal({ open, onClose }) {
       setLatest(res.latest || "");
     } catch (e) {
       console.error(e);
-      setMsg("Failed to load images");
+      setMsg(" "+ t("msgFailedToLoadImages") );
     }
   };
 
   const handleBuild = async () => {
     // 버전 포맷 검증
     if (!/^v\d+\.\d+\.\d+$/.test(newVersion)) {
-      alert("Version format must be v0.0.0");
+      alert(t("msgVersionFormat"));
       return;
     }
 
-    if (!window.confirm(`${t("msgConfirmBuild") || "Build new image?"} : ${newVersion}`)) {
+    if (!window.confirm(`${t("msgConfirmBuild")} : ${newVersion}`)) {
       return;
     }
 
     setLoading(true);
-    setMsg(`${t("msgBuilding") || "Building Image..."} (This may take a while)`);
+    setMsg(`${t("msgBuilding")} (${t("msgBuildingDesc")})`);
 
     try {
       await api.post("/images/build", { version: newVersion });
-      alert("Build Complete!");
+      alert(t("msgBuildComplete"));
       loadImages(); // 목록 갱신
       setNewVersion("v0.0.0");
     } catch (e) {
-      alert("Build Failed. Check server logs.");
+      alert(t("msgBuildFailed"));
     } finally {
       setLoading(false);
       setMsg("");
@@ -70,7 +70,7 @@ export default function ImageManageModal({ open, onClose }) {
       await api.post("/images/delete", { version });
       loadImages();
     } catch (e) {
-      alert("Delete Failed");
+      alert(t("msgDeleteFailed"));
     } finally {
       setLoading(false);
     }
@@ -85,7 +85,7 @@ export default function ImageManageModal({ open, onClose }) {
         {/* HEADER */}
         <div className="p-4 border-b border-gray-700 flex justify-between items-center">
           <h2 className="text-xl font-bold text-white">
-            {t("tlImageMng") || "Image Management"}
+            {t("tlImageMng")}
           </h2>
           <button onClick={onClose} className="text-gray-400 hover:text-white text-2xl">
             &times;
