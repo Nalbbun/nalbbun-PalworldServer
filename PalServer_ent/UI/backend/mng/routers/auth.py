@@ -169,9 +169,18 @@ def refresh(data: dict):
 
 
 @router.post("/verify-password")
-def verify_password_api(body: PasswordVerifyReq, user=Depends(require_auth)):
+def verify_password_api(
+    body: PasswordVerifyReq,
+    username: str = Depends(require_auth),
+    db: Session = Depends(get_db),
+):
+    # 1. DB에서 사용자 정보(해시된 비번 포함) 조회
+    db_user = get_user_by_username(db, username)
 
-    ok = verify_password(user, body.password)
+    if not db_user:
+        return {"verified": False, "reason": "user_not_found"}
+
+    ok = verify_password(body.password, db_user.password)
 
     return {
         "verified": ok,
