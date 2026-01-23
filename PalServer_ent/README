@@ -1,195 +1,123 @@
-PalServer_ent – DEV 2.0 Architecture README
-1. 개요 (Overview)
+PalServer Enterprise (PalServer_ent)
+PalServer_ent는 리눅스(Debian/Ubuntu) 환경에서 Docker를 기반으로 Palworld Dedicated Server를 구축, 운영, 모니터링하기 위한 올인원 엔터프라이즈 솔루션입니다. 강력한 CLI 도구(paladmin)와 직관적인 웹 대시보드를 통해 서버의 라이프사이클을 완벽하게 제어합니다.
 
-PalServer_ent DEV 2.0 은
-Palworld Enterprise Server를 CLI + Server + Web UI 구조로 명확히 분리한 운영 자동화 플랫폼입니다.
+🏗 System Architecture & Network
+이 시스템은 보안을 위해 Public과 Private 두 개의 Docker 네트워크로 격리되어 운영됩니다.
 
-DEV1.x 대비 주요 변경 방향은 다음과 같습니다.
+Host System: Linux (Ubuntu 20.04+ / Debian)
 
-🔹 공통 로직(cmm) / 서버(server) / UI(UI) 완전 분리
+Network Layer:
 
-🔹 CLI(paladmin) 중심 운영 → API/UI 연계 확장
+pal-public-net: 외부와 통신하는 Web UI 및 Proxy 컨테이너가 위치합니다.
 
-🔹 오프라인 이미지 빌드 및 업데이트 구조 명확화
+pal-private-net (Internal): DB 및 백엔드 서비스 간의 통신을 담당하며 외부 접근이 차단됩니다.
 
-🔹 운영자(Admin) / 관제자(Operator) UI 분리
+Control Layer:
 
-2. 전체 디렉토리 구조
-PalServer_ent
-├── install.sh
-├── uninstall.sh
-├── test.sh
-├── winTolinuxFile.sh
-│
-├── cmm/                # 공통(Common) 영역 – CLI & Core
-├── server/             # 실제 Palworld 서버 자원
-├── UI/                 # Web UI (Backend + Frontend + Proxy)
-├── log/                # 설치 및 운영 로그
-└── README
+CLI: /usr/local/bin/paladmin (시스템 전역 명령어로 등록됨)
 
-3. 디렉토리별 상세 역할
-3.1 cmm/ (Common Core)
+Web UI: React(Frontend) + Python(Backend) + Nginx
 
-DEV2.0의 핵심
-모든 운영 자동화의 중심 영역
+🛠 Installation Guide
+설치 스크립트는 Docker 설치 여부 확인부터 네트워크 구성, 웹 UI 배포까지 자동으로 수행합니다.
 
-cmm
-├── bin/
-│   └── paladmin.sh
-├── completion/
-│   └── paladmin.bash
-├── controllers/
-│   ├── instance.sh
-│   ├── update.sh
-│   ├── rollback.sh
-│   ├── backup.sh
-│   └── cache_clean.sh
-├── env/
-│   ├── env.load.sh
-│   └── paladmin.env
-└── make-pal-images/
-    ├── build.sh
-    ├── Dockerfile
-    ├── entrypoint.sh
-    └── README
+1. Prerequisites (사전 요구사항)
+OS: Debian 또는 Ubuntu 계열 리눅스 (필수)
 
-역할 요약
-영역	설명
-bin	paladmin CLI 진입점
-completion	bash 자동완성
-controllers	인스턴스 / 업데이트 / 백업 / 롤백 제어
-env	전역 환경 변수 로딩
-make-pal-images	Palworld 서버 이미지 빌드 (offline 지원)
+Account: sudo 권한이 있는 사용자
 
-✔ DEV2.0에서 controllers는 API/CLI/UI 공통으로 사용되는 “운영 엔진”
+Ports: 8443 (Web UI), 8211 (Game UDP) 오픈 필요
 
-3.2 server/ (Runtime Data 영역)
-server
-├── instances/
-│   └── DefaultPalWorldSettings.ini
-├── backup/
-│   └── Saved-xxxx.zip
-└── repo/
+2. Setup Steps
+Repository Clone
 
-역할
+Bash
 
-실제 Palworld 게임 데이터
+git clone <repository-url>
+cd PalServer_ent
+Run Installer 설치 스크립트에 실행 권한을 부여하고 실행합니다.
 
-컨테이너 외부 볼륨 기준
+Bash
 
-업데이트/롤백 시에도 절대 삭제되지 않는 영역
+chmod +x install.sh
+./install.sh
+Installation Process (Interactive) 스크립트 실행 중 다음과 같은 작업이 진행됩니다:
 
-✔ 운영 중 가장 보호되어야 할 영역
+Dependency Check: Docker 및 Docker Compose가 없으면 자동으로 설치합니다.
 
-3.3 UI/ (Web Control Plane)
-UI
-├── docker-compose.yml
-├── backend/
-├── frontend-admin/
-├── frontend-operator/
-├── proxy/
-└── cert/
+CLI Setup: paladmin 명령어를 시스템 전역(/usr/local/bin)에 등록합니다.
 
-3.3.1 Backend (FastAPI)
-backend
-├── main.py
-├── requirements.txt
-├── users.json
-└── mng/
-    ├── auth.py
-    ├── instance_api.py
-    ├── config_api.py
-    ├── logs.py
-    ├── metrics.py
-    ├── server_api.py
-    └── docker_utils.py
+Image Build (Optional): "Do you want to build Palworld server image now?" 질문에 y를 입력하면 커스텀 서버 이미지를 빌드합니다.
 
+Network Init: pal-public-net, pal-private-net 네트워크를 생성합니다.
 
-역할
+Web UI Start: 관리자 대시보드 컨테이너를 구동합니다.
 
-paladmin controller를 감싸는 REST API
+Completion (Optional): 명령어 자동완성 기능을 등록합니다.
 
-인증 / 인스턴스 제어 / 로그 / 메트릭 제공
+Verification 설치가 완료되면 아래와 같은 정보가 출력됩니다.
 
-CLI → API → UI 확장 구조
+Plaintext
 
-3.3.2 Frontend 분리 전략
-🔹 frontend-admin
+[SUCCESS] Installation completed successfully.
+- Admin CLI : paladmin
+- Web UI    : http://<server-ip>:8443
+💻 Usage
+1. Web Dashboard
+브라우저를 열고 http://<YOUR_SERVER_IP>:8443으로 접속합니다.
 
-서버 생성/삭제
+Dashboard: 서버 상태(CPU/RAM), 플레이어 접속 현황 확인.
 
-설정 변경
+Instance Mng: 서버 인스턴스 생성, 시작, 중지.
 
-업데이트/롤백
+Settings: PalWorldSettings.ini 웹 에디터 제공.
 
-위험 옵션(Danger Option) 제어
+2. CLI Tool (paladmin)
+설치 시 등록된 paladmin 명령어를 터미널에서 직접 사용할 수 있습니다.
 
-🔹 frontend-operator
+Bash
 
-상태 모니터링
+# 사용 가능한 명령어 확인
+paladmin --help
 
-로그/메트릭 확인
+# 주요 명령어 (예시)
+paladmin start <instance_name>   # 특정 인스턴스 시작
+paladmin backup <instance_name>  # 수동 백업 실행
+paladmin update                  # 서버 업데이트 수행
+🗑 Uninstallation
+시스템을 제거해야 할 경우 uninstall.sh를 사용합니다. 데이터 보존 정책에 따라 안전하게 삭제됩니다.
 
-읽기 전용 관제 UI
+Bash
 
-✔ DEV2.0부터 권한 기반 UI 분리
+./uninstall.sh
+삭제되는 항목:
 
-3.3.3 proxy (Nginx)
-proxy
-└── nginx.conf
+Web UI 관련 컨테이너 및 이미지 (Frontend, Backend, Nginx).
 
+paladmin CLI 실행 파일.
 
-Backend / Frontend Reverse Proxy
+Docker Networks (pal-public-net, pal-private-net).
 
-HTTPS 종단점
+보존되는 항목 (Safe):
 
-3.3.4 cert
-cert
-├── generate-cert.sh
-└── certs/
-    ├── selfsigned.crt
-    └── selfsigned.key
+server/instances/ 하위의 게임 세이브 데이터 및 설정 파일은 삭제되지 않습니다.
 
+Palworld 서버 Docker 이미지는 삭제 여부를 선택할 수 있습니다 ("Remove paladmin-related docker images?").
 
-DEV / 폐쇄망 환경용 Self-signed 인증서
+📂 Directory Structure
+Plaintext
 
-향후 Let’s Encrypt 교체 가능
-
-4. 실행 흐름 (Operation Flow)
-4.1 설치
-install.sh
- └─ cmm/env 로딩
- └─ paladmin 설치
- └─ UI docker-compose 기동
-
-4.2 서버 운영
-[CLI]
-paladmin instance create/update/rollback
-        ↓
-[controllers]
-instance.sh / update.sh
-        ↓
-[Docker]
-Palworld Container
-        ↓
-[server/instances]
-실제 게임 데이터 반영
-
-4.3 Web UI 제어
-Browser
- ↓
-Frontend (Admin / Operator)
- ↓
-Backend API
- ↓
-cmm/controllers
- ↓
-Docker / server
-
-5. DEV1.x 대비 핵심 변화 요약
-항목	DEV1.x	DEV2.0
-구조	혼합	완전 분리
-CLI	단독	API/UI 연계
-UI	단일	Admin / Operator
-이미지	온라인 중심	Offline 지원
-확장성	낮음	높음
+PalServer_ent/
+├── cmm/                  # Core Management Modules
+│   ├── bin/paladmin.sh   # CLI 실행 스크립트 (Source)
+│   ├── controllers/      # 백업, 업데이트, 롤백 로직 스크립트
+│   └── make-pal-images/  # 커스텀 Docker 이미지 빌더
+├── UI/                   # Web Interface
+│   ├── backend/          # Python API Server
+│   ├── frontend-admin/   # React Admin Dashboard
+│   └── docker-compose.yml# UI 컨테이너 오케스트레이션
+├── server/
+│   ├── instances/        # [중요] 게임 데이터 저장소 (삭제 안됨)
+│   └── backup/           # 백업 파일 저장소
+├── install.sh            # 메인 설치 스크립트
+└── uninstall.sh          # 메인 삭제 스크립트

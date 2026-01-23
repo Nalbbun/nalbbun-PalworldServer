@@ -1,15 +1,16 @@
 from mng.com import INSTANCE_DIR, SERVER_ROOT, CONTROLLER_DIR, log, run_cmd
-from mng.server_api import get_server_info
+from mng.server_api import get_server_info, get_svrSave
 from mng.docker_utils import (
     is_instance_stop,
     is_instance_start,
     is_instance_state,
+    is_instance_running,
 )
 from mng.auth import require_auth
 from fastapi import HTTPException, Depends, APIRouter
 import os, re
 from pydantic import BaseModel
-
+import time
 
 router = APIRouter(prefix="/api/instance", tags=["instance"])
 
@@ -192,6 +193,10 @@ def instance_exists(name: str, user=Depends(require_auth)):
 
 @router.post("/create")
 def create_instance(req: InstanceCreateRequest, user=Depends(require_auth)):
+    # 1. 보안 검증: 인스턴스 이름에 특수문자 포함 여부 확인
+    if not re.match(r"^[a-zA-Z0-9_-]+$", req.name):
+        raise HTTPException(400, "Invalid instance name")
+
     script = os.path.join(CONTROLLER_DIR, "instance.sh")
 
     if not os.path.exists(script):
@@ -199,10 +204,10 @@ def create_instance(req: InstanceCreateRequest, user=Depends(require_auth)):
 
     overwrite_flag = "true" if req.overwrite else "false"
 
-    cmd = f"bash {script} create {req.name} {req.port} {req.query} {req.version}  {overwrite_flag}"
+    # 2. 쉘 스크립트 실행
+    cmd = f"bash {script} create {req.name} {req.port} {req.query} {req.version} {overwrite_flag}"
 
     log.info(f"[instances] create={script}/{cmd}")
-
     output = run_cmd(cmd)
 
     return {"status": "created", "output": output}
@@ -243,10 +248,34 @@ def update_offline(req: InstanceUpdateRequest, user=Depends(require_auth)):
 
 @router.post("/{name}/backup")
 def backup_instance(name: str, user=Depends(require_auth)):
+    # 1. [REST API] 메모리 데이터 강제 저장 (Save)
+    # 서버가 켜져 있을 때만 저장을 시도합니다.
+    if is_instance_running(name):
+        try:
+            log.info(f"[backup] Triggering REST API save for {name}...")
+            # server_api.py의 get_svrSave는 /v1/api/save (REST)를 호출합니다.
+            get_svrSave(name)
+
+            # Palworld가 디스크에 쓰는 시간을 벌어줍니다 (비동기 처리됨)
+            time.sleep(5)
+            log.info(f"[backup] Save request sent. Waiting completed.")
+
+        except Exception as e:
+            # 저장이 실패하더라도(서버 응답 없음 등) 물리 백업은 시도할지 결정 필요
+            # 여기서는 경고만 남기고 백업을 강행합니다.
+            log.warning(f"[backup] REST Save failed (server might be busy): {e}")
+    else:
+        log.info(f"[backup] Instance {name} is stopped. Skipping memory save.")
+
+    # 2. [Shell] 파일 시스템 백업 실행
     script = os.path.join(CONTROLLER_DIR, "backup.sh")
-    cmd = f"bash {script} {name} "
 
-    log.info(f"[instances] backup={cmd}")
+    # 쉘 스크립트에 인자 전달
+    cmd = f"bash {script} {name}"
 
+    log.info(f"[instances] executing backup script={cmd}")
+
+    # 실제 파일 복사 (cp -r)
     result = run_cmd(cmd)
-    return {"result": result}
+
+    return {"result": result, "type": "REST_API_SAFE_BACKUP"}
