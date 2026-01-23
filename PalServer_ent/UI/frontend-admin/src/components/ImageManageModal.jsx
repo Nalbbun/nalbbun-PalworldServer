@@ -41,18 +41,24 @@ export default function ImageManageModal({ open, onClose }) {
       return;
     }
 
-    if (!window.confirm(`${t("msgConfirmBuild")} : ${newVersion}`)) {
+    if (!window.confirm(`${t("msgNewImgConfirmBuild")} : ${newVersion}`)) {
       return;
     }
 
     setLoading(true);
+
     setMsg(`${t("msgBuilding")} (${t("msgBuildingDesc")})`);
 
     try {
+
       await api.post("/images/build", { version: newVersion });
+
       alert(t("msgBuildComplete"));
+
       loadImages(); // 목록 갱신
+
       setNewVersion("v0.0.0");
+      
     } catch (e) {
       alert(t("msgBuildFailed"));
     } finally {
@@ -62,7 +68,7 @@ export default function ImageManageModal({ open, onClose }) {
   };
 
   const handleDelete = async (version) => {
-    if (!window.confirm(`${t("msgConfirmDelete") || "Delete image?"} : ${version}`)) {
+    if (!window.confirm(`${t("msgImgConfirmDelete")} : ${version}`)) {
       return;
     }
     setLoading(true);
@@ -116,7 +122,7 @@ export default function ImageManageModal({ open, onClose }) {
               </button>
             </div>
             <p className="text-xs text-gray-500 mt-2">
-              {t("msgBuildDesc")}
+              {t("msgImgBuildDesc")}
             </p>
           </div>
 
