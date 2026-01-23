@@ -19,6 +19,7 @@ export default {
     btnconfig: "설정",
     btnlogout: "로그아웃",
     btnCancel: "취소",
+    btnDelete: "삭제",
     btnCreate: "생성",
     btnOK: "확인",
     btnapply: "서버재시작",
@@ -26,6 +27,8 @@ export default {
     btndefault: "기본 설정 불러오기",
     btnNotice: "서버 공지",
     btnduplicateCheck: "중복 확인",
+    btnImgMng: "이미지 관리",
+    btnImgBuild: "빌드",
 	
     labid: "아이디",
     labConfig: "서버 설정 정보",
@@ -41,7 +44,8 @@ export default {
 	labLatestUp: "최신업데이트",
     labPorts: "포트",
     labQuery: "쿼리",
-    labVersion: "버전", 
+    labVersion: "버전",
+    labCreatTime: "생성 시간",
     labUsage: "사용량",
     labmetrics: "자원 정보",
     labplayers: "플레이어",
@@ -50,6 +54,7 @@ export default {
     labCurrentVersion: "현재 버전",
 	labLatestUp: "버전 최신 업데이트",
     labselectVersionDesc: "서버에 설치할 PalWorld 버전을 선택하세요.",
+    labRepositoryList: "저장소 목록",
 	
     msgNoticeInput: "서버에 표시할 공지 메시지를 입력하세요",
     msgLoading: "로딩 중",   
@@ -98,5 +103,8 @@ export default {
     msgDuplicateCheckFirst: "중복 확인을 먼저 진행하세요.",
     msgNoOverwrite: "중복 인스턴스가 존재하며 덮어쓰기가 허용되지 않았습니다.",
     msgOverwriteConfirm: "같은 이름의 인스턴스가 존재합니다. 덮어쓰시겠습니까?",
+    msgNoImages: "이미지가 없습니다.",
+    msgBuildDesc: "* steamcmd로부터 새로운 도커 이미지를 빌드합니다. 몇 분 정도 소요될 수 있습니다.",
+    msgCreatImage :"새 이미지 생성",
 
 };

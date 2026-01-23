@@ -9,6 +9,7 @@ from mng.routers.metrics import router as metrics_router
 from mng.routers.config import router as config_router
 from mng.routers.instance import router as instance_router
 from mng.routers.server import router as server_router
+from mng.routers.images import router as images_router
 from mng.db.db_init import init_db
 
 app = FastAPI()
@@ -36,3 +37,4 @@ app.include_router(logs_router)
 app.include_router(metrics_router)
 app.include_router(config_router)
 app.include_router(server_router)
+app.include_router(images_router)

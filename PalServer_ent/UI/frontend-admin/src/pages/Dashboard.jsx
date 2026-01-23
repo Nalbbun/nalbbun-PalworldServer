@@ -25,6 +25,8 @@ export default function Dashboard() {
   const pollingRef = useRef(null); 
   const [updating, setUpdating] = useState(false);
   const [updateMsg, setUpdateMsg] = useState("");
+  const [imgMngOpen, setImgMngOpen] = useState(false);  
+  const [authForImg, setAuthForImg] = useState(false);  
   const nav = useNavigate(); 
   
   const [versionModal, setVersionModal] = useState({
@@ -184,6 +186,11 @@ export default function Dashboard() {
 	  }
 	};
 
+	// 이미지 관리 버튼 클릭 핸들러
+  const handleImageMngClick = () => {
+    // 설정 페이지처럼 비밀번호 확인 모달 오픈
+    setAuthForImg(true);
+  };
   /* ==================== EFFECT ==================== */
   useEffect(() => {
 	  if (window.__ACTIVE_WS__) {
@@ -242,6 +249,11 @@ export default function Dashboard() {
         <div className="flex gap-3">
           <LangToggle /> 
           <ThemeToggle />
+			<button
+            onClick={handleImageMngClick}
+            className="px-4 py-2 bg-indigo-600 rounded hover:bg-indigo-500 text-white font-bold" >
+            {t("btnImgMng")}
+          </button>
           <button
             onClick={() => setCreateOpen(true)}
             className="px-4 py-2 bg-blue-600 rounded hover:bg-blue-500"
@@ -314,6 +326,21 @@ export default function Dashboard() {
 			nav(`/config/${confirmConfig.target}`);
 			setConfirmConfig({ open: false, target: null });
 		}}
+		/>
+		{/* 1. 비밀번호 확인 모달 (이미지 관리용) */}
+		<PasswordConfirmModal
+			open={authForImg}
+			onClose={() => setAuthForImg(false)}
+			onSuccess={() => {
+			setAuthForImg(false); // 인증 모달 닫고
+			setImgMngOpen(true);  // 관리 모달 열기
+			}}
+		/>
+
+		{/* 2. 이미지 관리 모달 */}
+		<ImageManageModal
+			open={imgMngOpen}
+			onClose={() => setImgMngOpen(false)}
 		/>
     </div>
   );

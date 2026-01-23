@@ -19,6 +19,7 @@ export default {
   btnconfig: "Configuration",
   btnlogout: "Logout",
   btnCancel: "Cancel",
+  btnDelete: "Delete",
   btnCreate: "Create",
   btnOK: "OK",
   btnapply: "Restart Server",
@@ -26,6 +27,8 @@ export default {
   btndefault: "Load Default Settings",
   btnNotice: "Server Notice",
   btnduplicateCheck: "Duplicate Check",
+  btnImgMng: "Manage Images",
+  btnImgBuild: "Build",
 
   labid: "Username",
   labConfig: "Server Config Info",
@@ -42,6 +45,7 @@ export default {
   labPorts: "Port",
   labQuery: "Query",
   labVersion: "Version",
+  labCreatTime : "Created Time",
   labUsage: "Usage",
   labmetrics: "Resource Metrics",
   labplayers: "Players",
@@ -50,6 +54,7 @@ export default {
   labCurrentVersion: "Current version",
   labLatestUp: "Upload Version",
   labselectVersionDesc: "Select the PalWorld version to install on the server.",
+  labRepositoryList: "Repository List",
 
   msgNoticeInput: "Please enter the notice message to be displayed on the server",
   msgLoading: "Loading...",
@@ -105,4 +110,7 @@ export default {
   msgDuplicateCheckFirst: "Please check for duplicates first.",
   msgNoOverwrite: "Duplicate instance exists and overwriting is not allowed.",
   msgOverwriteConfirm: "An instance with the same name exists. Do you want to overwrite it?",
+  msgNoImages: "No images found.",
+  msgBuildDesc: "* Builds a new Docker image from steamcmd. Takes several minutes.",
+  msgCreatImage :"Create New Image",
 };
