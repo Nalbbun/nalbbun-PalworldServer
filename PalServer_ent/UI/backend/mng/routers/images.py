@@ -70,7 +70,7 @@ def build_image(req: ImageReq, user=Depends(require_auth)):
         raise HTTPException(400, "Invalid version format (ex: v1.0.0)")
 
     # build.sh
-    cmd = f"cd {MAKE_IMG_DIR} && /bin/bash build.sh {version}"
+    cmd = f"cd {MAKE_IMG_DIR} && /bin/bash build.sh {version} -y"
 
     log.info(f"[IMAGE] Build start: {version} by {user}")
 
