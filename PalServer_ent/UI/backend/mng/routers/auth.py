@@ -171,16 +171,13 @@ def refresh(data: dict):
 @router.post("/verify-password")
 def verify_password_api(
     body: PasswordVerifyReq,
-    username: str = Depends(require_auth),
-    db: Session = Depends(get_db),
+    user=Depends(require_auth),
 ):
-    # 1. DB에서 사용자 정보(해시된 비번 포함) 조회
-    db_user = get_user_by_username(db, username)
+    # 1. require_auth가 이미 유저를 찾아왔으므로,
+    #    get_user_by_username()을 다시 호출할 필요가 없습니다. (코드 삭제)
 
-    if not db_user:
-        return {"verified": False, "reason": "user_not_found"}
-
-    ok = verify_password(body.password, db_user.password)
+    # 2. 바로 검증 수행 (user.password에는 DB의 해시값이 들어있습니다)
+    ok = verify_password(body.password, user.password)
 
     return {
         "verified": ok,
