@@ -6,3 +6,4 @@ passlib
 websockets
 wsproto
 requests
+sqlalchemy

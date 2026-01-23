@@ -1,14 +1,17 @@
-from mng.com import log
-from datetime import datetime, timedelta
 from fastapi import HTTPException, Header, APIRouter, Depends
 from pydantic import BaseModel
 from jose import JWTError, jwt
 import json, os
+from sqlalchemy.orm import Session
+from datetime import datetime, timedelta
+
+from mng.core.config import log
+from mng.db.database import get_db
+from mng.db.db_crud import get_user_by_username, verify_password
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-USER_DB = f"/app/users.json"
 
 # =========================
 # JWT CONFIG (단일 소스)
@@ -25,40 +28,6 @@ REFRESH_TOKEN_EXPIRE_DAYS = 7
 
 class PasswordVerifyReq(BaseModel):
     password: str
-
-
-# ---------------------------
-# User DB Loader
-# ---------------------------
-def load_users():
-    if not os.path.exists(USER_DB):
-        raise RuntimeError(f"User DB missing: {USER_DB}")
-
-    with open(USER_DB, "r") as f:
-        return json.load(f)
-
-
-# ---------------------------
-# Authentication
-# ---------------------------
-def authenticate(username: str, password: str):
-    users = load_users()
-    for user in users:
-        ## log.info(
-        ##     f"[AUTH DEBUG] user={user['username']} "
-        ##     f"db_pw=[{user['password']}] input_pw=[{password}]"
-        ## )
-        if user["username"] == username and user["password"] == password:
-            return user
-    return None
-
-
-def verify_password(username: str, password: str) -> bool:
-    users = load_users()
-    for user in users:
-        if user["username"] == username and user["password"] == password:
-            return True
-    return False
 
 
 # ---------------------------
@@ -130,7 +99,7 @@ def verify_refresh(token: str) -> str | None:
 # ---------------------------
 # Auth Dependency
 # ---------------------------
-def require_auth(authorization: str = Header(None)):
+def require_auth(authorization: str = Header(None), db: Session = Depends(get_db)):
     #    log.info(f"[AUTH] Authorization Header = {authorization}")
 
     if not authorization:
@@ -142,13 +111,17 @@ def require_auth(authorization: str = Header(None)):
         raise HTTPException(status_code=401, detail="Invalid auth scheme")
 
     token = authorization.split(" ", 1)[1]
-    user = verify_access(token)
+    userToken = verify_access(token)
 
-    if not user:
+    if not userToken:
         log.warning("[AUTH] Token verification failed")
         raise HTTPException(status_code=401, detail="Invalid token")
 
-    #    log.info(f"[AUTH] Authenticated user={user}")
+    user = get_user_by_username(db, userToken)
+
+    if not user:
+        raise HTTPException(status_code=401, detail="User not found")
+
     return user
 
 
@@ -156,13 +129,16 @@ def require_auth(authorization: str = Header(None)):
 # Auth API
 # ---------------------------
 @router.post("/login")
-def login(data: dict):
+def login(data: dict, db: Session = Depends(get_db)):
     username = data.get("username")
     password = data.get("password")
 
-    user = authenticate(username, password)
-    if not user:
+    user = get_user_by_username(db, username)
+
+    if not user or not verify_password(password, user.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    log.info(f"[Login] User '{username}' logged in.")
 
     return {
         "access_token": create_access_token(username),
@@ -204,6 +180,6 @@ def verify_password_api(body: PasswordVerifyReq, user=Depends(require_auth)):
 
 
 @router.post("/logout")
-def logout():
-    #
+def logout(user=Depends(require_auth)):
+    log.info(f"[logout] User '{user}' logged out.")
     return {"status": "success"}

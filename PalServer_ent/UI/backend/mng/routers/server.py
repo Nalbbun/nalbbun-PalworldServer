@@ -1,15 +1,15 @@
-from mng.com import log, INSTANCE_DIR
-from mng.docker_utils import is_instance_running
-from mng.auth import require_auth
-from mng.config_api import parse_option_settings
 from fastapi import HTTPException, Depends, APIRouter
 from requests.auth import HTTPBasicAuth
 from pydantic import BaseModel
 import requests, os
 
-router = APIRouter(prefix="/api/server", tags=["server"])
+from mng.core.config import log, INSTANCE_DIR, ADIM_USERNAME
+from mng.utils.docker import is_instance_running
+from mng.routers.auth import require_auth
+from mng.routers.config import parse_option_settings
 
-ADIM_USERNAME = "admin"
+
+router = APIRouter(prefix="/api/server", tags=["server"])
 
 
 class NoticeRequest(BaseModel):
@@ -46,7 +46,7 @@ def get_notice(instance: str, message: str):
     password = get_admin_password(instance)
     url = get_pal_rest_url(instance, "announce")
 
-    # print(f"[announce URL] = {url} {ADIM_USERNAME} {password}")
+    log.debug(f"[announce URL] = {url}")
 
     resp = requests.post(
         url,
@@ -62,7 +62,7 @@ def get_notice(instance: str, message: str):
     )
 
     resp.raise_for_status()
-    # Palworld returns plain 'true'
+
     return {"ok": True, "raw": resp.text}
 
 
@@ -70,7 +70,7 @@ def get_players(instance: str):
     password = get_admin_password(instance)
     url = get_pal_rest_url(instance, "players")
 
-    # print(f"[players URL] = {url} {ADIM_USERNAME} {password}")
+    log.debug(f"[players URL] = {url}")
 
     resp = requests.get(
         url,
@@ -81,9 +81,6 @@ def get_players(instance: str):
         },
         timeout=3,
     )
-
-    # print(f"[players status] = {resp.status_code}")
-    # print(f"[players body] = {resp.text}")
 
     resp.raise_for_status()
     return resp.json()
@@ -93,7 +90,7 @@ def get_server_info(instance: str):
     password = get_admin_password(instance)
     url = get_pal_rest_url(instance, "info")
 
-    # print(f"[info URL] = {url} {ADIM_USERNAME} {password}")
+    log.debug(f"[info URL] = {url}")
 
     resp = requests.get(
         url,
@@ -105,9 +102,6 @@ def get_server_info(instance: str):
         timeout=3,
     )
 
-    # print(f"[info status] = {resp.status_code}")
-    # print(f"[info body] = {resp.text}")
-
     resp.raise_for_status()
     return resp.json()
 
@@ -116,7 +110,7 @@ def get_svrSave(instance: str):
     password = get_admin_password(instance)
     url = get_pal_rest_url(instance, "save")
 
-    print(f"[save URL] = {url} {ADIM_USERNAME} {password}")
+    log.debug(f"[save URL] = {url}")
 
     try:
         resp = requests.post(
@@ -130,13 +124,17 @@ def get_svrSave(instance: str):
             stream=True,
         )
     except requests.exceptions.RequestException as e:
-        print(f"[save warning] protocol error ignored: {e}")
+        log.warning(f"[save warning] protocol error ignored: {e}")
         return {"result": "sent"}
 
     # status_code 접근만 (body 읽지 않음)
-    print(f"[save status] = {resp.status_code}")
-
+    log.debug(f"[save status] = {resp.status_code}")
     return {"result": "sent"}
+
+
+# ==========================
+# API Endpoints
+# ==========================
 
 
 @router.get("/players/{name}")
