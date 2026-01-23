@@ -24,15 +24,7 @@ export default function App() {
               <Dashboard />
             </ProtectedRoute>
           }
-        />        
-        <Route
-          path="/images"
-          element={
-            <ProtectedRoute>
-              <ImageManager />
-            </ProtectedRoute>
-          }
-        />
+        /> 
         <Route
           path="/logs/:instance"
           element={
@@ -41,7 +33,6 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/metrics/:instance"
           element={
