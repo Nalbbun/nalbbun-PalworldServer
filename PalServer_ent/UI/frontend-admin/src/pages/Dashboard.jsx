@@ -8,6 +8,7 @@ import InstanceCreateModal from "../components/InstanceCreateModal";
 import BlockingModal from "../components/BlockingModal";
 import LoadingOverlay from "../components/LoadingOverlay";
 import PasswordConfirmModal from "../components/PasswordConfirmModal";
+import ImageManageModal from "../components/ImageManageModal";
 import { useLang } from "../context/LangContext";
 import LangToggle from "../components/LangToggle";
 import api from "../utils/api"; 
