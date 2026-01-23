@@ -1,13 +1,14 @@
-from mng.com import log
-from mng.auth import verify_access
 import subprocess, asyncio
 from fastapi import WebSocket, WebSocketDisconnect, APIRouter
+from mng.core.config import log
+from mng.routers.auth import verify_access
 
 router = APIRouter(prefix="/api/ws/logs", tags=["logs"])
 
 # =========================================================
 # Logs WebSocket (Ring-buffer FE )
-# ========================================================= 
+# =========================================================
+
 
 @router.websocket("/{name}")
 async def ws_logs(ws: WebSocket, name: str):
