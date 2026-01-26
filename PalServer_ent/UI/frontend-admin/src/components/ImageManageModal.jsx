@@ -186,7 +186,7 @@ export default function ImageManageModal({ open, onClose }) {
             onClick={onClose}
             className="px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded transition"
           >
-            {t("btnCancel")}
+            {t("btnClose")}
           </button>
         </div>
       </div>

@@ -33,6 +33,10 @@ INSTANCE_DIR = os.path.join(SERVER_ROOT, "instances")
 
 ADIM_USERNAME = "admin"
 
+SECRET_KEY = os.getenv("SECRET_KEY", "nalbbun-palworld-secret-key")
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
+REFRESH_TOKEN_EXPIRE_DAYS = 7
 
 # print("[BOOT] Backend starting...")
 # print(f"[BOOT] BASE_DIR      = {BASE_DIR}")

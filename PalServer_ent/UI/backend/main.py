@@ -18,7 +18,7 @@ app = FastAPI()
 @app.on_event("startup")
 def startup_event():
     # 분리된 초기화 로직 호출
-    init_db("/app/users.json")
+    init_db("/app/mng/db/users.json")
 
 
 # CORS

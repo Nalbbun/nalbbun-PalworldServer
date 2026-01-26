@@ -5,25 +5,24 @@ import json, os
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 
-from mng.core.config import log
+from mng.core.config import (
+    log,
+    SECRET_KEY,
+    ALGORITHM,
+    ACCESS_TOKEN_EXPIRE_MINUTES,
+    REFRESH_TOKEN_EXPIRE_DAYS,
+)
 from mng.db.database import get_db
 from mng.db.db_crud import get_user_by_username, verify_password
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
 # =========================
 # JWT CONFIG (단일 소스)
 # =========================
-SECRET_KEY = os.getenv("SECRET_KEY", "nalbbun-palworld-secret-key")
-ALGORITHM = "HS256"
 
 if not isinstance(SECRET_KEY, str):
     raise RuntimeError("SECRET_KEY must be a string")
-
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-REFRESH_TOKEN_EXPIRE_DAYS = 7
 
 
 class PasswordVerifyReq(BaseModel):
