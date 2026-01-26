@@ -23,6 +23,7 @@ export default {
   btnDelete: "Delete",
   btnCreate: "Create",
   btnOK: "OK",
+  btnClose: "Close",
   btnapply: "Restart Server",
   btnsave: "Save",
   btndefault: "Load Default Settings",

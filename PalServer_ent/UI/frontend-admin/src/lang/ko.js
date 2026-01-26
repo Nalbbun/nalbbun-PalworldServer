@@ -23,6 +23,7 @@ export default {
     btnDelete: "삭제",
     btnCreate: "생성",
     btnOK: "확인",
+    btnClose: "닫기",
     btnapply: "서버재시작",
     btnsave: "저장",
     btndefault: "기본 설정 불러오기",
