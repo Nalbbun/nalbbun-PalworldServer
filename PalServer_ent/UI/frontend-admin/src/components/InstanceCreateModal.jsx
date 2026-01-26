@@ -78,15 +78,17 @@ export default function InstanceCreateModal({ open, onClose, onCreated }) {
     await api.post("/instance/create", { name, port , query , version, overwrite });
     onCreated();
     onClose();
-  };
+  }; 
+
+  const inputClass = "w-full mb-3 p-2 rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-colors";
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
-      <div className="bg-gray-800 p-6 rounded w-96">
-        <h2 className="text-xl font-bold mb-4">{t("labCreateIns")}</h2>
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm">
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-2xl w-96 transition-colors duration-200">
+        <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">{t("labCreateIns")}</h2>
 
         <input
-          className="w-full mb-3 p-2 rounded bg-gray-700"
+          className={inputClass}
           placeholder={t("labinstanceName")}
           value={name}
           onChange={(e) => {setName(e.target.value); resetCheck();}}
@@ -94,8 +96,9 @@ export default function InstanceCreateModal({ open, onClose, onCreated }) {
         <button
           onClick={checkDuplicate}
           disabled={!name || checking}
-          className="w-full mb-3 px-3 py-2 bg-yellow-600 rounded hover:bg-yellow-500 disabled:opacity-50"
-        >{checking ?  t("msgConnectingDuplicate") : t("btnduplicateCheck")}
+          className="w-full mb-3 px-3 py-2 bg-yellow-500 hover:bg-yellow-400 text-white font-bold rounded disabled:opacity-50 transition shadow-sm"
+        > 
+         {checking ?  t("msgConnectingDuplicate") : t("btnduplicateCheck")}
         </button>        
         {/* 중복 결과 표시 */}
         {checked && !exists && (
@@ -104,31 +107,30 @@ export default function InstanceCreateModal({ open, onClose, onCreated }) {
           </p>
         )}
 
+        {checked && !exists && (
+          <p className="text-green-600 dark:text-green-400 text-sm mb-2 font-medium">{t("msgNameAvailable")}</p>
+        )}
         {checked && exists && overwrite && (
-          <p className="text-yellow-400 text-sm mb-2">
-            {t("msgOverwriteInstance")}
-          </p>
+          <p className="text-yellow-600 dark:text-yellow-400 text-sm mb-2 font-medium">{t("msgOverwriteInstance")}</p>
+        )}
+        {checked && exists && !overwrite && (
+          <p className="text-red-600 dark:text-red-400 text-sm mb-2 font-medium">{t("msgNameExists")}</p>
         )}
 
-        {checked && exists && !overwrite && (
-          <p className="text-red-400 text-sm mb-2">
-            {t("msgNameExists")}
-          </p>
-        )}
         <input
-          className="w-full mb-3 p-2 rounded bg-gray-700"
+          className={inputClass}
           placeholder={t("labPorts")}
           value={port}
           onChange={(e) => setPort(e.target.value)}
         />
         <input
-          className="w-full mb-3 p-2 rounded bg-gray-700"
+          className={inputClass}
           placeholder={t("labQuery")}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         /> 
         <select
-          className="w-full mb-4 p-2 rounded bg-gray-700"
+          className={inputClass}
           value={version}
           onChange={(e) => setVersion(e.target.value)}
         >
@@ -140,10 +142,11 @@ export default function InstanceCreateModal({ open, onClose, onCreated }) {
         </select>
 
         <div className="flex justify-end gap-2">
-          <button onClick={onClose} className="px-3 py-1 bg-gray-600 rounded">
+          <button onClick={onClose} className="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-800 dark:text-white rounded transition">
             {t("btnCancel")}
           </button>
-          <button onClick={create} disabled={!checked} className={`px-3 py-1 rounded ${ checked
+          <button onClick={create} disabled={!checked} className={`px-4 py-2 rounded text-white font-bold transition shadow
+           ${ checked
                 ? "bg-green-600 hover:bg-green-500"
                 : "bg-gray-600 cursor-not-allowed"
             }`}

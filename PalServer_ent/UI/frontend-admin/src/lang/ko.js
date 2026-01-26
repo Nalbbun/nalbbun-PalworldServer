@@ -46,6 +46,7 @@ export default {
     labPorts: "포트",
     labQuery: "쿼리",
     labVersion: "버전",
+    labWorld: "월드",
     labCreatTime: "생성 시간",
     labUsage: "사용량",
     labmetrics: "자원 정보",
@@ -57,6 +58,7 @@ export default {
     labselectVersionDesc: "서버에 설치할 PalWorld 버전을 선택하세요.",
     labRepositoryList: "저장소 목록", 
 	
+    msgRestAPIInitializing: "REST API 초기화 중...",
     msgNoticeInput: "서버에 표시할 공지 메시지를 입력하세요",
     msgLoading: "로딩 중",   
     msgnoinstance: "생성 된 서버가 없습니다. 서버를 생성 하세요..",

@@ -26,33 +26,35 @@ export default function Login() {
     setId(onlyEngNum);
   };
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0e0f11]">
-        <LangToggle /> 
-      <div className="bg-[#1b1c1f]/80 p-10 rounded-xl shadow-xl w-96 backdrop-blur">
-        <h1 className="text-center text-2xl text-white mb-6 font-bold">
+   <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-[#0e0f11] transition-colors duration-300">
+      <div className="absolute top-5 right-5">
+        <LangToggle />
+      </div> 
+      <div className="bg-white dark:bg-[#1b1c1f]/80 p-10 rounded-xl shadow-2xl w-96 backdrop-blur transition-colors duration-300 border border-gray-200 dark:border-gray-800">
+        <h1 className="text-center text-2xl mb-6 font-bold text-gray-900 dark:text-white">
           {t("tlLogin")}
         </h1>
-        {error && <div className="text-red-400 mb-3">{error}</div>}
+        {error && <div className="text-red-500 text-sm mb-3 font-medium text-center">{error}</div>}
 
         <form onSubmit={submit} className="space-y-4">
           <input
             type="text"
             placeholder={t("labid")}
-            className="w-full p-3 rounded bg-[#2a2b2e] text-white"
+            className="w-full p-3 rounded bg-gray-50 dark:bg-[#2a2b2e] border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
             value={id}
             onChange={handleIdChange}
           />
           <input
             type="password"
             placeholder={t("labpassword")}
-            className="w-full p-3 rounded bg-[#2a2b2e] text-white"
+            className="w-full p-3 rounded bg-gray-50 dark:bg-[#2a2b2e] border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
             value={pw}
             onChange={(e) => setPw(e.target.value)}
           />
 
           <button 
             type="submit"
-            className="w-full p-3 bg-blue-600 hover:bg-blue-700 text-white rounded mt-2"
+            className="w-full p-3 bg-blue-600 hover:bg-blue-700 text-white rounded mt-4 font-bold transition shadow-md"
           >
             {t("btnlogin")}
           </button>

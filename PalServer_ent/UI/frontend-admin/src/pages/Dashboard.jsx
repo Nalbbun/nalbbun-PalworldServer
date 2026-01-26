@@ -15,7 +15,7 @@ import api from "../utils/api";
 import { safeCloseWS } from "../utils/ws";
 import { ROUTE_EVENTS, onRouteChange } from "../utils/routeEvents";
 
-// [추가] 새로고침 아이콘 (SVG)
+ 
 const RefreshIcon = ({ spin }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -274,15 +274,14 @@ export default function Dashboard() {
   }, [instances]);
 
   return (
-    <div className="p-10 min-h-screen bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white relative transition-colors duration-200">
-      {/* HEADER */}
+    <div className="p-10 min-h-screen bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white relative transition-colors duration-200">  {/* HEADER */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-4xl font-bold"> {t("tldashboard")}</h1>
         <div className="flex gap-3"> 
           <button
             onClick={handleManualRefresh}
             disabled={refreshing}
-            className="p-2 bg-gray-700 rounded-full hover:bg-gray-600 transition disabled:opacity-50"
+            className="p-2 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-600 transition disabled:opacity-50 shadow-sm"
             title="Refresh Status"
           >
             <RefreshIcon spin={refreshing} />
@@ -291,24 +290,24 @@ export default function Dashboard() {
           <ThemeToggle />
 		  <button
             onClick={handleImageMngClick}
-            className="px-4 py-2 bg-indigo-600 rounded hover:bg-indigo-500 text-white font-bold" >
+            className="px-4 py-2 bg-indigo-600 rounded hover:bg-indigo-500 text-white font-bold shadow" >
             {t("btnImgMng")}
           </button>
           <button
             onClick={() => setCreateOpen(true)}
-            className="px-4 py-2 bg-blue-600 rounded hover:bg-blue-500"
+            className="px-4 py-2 bg-blue-600 rounded hover:bg-blue-500 text-white shadow"
           >
             + {t("btninstance")}
           </button>
           <button
             onClick={logout}
-            className="px-4 py-2 bg-red-600 rounded hover:bg-red-500"
+            className="px-4 py-2 bg-red-600 rounded hover:bg-red-500 text-white shadow"
           >
             {t("btnlogout")}
           </button>
 		  <button
 			  onClick={() => setVersionModal({ open: true, mode: "update-all", target: null}) }
-				className="px-4 py-2 bg-green-700 rounded hover:bg-green-600"
+			  className="px-4 py-2 bg-green-700 rounded hover:bg-green-600 text-white shadow"
 		  >
 		   {t("btnallupdate")}
 		  </button>
@@ -316,7 +315,7 @@ export default function Dashboard() {
       </div>
 
       {message && (
-        <div className="mb-4 p-3 bg-blue-800 rounded text-center">
+        <div className="mb-4 p-3 bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-white rounded text-center font-semibold animate-pulse">
           {message}
         </div>
       )}

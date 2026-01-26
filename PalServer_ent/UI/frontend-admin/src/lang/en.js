@@ -46,6 +46,7 @@ export default {
   labPorts: "Port",
   labQuery: "Query",
   labVersion: "Version",
+  labWorld: "World",
   labCreatTime : "Created Time",
   labUsage: "Usage",
   labmetrics: "Resource Metrics",
@@ -57,6 +58,7 @@ export default {
   labselectVersionDesc: "Select the PalWorld version to install on the server.",
   labRepositoryList: "Repository List", 
 
+  msgRestAPIInitializing: "REST API initializing...",
   msgNoticeInput: "Please enter the notice message to be displayed on the server",
   msgLoading: "Loading...",
   msgnoinstance: "No servers have been created. Please create a server.",
