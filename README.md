@@ -58,27 +58,7 @@ chmod +x install.sh
 3. 접속 방법
 설치가 완료되면 브라우저를 통해 대시보드에 접속합니다.
 URL: http://localhost (또는 서버 IP)
-기본 계정: 최초 실행 시 backend/mng/db/db_init.py에 의해 초기 관리자 계정이 생성됩니다 (보통 admin / admin 혹은 설치 시 설정).
-
-📂 디렉토리 구조 (Directory Structure)
-Bash
-PalServer_ent/
-├── cmm/                    # 공통 관리 스크립트 및 툴
-│   ├── controllers/        # 백업, 업데이트 등 제어 스크립트
-│   └── make-pal-images/    # Palworld 도커 이미지 빌드 소스 
-├── server/                 # 서버 데이터 저장소
-│   ├── instances/          # 생성된 인스턴스별 데이터
-│   └── repo/               # 빌드된 도커 이미지 저장소
-├── UI/                     # 웹 애플리케이션 소스
-│   ├── backend/            # FastAPI 백엔드 소스 
-│   │   ├── mng/routers/    # API 엔드포인트 정의 [cite: 12]
-│   │   └── mng/utils/      # Docker 및 Shell 유틸리티
-│   ├── frontend-admin/     # React 관리자 페이지 소스 
-│   └── proxy/              # Nginx 설정
-├── install.sh              # 전체 설치 스크립트
-└── docker-compose.yml      # 서비스 구동 정의
-
-
+기본 계정: 최초 실행 시 backend/mng/db/db_init.py에 의해 초기 관리자 계정이 생성됩니다 (보통 admin / admin 혹은 설치 시 설정). 
 
 📝 사용 가이드 (Usage)
 이미지 빌드 (Image Build)
