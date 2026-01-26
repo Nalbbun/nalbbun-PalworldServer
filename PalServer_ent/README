@@ -1,123 +1,101 @@
-PalServer Enterprise (PalServer_ent)
-PalServer_ent는 리눅스(Debian/Ubuntu) 환경에서 Docker를 기반으로 Palworld Dedicated Server를 구축, 운영, 모니터링하기 위한 올인원 엔터프라이즈 솔루션입니다. 강력한 CLI 도구(paladmin)와 직관적인 웹 대시보드를 통해 서버의 라이프사이클을 완벽하게 제어합니다.
+Nalbbun PalServer Manager (PalAdmin)
+PalServer 는 Docker 기반의 Palworld Dedicated Server를 웹 인터페이스에서 쉽고 강력하게 관리하기 위한 올인원 솔루션입니다.
 
-🏗 System Architecture & Network
-이 시스템은 보안을 위해 Public과 Private 두 개의 Docker 네트워크로 격리되어 운영됩니다.
+여러 개의 서버 인스턴스를 생성하고, 시스템 리소스를 모니터링하며, 게임 설정을 GUI로 간편하게 수정할 수 있습니다.
 
-Host System: Linux (Ubuntu 20.04+ / Debian)
+✨ 주요 기능 (Key Features)
+1. 🖥️ 서버 인스턴스 라이프사이클 관리
+멀티 인스턴스: 하나의 머신에서 여러 개의 팰월드 서버를 독립적으로 운영.
+제어: 웹 대시보드에서 서버 시작, 정지, 재시작, 삭제를 원클릭으로 수행.
+백업/복원: 서버 월드 데이터의 원클릭 백업 및 관리.
 
-Network Layer:
+2. 📊 실시간 모니터링 및 로그
+리소스 차트: 각 인스턴스별 CPU 및 RAM 사용량을 실시간 그래프로 시각화.
+실시간 로그: WebSocket을 통해 서버의 콘솔 로그를 웹에서 실시간으로 스트리밍 확인.
+플레이어 관리: 현재 접속 중인 플레이어 목록 확인 및 관리.
 
-pal-public-net: 외부와 통신하는 Web UI 및 Proxy 컨테이너가 위치합니다.
+3. ⚙️ 고급 설정 관리 (Config Editor)
+GUI 설정 편집: 복잡한 .ini 파일을 직접 수정할 필요 없이, 웹 폼(Form) 형태로 게임 옵션 변경.
+위험 옵션 감지: 서버 성능에 영향을 줄 수 있는 위험한 옵션(Danger Option)에 대한 경고 및 툴팁 제공.
 
-pal-private-net (Internal): DB 및 백엔드 서비스 간의 통신을 담당하며 외부 접근이 차단됩니다.
+4. 🐳 도커 이미지 관리 (Image Builder)
+버전 관리: SteamCMD를 통해 특정 버전의 Palworld 서버 이미지를 직접 빌드하고 관리.
+오프라인 리포지토리: 빌드된 이미지를 로컬에 저장하여 인터넷 연결 없이도 인스턴스 생성 가능.
 
-Control Layer:
+5. 🎨 사용자 경험 (UX)
+다크/라이트 모드: 눈이 편한 다크 모드와 가독성 높은 라이트 모드 지원.
+다국어 지원 (i18n): 한국어(KO) 및 영어(EN) 완벽 지원.
+반응형 디자인: Tailwind CSS 기반의 깔끔하고 현대적인 UI.
 
-CLI: /usr/local/bin/paladmin (시스템 전역 명령어로 등록됨)
+🛠️ 기술 스택 (Tech Stack)
 
-Web UI: React(Frontend) + Python(Backend) + Nginx
+구분	                    기술	                    설명
+Frontend	                React, Vite	                관리자 대시보드 UI 
+Style	                    Tailwind CSS	            반응형 디자인 및 테마 적용 
+Backend	                    Python FastAPI	            REST API 서버, Docker 제어, 시스템 관리  
+Database	                SQLite	                    사용자 정보 및 메타데이터 저장 
+Infrastructure	            Docker, Docker Compose	    서비스 컨테이너화 및 오케스트레이션
+Proxy	                    Nginx	                    리버스 프록시 및 정적 파일 서빙
 
-🛠 Installation Guide
-설치 스크립트는 Docker 설치 여부 확인부터 네트워크 구성, 웹 UI 배포까지 자동으로 수행합니다.
+🚀 설치 및 실행 (Installation)
+이 프로젝트는 Linux 환경(Ubuntu/Debian 권장)에서 Docker가 설치된 환경을 기준으로 합니다.
 
-1. Prerequisites (사전 요구사항)
-OS: Debian 또는 Ubuntu 계열 리눅스 (필수)
+사전 요구사항
+Docker & Docker Compose
 
-Account: sudo 권한이 있는 사용자
+Git
 
-Ports: 8443 (Web UI), 8211 (Game UDP) 오픈 필요
-
-2. Setup Steps
-Repository Clone
-
-Bash
-
-git clone <repository-url>
+1. 프로젝트 클론
+git clone https://github.com/your-repo/PalServer_ent.git
 cd PalServer_ent
-Run Installer 설치 스크립트에 실행 권한을 부여하고 실행합니다.
 
-Bash
-
+2. 설치 스크립트 실행
+자동화된 설치 스크립트를 통해 환경을 구성합니다.
 chmod +x install.sh
 ./install.sh
-Installation Process (Interactive) 스크립트 실행 중 다음과 같은 작업이 진행됩니다:
+이 스크립트는 필요한 디렉토리를 생성하고, Docker 이미지를 빌드하며 서비스를 시작합니다
 
-Dependency Check: Docker 및 Docker Compose가 없으면 자동으로 설치합니다.
+3. 접속 방법
+설치가 완료되면 브라우저를 통해 대시보드에 접속합니다.
+URL: http://localhost (또는 서버 IP)
+기본 계정: 최초 실행 시 backend/mng/db/db_init.py에 의해 초기 관리자 계정이 생성됩니다 (보통 admin / admin 혹은 설치 시 설정).
 
-CLI Setup: paladmin 명령어를 시스템 전역(/usr/local/bin)에 등록합니다.
-
-Image Build (Optional): "Do you want to build Palworld server image now?" 질문에 y를 입력하면 커스텀 서버 이미지를 빌드합니다.
-
-Network Init: pal-public-net, pal-private-net 네트워크를 생성합니다.
-
-Web UI Start: 관리자 대시보드 컨테이너를 구동합니다.
-
-Completion (Optional): 명령어 자동완성 기능을 등록합니다.
-
-Verification 설치가 완료되면 아래와 같은 정보가 출력됩니다.
-
-Plaintext
-
-[SUCCESS] Installation completed successfully.
-- Admin CLI : paladmin
-- Web UI    : http://<server-ip>:8443
-💻 Usage
-1. Web Dashboard
-브라우저를 열고 http://<YOUR_SERVER_IP>:8443으로 접속합니다.
-
-Dashboard: 서버 상태(CPU/RAM), 플레이어 접속 현황 확인.
-
-Instance Mng: 서버 인스턴스 생성, 시작, 중지.
-
-Settings: PalWorldSettings.ini 웹 에디터 제공.
-
-2. CLI Tool (paladmin)
-설치 시 등록된 paladmin 명령어를 터미널에서 직접 사용할 수 있습니다.
-
+📂 디렉토리 구조 (Directory Structure)
 Bash
-
-# 사용 가능한 명령어 확인
-paladmin --help
-
-# 주요 명령어 (예시)
-paladmin start <instance_name>   # 특정 인스턴스 시작
-paladmin backup <instance_name>  # 수동 백업 실행
-paladmin update                  # 서버 업데이트 수행
-🗑 Uninstallation
-시스템을 제거해야 할 경우 uninstall.sh를 사용합니다. 데이터 보존 정책에 따라 안전하게 삭제됩니다.
-
-Bash
-
-./uninstall.sh
-삭제되는 항목:
-
-Web UI 관련 컨테이너 및 이미지 (Frontend, Backend, Nginx).
-
-paladmin CLI 실행 파일.
-
-Docker Networks (pal-public-net, pal-private-net).
-
-보존되는 항목 (Safe):
-
-server/instances/ 하위의 게임 세이브 데이터 및 설정 파일은 삭제되지 않습니다.
-
-Palworld 서버 Docker 이미지는 삭제 여부를 선택할 수 있습니다 ("Remove paladmin-related docker images?").
-
-📂 Directory Structure
-Plaintext
-
 PalServer_ent/
-├── cmm/                  # Core Management Modules
-│   ├── bin/paladmin.sh   # CLI 실행 스크립트 (Source)
-│   ├── controllers/      # 백업, 업데이트, 롤백 로직 스크립트
-│   └── make-pal-images/  # 커스텀 Docker 이미지 빌더
-├── UI/                   # Web Interface
-│   ├── backend/          # Python API Server
-│   ├── frontend-admin/   # React Admin Dashboard
-│   └── docker-compose.yml# UI 컨테이너 오케스트레이션
-├── server/
-│   ├── instances/        # [중요] 게임 데이터 저장소 (삭제 안됨)
-│   └── backup/           # 백업 파일 저장소
-├── install.sh            # 메인 설치 스크립트
-└── uninstall.sh          # 메인 삭제 스크립트
+├── cmm/                    # 공통 관리 스크립트 및 툴
+│   ├── controllers/        # 백업, 업데이트 등 제어 스크립트
+│   └── make-pal-images/    # Palworld 도커 이미지 빌드 소스 
+├── server/                 # 서버 데이터 저장소
+│   ├── instances/          # 생성된 인스턴스별 데이터
+│   └── repo/               # 빌드된 도커 이미지 저장소
+├── UI/                     # 웹 애플리케이션 소스
+│   ├── backend/            # FastAPI 백엔드 소스 
+│   │   ├── mng/routers/    # API 엔드포인트 정의 [cite: 12]
+│   │   └── mng/utils/      # Docker 및 Shell 유틸리티
+│   ├── frontend-admin/     # React 관리자 페이지 소스 
+│   └── proxy/              # Nginx 설정
+├── install.sh              # 전체 설치 스크립트
+└── docker-compose.yml      # 서비스 구동 정의
+
+
+📝 사용 가이드 (Usage)
+이미지 빌드 (Image Build)
+대시보드의 "Manage Images" 메뉴 또는 쉘 스크립트를 통해 서버 버전을 관리할 수 있습니다.
+# 수동 빌드 예시
+cd cmm/make-pal-images
+./build.sh v0.0.1
+
+인스턴스 생성
+대시보드 상단의 "+ Create Server" 버튼 클릭.
+서버 이름, 포트, 사용할 이미지 버전을 선택.
+생성 후 Start 버튼을 눌러 서버 구동.
+
+
+설정 변경
+인스턴스 카드의 Config 버튼을 눌러 PalWorldSettings.ini 값을 GUI 환경에서 안전하게 수정할 수 있습니다.
+
+🔒 보안 (Security)
+JWT 인증: Access/Refresh Token 기반의 안전한 로그인 세션 관리.
+비밀번호 암호화: bcrypt를 사용하여 사용자 비밀번호를 안전하게 해싱 저장.
+ 
