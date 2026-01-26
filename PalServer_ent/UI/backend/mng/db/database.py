@@ -10,7 +10,7 @@ from mng.core.config import log
 # ---------------------------------------------------------
 BASE_DIR = os.getenv("PALSERVER_BASE_DIR", "PalServer_ent")
 # DB 파일 경로: /app/PalServer_ent/server/paladmin.db
-DB_PATH = f"/app/{BASE_DIR}/server/paladmin.db"
+DB_PATH = f"/app/{BASE_DIR}/server/sqldb/paladmin.db"
 DATABASE_URL = f"sqlite:///{DB_PATH}"
 
 # SQLite Thread Check 비활성화 (FastAPI 비동기 처리를 위해 필수)
@@ -32,6 +32,7 @@ class User(Base):
     role = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     last_login = Column(DateTime, nullable=True)
+
 
 # ---------------------------------------------------------
 # 3. Dependency (FastAPI용)
