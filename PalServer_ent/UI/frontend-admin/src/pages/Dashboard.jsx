@@ -237,7 +237,7 @@ export default function Dashboard() {
 
 	  const startPolling = () => {
 		if (pollingRef.current) return;
-		pollingRef.current = setInterval(refreshAllStatus, 10000);
+		pollingRef.current = setInterval(refreshAllStatus, 60000);
 		console.log("[DASHBOARD] polling started");
 	  };
 
@@ -278,10 +278,18 @@ export default function Dashboard() {
       {/* HEADER */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-4xl font-bold"> {t("tldashboard")}</h1>
-        <div className="flex gap-3">
+        <div className="flex gap-3"> 
+          <button
+            onClick={handleManualRefresh}
+            disabled={refreshing}
+            className="p-2 bg-gray-700 rounded-full hover:bg-gray-600 transition disabled:opacity-50"
+            title="Refresh Status"
+          >
+            <RefreshIcon spin={refreshing} />
+          </button>
           <LangToggle /> 
           <ThemeToggle />
-			<button
+		  <button
             onClick={handleImageMngClick}
             className="px-4 py-2 bg-indigo-600 rounded hover:bg-indigo-500 text-white font-bold" >
             {t("btnImgMng")}
