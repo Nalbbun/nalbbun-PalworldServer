@@ -360,20 +360,20 @@ export default function Dashboard() {
 		  message={message}/>
 
 		<PasswordConfirmModal
-		open={confirmConfig.open}
-		onClose={() => setConfirmConfig({ open: false, target: null })}
-		onSuccess={() => {
-			nav(`/config/${confirmConfig.target}`);
-			setConfirmConfig({ open: false, target: null });
-		}}
+			open={confirmConfig.open}
+			onClose={() => setConfirmConfig({ open: false, target: null })}
+			onSuccess={() => {
+				nav(`/config/${confirmConfig.target}`);
+				setConfirmConfig({ open: false, target: null });
+			}}
 		/>
 		{/* 1. 비밀번호 확인 모달 (이미지 관리용) */}
 		<PasswordConfirmModal
 			open={authForImg}
 			onClose={() => setAuthForImg(false)}
 			onSuccess={() => {
-			setAuthForImg(false); // 인증 모달 닫고
-			setImgMngOpen(true);  // 관리 모달 열기
+				setAuthForImg(false); // 인증 모달 닫고
+				setImgMngOpen(true);  // 관리 모달 열기
 			}}
 		/>
 

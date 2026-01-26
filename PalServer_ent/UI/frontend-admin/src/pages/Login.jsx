@@ -18,7 +18,13 @@ export default function Login() {
       setError(t("msgloginError"));
     }
   };
-
+  //   ID 입력 핸들러: 영문과 숫자만 허용
+  const handleIdChange = (e) => {
+    const val = e.target.value;
+    // 정규식: A-Z, a-z, 0-9 , _-가 아닌 문자는 모두 제거
+    const onlyEngNum = val.replace(/[^A-Za-z0-9_-]/g, "")
+    setId(onlyEngNum);
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0e0f11]">
         <LangToggle /> 
@@ -34,7 +40,7 @@ export default function Login() {
             placeholder={t("labid")}
             className="w-full p-3 rounded bg-[#2a2b2e] text-white"
             value={id}
-            onChange={(e) => setId(e.target.value)}
+            onChange={handleIdChange}
           />
           <input
             type="password"
