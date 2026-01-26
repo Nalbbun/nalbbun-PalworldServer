@@ -274,7 +274,7 @@ export default function Dashboard() {
   }, [instances]);
 
   return (
-    <div className="p-10 min-h-screen bg-gray-900 text-white relative">
+    <div className="p-10 min-h-screen bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white relative transition-colors duration-200">
       {/* HEADER */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-4xl font-bold"> {t("tldashboard")}</h1>
