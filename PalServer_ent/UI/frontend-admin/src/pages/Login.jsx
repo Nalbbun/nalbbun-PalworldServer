@@ -27,9 +27,6 @@ export default function Login() {
   };
   return (
    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-[#0e0f11] transition-colors duration-300">
-      <div className="absolute top-5 right-5">
-        <LangToggle />
-      </div> 
       <div className="bg-white dark:bg-[#1b1c1f]/80 p-10 rounded-xl shadow-2xl w-96 backdrop-blur transition-colors duration-300 border border-gray-200 dark:border-gray-800">
         <h1 className="text-center text-2xl mb-6 font-bold text-gray-900 dark:text-white">
           {t("tlLogin")}
@@ -60,6 +57,7 @@ export default function Login() {
           </button>
         </form>
       </div>
+      <LangToggle />
     </div>
   );
 }
