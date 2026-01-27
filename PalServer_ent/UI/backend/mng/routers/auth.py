@@ -137,7 +137,7 @@ def login(data: dict, db: Session = Depends(get_db)):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     log.info(f"[Login] User '{username}' logged in.")
-    # role 정보가 있다면 반환, 없으면 기본값(op) 처리 (DB 스키마 확인 필요)
+    # role 정보가 있다면 반환, 없으면 기본값(operator) 처리 (DB 스키마 확인 필요)
     user_role = getattr(user, "role", "operator") 
     if not user_role: 
         user_role = "operator"
