@@ -7,3 +7,4 @@ websockets
 wsproto
 requests
 sqlalchemy
+bcrypt
