@@ -35,7 +35,7 @@ def init_db(json_path: str = None):
 
                     for u in users_data:
                         # db_crud의 create_user 재사용 (해싱 자동 처리)
-                        create_user(db, u["username"], u["password"], role="admin")
+                        create_user(db, u["username"], u["password"], u["role"])
 
                     log.info("[DB] Migration completed.")
                     # 마이그레이션 후 파일명 변경 (중복 실행 방지)
@@ -47,7 +47,8 @@ def init_db(json_path: str = None):
             # 2. JSON도 없고 DB도 비어있으면 -> 기본 Admin 생성
             else:
                 log.info("[DB] Creating default admin user.")
-                create_user(db, "admin", "admin", role="admin")
+                create_user(db, "admin", "admin123!", role="admin")
+                create_user(db, "op", "op123!", role="op")
 
         db.close()
 
