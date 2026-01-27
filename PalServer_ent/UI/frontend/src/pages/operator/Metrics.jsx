@@ -1,8 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
-import api from "../utils/api";
-import { useLang } from "../context/LangContext";
+import api from "../../utils/api";
+import { useLang } from "../../context/LangContext";
 import LangToggle from "../components/LangToggle"; // 임포트는 유지하되 사용되지 않았으나, 필요 시 헤더에 추가 가능
 
 import {

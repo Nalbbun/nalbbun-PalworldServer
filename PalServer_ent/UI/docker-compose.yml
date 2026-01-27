@@ -3,21 +3,11 @@ services:
   # =========================
   # ADMIN UI (BUILD ONLY)
   # =========================
-  admin-ui:
-    build: ./frontend-admin
-    container_name: admin-ui-build
+  paladmin-ui:
+    build: ./frontend
+    container_name: paladmin-ui-build
     volumes:
-      - ./dist/admin:/out
-    command: >
-      sh -c "rm -rf /out/* && cp -r /app/dist/* /out"
-  # =========================
-  # OPERATOR UI (BUILD ONLY)
-  # =========================
-  operator-ui:
-    build: ./frontend-operator
-    container_name: operator-ui-build
-    volumes:
-      - ./dist/operator:/out
+      - ./dist/paladmin:/out
     command: >
       sh -c "rm -rf /out/* && cp -r /app/dist/* /out"
 

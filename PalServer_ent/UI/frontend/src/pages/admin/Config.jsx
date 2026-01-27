@@ -1,12 +1,12 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useLang } from "../context/LangContext";
-import { isDangerOption } from "../utils/isDangerOption";
-import { detectType } from "../utils/valueType";
-import LangToggle from "../components/LangToggle";
-import LoadingOverlay from "../components/LoadingOverlay";
-import api from "../utils/api";
-import Tooltip from "../components/Tooltip";
+import { useLang } from "../../context/LangContext";
+import { isDangerOption } from "../../utils/isDangerOption";
+import { detectType } from "../../utils/valueType";
+import LangToggle from "../../components/LangToggle";
+import LoadingOverlay from "../../components/LoadingOverlay";
+import api from "../../utils/api";
+import Tooltip from "../../components/Tooltip";
 
 export default function Config() {
   const { instance } = useParams();

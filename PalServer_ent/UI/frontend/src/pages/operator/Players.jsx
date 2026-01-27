@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react"; 
-import api from "../utils/api";
-import { useLang } from "../context/LangContext";
+import api from "../../utils/api";
+import { useLang } from "../../context/LangContext";
 import LangToggle from "../components/LangToggle"; 
 
 export default function Players() {

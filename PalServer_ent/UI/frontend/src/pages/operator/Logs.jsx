@@ -1,8 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { useLang } from "../context/LangContext"; 
-import { createWS, safeCloseWS } from "../utils/ws";
-import api from "../utils/api";
+import { useLang } from "../../context/LangContext"; 
+import { createWS, safeCloseWS } from "../../utils/ws";
+import api from "../../utils/api";
 import NoticeModal from "../components/NoticeModal"; 
 
 const MAX_LINES = 10000;

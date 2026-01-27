@@ -1,19 +1,19 @@
 import { useEffect, useRef,useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import ThemeToggle from "../components/ThemeToggle";
-import ServerTable from "../components/ServerTable";
-import VersionSelectModal from "../components/VersionSelectModal";
-import InstanceCreateModal from "../components/InstanceCreateModal";
-import BlockingModal from "../components/BlockingModal";
-import LoadingOverlay from "../components/LoadingOverlay";
-import PasswordConfirmModal from "../components/PasswordConfirmModal";
-import ImageManageModal from "../components/ImageManageModal";
-import { useLang } from "../context/LangContext";
-import LangToggle from "../components/LangToggle";
-import api from "../utils/api"; 
-import { safeCloseWS } from "../utils/ws";
-import { ROUTE_EVENTS, onRouteChange } from "../utils/routeEvents";
+import { useAuth } from "../../context/AuthContext";
+import ThemeToggle from "../../components/ThemeToggle";
+import ServerTable from "../../components/ServerTable";
+import VersionSelectModal from "../../components/VersionSelectModal";
+import InstanceCreateModal from "../../components/InstanceCreateModal";
+import BlockingModal from "../../components/BlockingModal";
+import LoadingOverlay from "../../components/LoadingOverlay";
+import PasswordConfirmModal from "../../components/PasswordConfirmModal";
+import ImageManageModal from "../../components/ImageManageModal";
+import { useLang } from "../../context/LangContext";
+import LangToggle from "../../components/LangToggle";
+import api from "../../utils/api"; 
+import { safeCloseWS } from "../../utils/ws";
+import { ROUTE_EVENTS, onRouteChange } from "../../utils/routeEvents";
 
  
 const RefreshIcon = ({ spin }) => (
