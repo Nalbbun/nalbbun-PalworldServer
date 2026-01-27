@@ -3,21 +3,11 @@ services:
   # =========================
   # ADMIN UI (BUILD ONLY)
   # =========================
-  admin-ui:
-    build: ./frontend-admin
-    container_name: admin-ui-build
+  paladmin-ui:
+    build: ./frontend
+    container_name: paladmin-ui-build
     volumes:
-      - ./dist/admin:/out
-    command: >
-      sh -c "rm -rf /out/* && cp -r /app/dist/* /out"
-  # =========================
-  # OPERATOR UI (BUILD ONLY)
-  # =========================
-  operator-ui:
-    build: ./frontend-operator
-    container_name: operator-ui-build
-    volumes:
-      - ./dist/operator:/out
+      - ./dist:/out
     command: >
       sh -c "rm -rf /out/* && cp -r /app/dist/* /out"
 
@@ -57,9 +47,7 @@ services:
       - ./proxy/nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - ./cert/certs:/etc/nginx/certs:ro
     depends_on:
-      admin-ui:
-       condition: service_completed_successfully
-      operator-ui:
+      paladmin-ui:
        condition: service_completed_successfully
       paladmin-backend:
        condition: service_healthy

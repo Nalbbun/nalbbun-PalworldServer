@@ -7,7 +7,7 @@ import sys
 # 1. 로그 레벨 설정 (Env에서 가져옴, 기본값: INFO)
 # ---------------------------------------------------------
 # docker-compose에서 LOG_LEVEL=DEBUG 로 설정하면 디버그 모드 작동
-LOG_LEVEL_STR = os.getenv("LOG_LEVEL", "INFO").upper()
+LOG_LEVEL_STR = os.getenv("LOG_LEVEL", "DEBUG").upper()
 LOG_LEVEL = getattr(logging, LOG_LEVEL_STR, logging.INFO)
 
 # ---------------------------------------------------------

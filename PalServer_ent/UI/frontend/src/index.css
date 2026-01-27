@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* [변경] Tailwind의 dark 모드 클래스에 반응하도록 수정 */
+body {
+  @apply bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-200;
+}

@@ -40,12 +40,11 @@ def _create_token(payload: dict, expires_delta: timedelta):
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
 
-def create_access_token(username: str) -> str:
+def create_access_token(username: str, role: str) -> str:
     return _create_token(
-        {"sub": username, "type": "access"},
+        {"sub": username, "type": "access", "role": role}, 
         timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
     )
-
 
 def create_refresh_token(username: str) -> str:
     return _create_token(
@@ -138,11 +137,19 @@ def login(data: dict, db: Session = Depends(get_db)):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     log.info(f"[Login] User '{username}' logged in.")
+    # role 정보가 있다면 반환, 없으면 기본값(operator) 처리 (DB 스키마 확인 필요)
+    user_role = getattr(user, "role", "operator") 
+    if not user_role: 
+        user_role = "operator"
+
+    log.debug(f"[Login] User '{username}' logged in as '{user_role}' ")
 
     return {
-        "access_token": create_access_token(username),
+        "access_token": create_access_token(username, user_role),
         "refresh_token": create_refresh_token(username),
         "token_type": "bearer",
+        "username": username,  
+        "role": user_role 
     }
 
 
