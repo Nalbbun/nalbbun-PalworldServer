@@ -22,8 +22,7 @@ def init_db(json_path: str = None):
         db = SessionLocal()
 
         # 데이터 확인 및 마이그레이션
-        if db.query(User).count() == 0:
-            
+        if db.query(User).count() == 0:            
             # 1. JSON 마이그레이션 시도
             if json_path and os.path.exists(json_path):
                 

@@ -16,7 +16,6 @@ def verify_password(plain_password, hashed_password):
 def get_password_hash(password):
     return pwd_context.hash(password)
 
-
 # ---------------------------------------------------------
 # User CRUD
 # ---------------------------------------------------------
@@ -24,9 +23,8 @@ def get_user_by_username(db: Session, username: str):
     return db.query(User).filter(User.username == username).first()
 
 
-def create_user(db: Session, username, password, role="operator"):
+def create_user(db: Session, username, password, role):
     hashed_pw = get_password_hash(password)
-
     db_user = User(username=username, password=hashed_pw, role=role)
 
     db.add(db_user)
