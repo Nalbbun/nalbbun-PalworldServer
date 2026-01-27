@@ -1,8 +1,10 @@
 export default {
-  tlLogin: "Nalbbun PalWorld Admin Login",
-  tldashboard: "Nalbbun PalWorld Admin Dashboard",
+  tlLogin: "Nalbbun PalWorld Server Login",
+  tldashboard: "Nalbbun PalWorld Server Dashboard",
   tlNotice: "Server Notice",
   tlImageMng: "Instance Image Management",
+  tlAdminDashboard: "Nalbbun PalWorld Server Admin Dashboard",
+  tlOperatorDashboard: "Nalbbun PalWorld Server Operator Dashboard",
 
   btnlogin: "Login",
   btndashboard: "Dashboard",
@@ -32,6 +34,8 @@ export default {
   btnImgMng: "Manage Images",
   btnImgBuild: "Build",
 
+  labAdmin: "Admin",
+  labOperator: "Operator",
   labid: "Username",
   labConfig: "Server Config Info",
   lablogs: "Logs",
@@ -59,6 +63,8 @@ export default {
   labselectVersionDesc: "Select the PalWorld version to install on the server.",
   labRepositoryList: "Repository List", 
 
+  msgWellcome: "Welcome to Manager!",
+  msgIntroduction: "The Nalbbun PalWorld Server Dashboard allows you to efficiently manage and monitor your server instances. Utilize various features to optimize server operations.",
   msgRestAPIInitializing: "REST API initializing...",
   msgNoticeInput: "Please enter the notice message to be displayed on the server",
   msgLoading: "Loading...",

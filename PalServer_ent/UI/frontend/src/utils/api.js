@@ -123,7 +123,7 @@ function logoutHard() {
   localStorage.clear();
   window.dispatchEvent(new Event("auth-logout"));
   setTimeout(() => {
-    window.location.href = "/admin/login";
+    window.location.href = "/login";
   }, 0);
 }
 

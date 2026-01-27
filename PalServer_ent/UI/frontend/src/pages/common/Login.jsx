@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useLang } from "../../context/LangContext";
-import LangToggle from "../components/LangToggle";
+import LangToggle from "../../components/LangToggle";
 
 export default function Login() {
   const { login } = useAuth();
@@ -12,8 +12,15 @@ export default function Login() {
 
   const submit = async (e) => {
     e.preventDefault();
-    try {
-      await login(id, pw);
+    try {      
+      const user = await login(id, pw);  
+
+      if (user?.role === 'op') {
+        navigate("/op");
+      } else {
+        navigate("/admin");
+      }
+
     } catch {
       setError(t("msgloginError"));
     }
@@ -57,7 +64,9 @@ export default function Login() {
           </button>
         </form>
       </div>
-      <LangToggle />
+        <div className="absolute top-5 right-5">
+            <LangToggle /> 
+        </div>
     </div>
   );
 }

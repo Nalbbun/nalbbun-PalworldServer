@@ -2,8 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useLang } from "../../context/LangContext";
 import { isDangerOption } from "../../utils/isDangerOption";
-import { detectType } from "../../utils/valueType";
-import LangToggle from "../../components/LangToggle";
+import { detectType } from "../../utils/valueType"; 
 import LoadingOverlay from "../../components/LoadingOverlay";
 import api from "../../utils/api";
 import Tooltip from "../../components/Tooltip";
@@ -19,15 +18,7 @@ export default function Config() {
   const { t, tip } = useLang();
 
   useEffect(() => {
-    api.get(`/config/${instance}`)
-      .then((res) => {
-        const { options, isDefault } = res;
-        setOptions(options || {});
-        setIsDefault(isDefault === true);
-      })
-      .catch((err) => {
-        console.error("Config load failed", err);
-      });
+    loadInstances();
   }, [instance]);
 
   /* ==================== LOAD ==================== */
@@ -66,7 +57,7 @@ export default function Config() {
       setLoading(true);
       await api.post(`/config/apply/${instance}`);
       alert(t("msgServerRestarted"));
-      navigate("/", { replace: true });
+      navigate("/admin", { replace: true });
     } finally {
       setLoading(false);
     }
@@ -88,7 +79,7 @@ export default function Config() {
 
       <button
         className="mb-6 px-4 py-2 rounded shadow-sm bg-white hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold transition-colors"
-        onClick={() => navigate("/")}
+        onClick={() => navigate("/admin")}
       >
         ← {t("btndashboard")}
       </button>

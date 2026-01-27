@@ -1,7 +1,5 @@
 import { useEffect, useRef,useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import ThemeToggle from "../../components/ThemeToggle";
+import { useNavigate } from "react-router-dom";  
 import ServerTable from "../../components/ServerTable";
 import VersionSelectModal from "../../components/VersionSelectModal";
 import InstanceCreateModal from "../../components/InstanceCreateModal";
@@ -11,9 +9,9 @@ import PasswordConfirmModal from "../../components/PasswordConfirmModal";
 import ImageManageModal from "../../components/ImageManageModal";
 import { useLang } from "../../context/LangContext";
 import LangToggle from "../../components/LangToggle";
+import { ROUTE_EVENTS, onRouteChange } from "../../utils/routeEvents";
 import api from "../../utils/api"; 
 import { safeCloseWS } from "../../utils/ws";
-import { ROUTE_EVENTS, onRouteChange } from "../../utils/routeEvents";
 
  
 const RefreshIcon = ({ spin }) => (
@@ -33,9 +31,9 @@ const RefreshIcon = ({ spin }) => (
   </svg>
 );
 
-export default function Dashboard() {
-  const { logout } = useAuth();
+export default function Dashboard() { 
   const { t } = useLang();
+  const nav = useNavigate();
 
   const [instances, setInstances] = useState([]);
   const [status, setStatus] = useState({});
@@ -50,8 +48,7 @@ export default function Dashboard() {
   
   const [updateMsg, setUpdateMsg] = useState("");
   const [imgMngOpen, setImgMngOpen] = useState(false);  
-  const [authForImg, setAuthForImg] = useState(false);  
-  const nav = useNavigate(); 
+  const [authForImg, setAuthForImg] = useState(false);   
   
   const [versionModal, setVersionModal] = useState({
     open: false,
@@ -274,10 +271,14 @@ export default function Dashboard() {
   }, [instances]);
 
   return (
-    <div className="p-10 min-h-screen bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white relative transition-colors duration-200">  {/* HEADER */}
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold"> {t("tldashboard")}</h1>
-        <div className="flex gap-3"> 
+	<div className="animate-fade-in">  
+      {/* HEADER ACTION BAR: Layout 하단에 위치하는 Page Title 및 Action 버튼들 */}
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+		{/* Title & Refresh */}
+        <div className="flex items-center gap-3">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+            {t("tldashboard")}
+          </h2>
           <button
             onClick={handleManualRefresh}
             disabled={refreshing}
@@ -286,8 +287,6 @@ export default function Dashboard() {
           >
             <RefreshIcon spin={refreshing} />
           </button>
-          <LangToggle /> 
-          <ThemeToggle />
 		  <button
             onClick={handleImageMngClick}
             className="px-4 py-2 bg-indigo-600 rounded hover:bg-indigo-500 text-white font-bold shadow" >
@@ -314,16 +313,17 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {message && (
-        <div className="mb-4 p-3 bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-white rounded text-center font-semibold animate-pulse">
+	 {message && (
+        <div className="mb-4 p-3 bg-blue-50 text-blue-800 dark:bg-blue-900/40 dark:text-blue-100 rounded text-center font-semibold animate-pulse border border-blue-100 dark:border-blue-800">
           {message}
         </div>
       )}
 
-      <ServerTable
+    	<ServerTable
         instances={instances}
         status={status}
         loading={loading}
+		basePath="/admin"
         onStart={startInstance}
         onStop={stopInstance}
         onBackup={backupInstance}
@@ -331,15 +331,15 @@ export default function Dashboard() {
 		onDelete={deleteInstance}
 		onConfig={openConfigWithAuth}
 		onSvrSave={sumitServerSave}
-      />
+    	/>
 
-      <InstanceCreateModal
+		<InstanceCreateModal
         open={createOpen}
         onClose={() => setCreateOpen(false)}
         onCreated={loadInstances}
-      />
+    	/>
 	  
-	  <VersionSelectModal
+		<VersionSelectModal
 		  open={versionModal.open}
 		  mode={versionModal.mode}
 		  target={versionModal.target}
@@ -349,20 +349,14 @@ export default function Dashboard() {
 			setVersionModal({ open: false, mode: null, target: null , currentVersion: null , })
 		  }
 		/>
-		<BlockingModal
-		  open={updating}
-		  message={updateMsg}
-		/>
-		
-       <LoadingOverlay 
-		  show={loading} 
-		  message={message}/>
+		<BlockingModal open={updating} message={updateMsg} />
+		<LoadingOverlay show={loading} message={message} />
 
 		<PasswordConfirmModal
 			open={confirmConfig.open}
 			onClose={() => setConfirmConfig({ open: false, target: null })}
 			onSuccess={() => {
-				nav(`/config/${confirmConfig.target}`);
+				nav(`config/${confirmConfig.target}`);
 				setConfirmConfig({ open: false, target: null });
 			}}
 		/>

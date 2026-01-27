@@ -1,8 +1,10 @@
 export default {
-    tlLogin: "Nalbbun PalWorld 관리자 로그인",
-    tldashboard: "Nalbbun PalWorld 관리자 대시보드",
+    tlLogin: "Nalbbun PalWorld Server 로그인",
+    tldashboard: "Nalbbun PalWorld Server 대시보드",
     tlNotice: "서버 공지",
     tlImageMng: "인스턴스 이미지 관리",
+    tlAdminDashboard: "Nalbbun PalWorld Server 관리자 대시보드",
+    tlOperatorDashboard: "Nalbbun PalWorld Server 운영자 대시보드",
 	
     btnlogin: "로그인",
     btndashboard: "대시보드",
@@ -32,6 +34,8 @@ export default {
     btnImgMng: "이미지 관리",
     btnImgBuild: "빌드",
 	
+    labAdmin: "관리자",
+    labOperator: "운영자",    
     labid: "아이디",
     labConfig: "서버 설정 정보",
     lablogs: "로그 정보",
@@ -59,6 +63,8 @@ export default {
     labselectVersionDesc: "서버에 설치할 PalWorld 버전을 선택하세요.",
     labRepositoryList: "저장소 목록", 
 	
+    msgWellcome: "관리 도구에 오신 것을 환영합니다!",
+    msgIntroduction: "Nalbbun PalWorld Server 대시보드를 통해 서버 인스턴스를 효율적으로 관리하고 모니터링할 수 있습니다. 다양한 기능을 활용하여 서버 운영을 최적화하세요.",
     msgRestAPIInitializing: "REST API 초기화 중...",
     msgNoticeInput: "서버에 표시할 공지 메시지를 입력하세요",
     msgLoading: "로딩 중",   

@@ -1,8 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react"; 
 import api from "../../utils/api";
-import { useLang } from "../../context/LangContext";
-import LangToggle from "../../components/LangToggle"; 
+import { useLang } from "../../context/LangContext"; 
 
 export default function Players() {
   const { instance } = useParams();
@@ -46,7 +45,7 @@ export default function Players() {
         <div>
           <button
             className="mb-4 px-4 py-2 rounded shadow-sm bg-white hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold transition-colors"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/admin")}
           >
              ← {t("btndashboard")}
           </button>

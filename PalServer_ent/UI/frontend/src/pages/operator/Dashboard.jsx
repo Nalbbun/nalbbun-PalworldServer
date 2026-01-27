@@ -1,6 +1,5 @@
 import { useEffect, useRef,useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom"; 
 import ThemeToggle from "../components/ThemeToggle";
 import ServerTable from "../components/ServerTable";
 import VersionSelectModal from "../components/VersionSelectModal";
@@ -34,7 +33,7 @@ const RefreshIcon = ({ spin }) => (
 );
 
 export default function Dashboard() {
-  const { logout } = useAuth();
+  const nav = useNavigate(); 
   const { t } = useLang();
 
   const [instances, setInstances] = useState([]);
@@ -51,7 +50,6 @@ export default function Dashboard() {
   const [updateMsg, setUpdateMsg] = useState("");
   const [imgMngOpen, setImgMngOpen] = useState(false);  
   const [authForImg, setAuthForImg] = useState(false);  
-  const nav = useNavigate(); 
   
   const [versionModal, setVersionModal] = useState({
     open: false,
@@ -324,6 +322,7 @@ export default function Dashboard() {
         instances={instances}
         status={status}
         loading={loading}
+		basePath="/op"
         onStart={startInstance}
         onStop={stopInstance}
         onBackup={backupInstance}
@@ -362,7 +361,7 @@ export default function Dashboard() {
 			open={confirmConfig.open}
 			onClose={() => setConfirmConfig({ open: false, target: null })}
 			onSuccess={() => {
-				nav(`/config/${confirmConfig.target}`);
+				nav(`config/${confirmConfig.target}`);
 				setConfirmConfig({ open: false, target: null });
 			}}
 		/>

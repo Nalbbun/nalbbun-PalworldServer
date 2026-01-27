@@ -1,5 +1,4 @@
-import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; 
 import { useLang } from "../context/LangContext";
 
 function StatusBadge({ status }) {
@@ -49,6 +48,7 @@ export default function ServerTable({
   instances,
   status,
   loading,
+  basePath ,  
   onStart,
   onStop,
   onBackup,
@@ -58,15 +58,24 @@ export default function ServerTable({
   onSvrSave,
 }) {     
   const nav = useNavigate();
-
+  const { t } = useLang();
+  const goTo = (path) => {
+    // path가 "logs/nal" 이고 basePath가 "/admin" 이면 -> "/admin/logs/nal"
+    // 상대 경로로 처리하려면 navigate(path) 만 써도 되지만, 
+    // 명시적으로 합쳐주는 것이 안전할 수 있음.
+    // 여기서는 상대 경로 방식을 추천: navigate(`logs/${ins.name}`)
+    // 하지만 ServerTable이 호출되는 위치가 이미 /admin 이라면 상대 경로가 맞음.
+    // 확실하게 하기 위해 basePath를 결합합니다.
+    const target = basePath ? `${basePath}/${path}` : path;
+    nav(target);
+  };
+  
   const btn = (enabled, color) =>
     `px-3 py-1 rounded text-sm font-semibold transition text-white shadow-sm whitespace-nowrap ${
       enabled
         ? `${color} hover:brightness-110`
         : "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 opacity-60 cursor-not-allowed"
-    }`;
-
-  const { t } = useLang(); 
+    }`;  
 
   return (
     <div className="rounded-lg overflow-hidden shadow-lg bg-white dark:bg-gray-800 transition-colors duration-200 border border-gray-200 dark:border-gray-700">
@@ -169,9 +178,9 @@ export default function ServerTable({
 
                   {/* SUB ACTIONS */}
                   <div className="flex flex-wrap gap-2 justify-center border-t border-gray-200 dark:border-gray-700 pt-3 mt-2">
-                    <button disabled={!running} onClick={() => nav(`/logs/${ins.name}`)} className={btn(running, "bg-slate-600")}>{t("btnlogs")}</button>
-                    <button disabled={!running} onClick={() => nav(`/metrics/${ins.name}`)} className={btn(running, "bg-purple-600")}>{t("btnmetrics")}</button>
-                    <button disabled={!running} onClick={() => nav(`/players/${ins.name}`)} className={btn(running, "bg-indigo-600")}>{t("btnplayers")}</button>
+                    <button disabled={!running} onClick={() => goTo(`logs/${ins.name}`)} className={btn(running, "bg-slate-600")}>{t("btnlogs")}</button>
+                    <button disabled={!running} onClick={() => goTo(`metrics/${ins.name}`)} className={btn(running, "bg-purple-600")}>{t("btnmetrics")}</button>
+                    <button disabled={!running} onClick={() => goTo(`players/${ins.name}`)} className={btn(running, "bg-indigo-600")}>{t("btnplayers")}</button>
                     <button disabled={!running} onClick={() => onSvrSave(ins.name)} className={btn(running, "bg-teal-600")}>{t("btninsSave")}</button>
                   </div>
                 </td>

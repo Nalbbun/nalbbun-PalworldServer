@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import api from "../../utils/api";
 import { useLang } from "../../context/LangContext";
-import LangToggle from "../components/LangToggle"; // 임포트는 유지하되 사용되지 않았으나, 필요 시 헤더에 추가 가능
 
 import {
   Chart as ChartJS,
@@ -27,11 +26,15 @@ ChartJS.register(
 export default function Metrics() {
   const { instance } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [cpu, setCpu] = useState([]);
   const [ram, setRam] = useState([]);
   const [running, setRunning] = useState(true);
   const { t } = useLang();
+
+  const isOperator = location.pathname.startsWith("/operator");
+  const backPath = isOperator ? "/operator" : "/admin";
 
   const load = async () => {
     try {
@@ -83,9 +86,9 @@ export default function Metrics() {
         <div>
           <button
             className="mb-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 rounded text-sm font-bold transition shadow-sm"
-            onClick={() => navigate("/")}
+            onClick={() => navigate(backPath)}
           >
-             ← {t("btndashboard")}
+             {t("btndashboard")}
           </button>
           <h2 className="text-3xl font-bold">
             {t("labmetrics")} : <span className="text-blue-600 dark:text-blue-400">{instance}</span>

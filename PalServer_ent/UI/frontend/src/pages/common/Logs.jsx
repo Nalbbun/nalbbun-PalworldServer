@@ -3,13 +3,14 @@ import { useEffect, useRef, useState } from "react";
 import { useLang } from "../../context/LangContext"; 
 import { createWS, safeCloseWS } from "../../utils/ws";
 import api from "../../utils/api";
-import NoticeModal from "../components/NoticeModal"; 
+import NoticeModal from "../../components/NoticeModal"; 
 
 const MAX_LINES = 10000;
 
 export default function Logs() {
   const { instance } = useParams();
   const navigate = useNavigate();
+  const location = useLocation(); //  현재 경로 확인용
  
   const [showNotice, setShowNotice] = useState(false);
   const [sendingNotice, setSendingNotice] = useState(false);
@@ -18,6 +19,10 @@ export default function Logs() {
   const [wsState, setWsState] = useState("connecting");
   const wsRef = useRef(null);
   const { t } = useLang();  
+
+  //   현재 경로에 따라 뒤로가기 대상 결정
+  const isOperator = location.pathname.startsWith("/op");
+  const backPath = isOperator ? "/op" : "/admin";
 
   useEffect(() => { 
     setLines([]);
@@ -74,7 +79,7 @@ export default function Logs() {
       wsRef.current = null;
       window.__ACTIVE_WS__ = null;
     }
-    navigate("/", { replace: true });
+    navigate(backPath, { replace: true });
   }; 
      
   const sendNotice = async (message) => {
@@ -92,8 +97,8 @@ export default function Logs() {
     
   return (
     // [수정] 배경: 라이트(gray-100) / 다크(gray-900)
-    <div className="p-6 min-h-screen bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-200">
-      
+    <div className="p-4 md:p-8 animate-fade-in">  
+
       {/* Header Section */}
       <div className="flex justify-between items-start mb-6">
         <div>
@@ -119,12 +124,12 @@ export default function Logs() {
       </div>
 
       {/* Log Terminal Window */}
-      {/* [수정] 테두리 및 그림자 추가 */}
+      {/* 테두리 및 그림자 추가 */}
       <div className="rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-        {/* [수정] 배경: 라이트(흰색) / 다크(검은색 - 터미널 느낌) */}
+        {/* 배경: 라이트(흰색) / 다크(검은색 - 터미널 느낌) */}
         <div className="p-4 h-[80vh] overflow-auto font-mono text-sm bg-white dark:bg-black transition-colors duration-200">
           {lines.length ? (
-            // [수정] 텍스트 색상: 라이트(진한 회색) / 다크(녹색 - 터미널 느낌)
+            //  텍스트 색상: 라이트(진한 회색) / 다크(녹색 - 터미널 느낌)
             <pre className="whitespace-pre-wrap text-gray-800 dark:text-green-400 transition-colors">
               {lines.join("")}
             </pre>
