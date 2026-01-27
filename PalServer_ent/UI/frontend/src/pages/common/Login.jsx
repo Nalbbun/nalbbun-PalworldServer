@@ -2,9 +2,12 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useLang } from "../../context/LangContext";
 import LangToggle from "../../components/LangToggle";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Login() {
   const { login } = useAuth();
+  const navigate = useNavigate();
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
   const [error, setError] = useState("");
@@ -15,10 +18,10 @@ export default function Login() {
     try {      
       const user = await login(id, pw);  
 
-      if (user?.role === 'op') {
-        navigate("/operator");
+      if (user.role === "op") {
+        navigate("/operator", { replace: true });
       } else {
-        navigate("/admin");
+        navigate("/admin", { replace: true });
       }
 
     } catch {

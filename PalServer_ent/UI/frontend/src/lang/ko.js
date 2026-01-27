@@ -125,4 +125,5 @@ export default {
     msgBuildComplete: "빌드 완료!",
     msgBuildFailed: "빌드 실패. 서버 로그를 확인하세요.",
     msgDeleteFailed: "삭제 실패",
+    msgUnAthorized: "접근 권한이 없습니다.",
 };

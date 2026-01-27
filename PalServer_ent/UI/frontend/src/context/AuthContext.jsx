@@ -3,39 +3,51 @@ import { createContext, useContext, useState, useEffect } from "react";
 import api from "../utils/api";
 import { useNavigate } from "react-router-dom";
 
+
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
+
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const safeGet = (key) => localStorage.getItem(key) || null;
 
   const [accessToken, setAccessToken] = useState(
     localStorage.getItem("accessToken")
-  );
-  const [loading, setLoading] = useState(true);
+  ); 
 
   useEffect(() => {
+    //새로고침 시 로컬스토리지에서 복원
+    const token = localStorage.getItem("accessToken");
+    const role = localStorage.getItem("userRole");
+    const name = localStorage.getItem("userName");
+
+    if (token && role) {
+      setUser({ username: name, role: role });
+    }
     setLoading(false);
   }, []);
   
   //  
   const login = async (username, password) => {
-//    console.log("[AUTH][LOGIN] try", username);
-
+    // 1. API 요청
     const res = await api.post("/auth/login", { username, password });
 
-//    console.log("[AUTH][LOGIN][OK]", res); 
+    // 2. 응답 데이터 저장 (Role 포함)
+    const { access_token, refresh_token, role } = res;
+    
+    localStorage.setItem("accessToken", access_token);
+    localStorage.setItem("refreshToken", refresh_token);
+    localStorage.setItem("userRole", role); 
+    localStorage.setItem("userName", username);
 
-    localStorage.setItem("accessToken", res.access_token);
-    localStorage.setItem("refreshToken", res.refresh_token);
-
-//    console.log("[AUTH][access_token][OK]", localStorage.getItem("accessToken") ); 
-	
-    setAccessToken(res.access_token);
-    setLoading(false);
-
-    navigate("/", { replace: true });
+    // 3. 상태 업데이트
+    const userData = { username, role: role};
+    setUser(userData);
+     
+    return userData;
   };
 
 	const logout = () => {
@@ -54,13 +66,13 @@ export const AuthProvider = ({ children }) => {
 	};
 	
   return (
-    <AuthContext.Provider
+<AuthContext.Provider
       value={{
-        accessToken,
-        setAccessToken,
+        user,
         login,
         logout,
         loading,
+        isAuthenticated: !!user,
       }}
     >
       {children}

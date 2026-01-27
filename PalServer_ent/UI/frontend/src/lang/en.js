@@ -132,4 +132,5 @@ export default {
   msgBuildComplete: "Build Complete!",
   msgBuildFailed: "Build Failed. Check server logs.",
   msgDeleteFailed: "Delete Failed",
+  msgUnAthorized: "You do not have access rights.",
 };
