@@ -318,7 +318,7 @@ export default function Dashboard() {
         instances={instances}
         status={status}
         loading={loading}
-		basePath="/op"
+		basePath="/operator"
         onStart={startInstance}
         onStop={stopInstance}
         onBackup={backupInstance}

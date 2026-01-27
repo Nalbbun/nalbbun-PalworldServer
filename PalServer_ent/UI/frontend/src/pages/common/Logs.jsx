@@ -21,8 +21,8 @@ export default function Logs() {
   const { t } = useLang();  
 
   //   현재 경로에 따라 뒤로가기 대상 결정
-  const isOperator = location.pathname.startsWith("/op");
-  const backPath = isOperator ? "/op" : "/admin";
+  const isOperator = location.pathname.startsWith("/operator");
+  const backPath = isOperator ? "/operator" : "/admin";
 
   useEffect(() => { 
     setLines([]);
