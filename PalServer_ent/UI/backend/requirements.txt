@@ -2,9 +2,9 @@ fastapi
 uvicorn[standard]
 python-multipart
 python-jose 
-passlib
+passlib[bcrypt]
+bcrypt==4.0.1
 websockets
 wsproto
 requests
 sqlalchemy
-bcrypt
