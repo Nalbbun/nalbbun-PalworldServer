@@ -274,10 +274,7 @@ export default function Dashboard() {
       {/* HEADER ACTION BAR: Layout 하단에 위치하는 Page Title 및 Action 버튼들 */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
 		{/* Title & Refresh */}
-        <div className="flex items-center gap-3">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-            {t("tldashboard")}
-          </h2>
+        <div className="flex items-center gap-3"> 
           <button
             onClick={handleManualRefresh}
             disabled={refreshing}

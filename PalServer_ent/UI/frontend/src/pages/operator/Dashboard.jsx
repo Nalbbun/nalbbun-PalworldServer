@@ -1,12 +1,10 @@
 import { useEffect, useRef,useState } from "react";
 import { useNavigate } from "react-router-dom";  
 import ServerTable from "../../components/ServerTable";
-import VersionSelectModal from "../../components/VersionSelectModal";
-import InstanceCreateModal from "../../components/InstanceCreateModal";
+import VersionSelectModal from "../../components/VersionSelectModal"; 
 import BlockingModal from "../../components/BlockingModal";
 import LoadingOverlay from "../../components/LoadingOverlay";
-import PasswordConfirmModal from "../../components/PasswordConfirmModal";
-import ImageManageModal from "../../components/ImageManageModal";
+import PasswordConfirmModal from "../../components/PasswordConfirmModal"; 
 import { useLang } from "../../context/LangContext";
 import api from "../../utils/api"; 
 import { safeCloseWS } from "../../utils/ws";
@@ -40,13 +38,11 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [message, setMessage] = useState("");
-
-  const [createOpen, setCreateOpen] = useState(false);
+ 
   const pollingRef = useRef(null); 
   const [updating, setUpdating] = useState(false);
   
-  const [updateMsg, setUpdateMsg] = useState("");
-  const [imgMngOpen, setImgMngOpen] = useState(false);  
+  const [updateMsg, setUpdateMsg] = useState(""); 
   const [authForImg, setAuthForImg] = useState(false);  
   
   const [versionModal, setVersionModal] = useState({
@@ -213,12 +209,7 @@ export default function Dashboard() {
 		}, 1500);
 	  }
 	};
-
-	// 이미지 관리 버튼 클릭 핸들러
-  const handleImageMngClick = () => {
-    // 설정 페이지처럼 비밀번호 확인 모달 오픈
-    setAuthForImg(true);
-  };
+ 
   /* ==================== EFFECT ==================== */
   useEffect(() => {
 	  if (window.__ACTIVE_WS__) {
@@ -272,7 +263,6 @@ export default function Dashboard() {
   return (
     <div className="p-10 min-h-screen bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white relative transition-colors duration-200">  {/* HEADER */}
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold"> {t("tldashboard")}</h1>
         <div className="flex gap-3"> 
           <button
             onClick={handleManualRefresh}
@@ -281,17 +271,6 @@ export default function Dashboard() {
             title="Refresh Status"
           >
             <RefreshIcon spin={refreshing} />
-          </button>
-		  <button
-            onClick={handleImageMngClick}
-            className="px-4 py-2 bg-indigo-600 rounded hover:bg-indigo-500 text-white font-bold shadow" >
-            {t("btnImgMng")}
-          </button>
-          <button
-            onClick={() => setCreateOpen(true)}
-            className="px-4 py-2 bg-blue-600 rounded hover:bg-blue-500 text-white shadow"
-          >
-            + {t("btninstance")}
           </button>
 		  <button
 			  onClick={() => setVersionModal({ open: true, mode: "update-all", target: null}) }
@@ -320,12 +299,6 @@ export default function Dashboard() {
 		onDelete={deleteInstance}
 		onConfig={openConfigWithAuth}
 		onSvrSave={sumitServerSave}
-      />
-
-      <InstanceCreateModal
-        open={createOpen}
-        onClose={() => setCreateOpen(false)}
-        onCreated={loadInstances}
       />
 	  
 	  <VersionSelectModal
@@ -363,13 +336,7 @@ export default function Dashboard() {
 				setAuthForImg(false); // 인증 모달 닫고
 				setImgMngOpen(true);  // 관리 모달 열기
 			}}
-		/>
-
-		{/* 2. 이미지 관리 모달 */}
-		<ImageManageModal
-			open={imgMngOpen}
-			onClose={() => setImgMngOpen(false)}
-		/>
+		/> 
     </div>
   );
 }
