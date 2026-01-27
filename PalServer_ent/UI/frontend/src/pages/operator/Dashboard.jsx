@@ -1,6 +1,5 @@
 import { useEffect, useRef,useState } from "react";
-import { useNavigate } from "react-router-dom"; 
-import ThemeToggle from "../components/ThemeToggle";
+import { useNavigate } from "react-router-dom";  
 import ServerTable from "../components/ServerTable";
 import VersionSelectModal from "../components/VersionSelectModal";
 import InstanceCreateModal from "../components/InstanceCreateModal";
@@ -9,7 +8,6 @@ import LoadingOverlay from "../components/LoadingOverlay";
 import PasswordConfirmModal from "../components/PasswordConfirmModal";
 import ImageManageModal from "../components/ImageManageModal";
 import { useLang } from "../../context/LangContext";
-import LangToggle from "../components/LangToggle";
 import api from "../../utils/api"; 
 import { safeCloseWS } from "../../utils/ws";
 import { ROUTE_EVENTS, onRouteChange } from "../../utils/routeEvents";
@@ -114,7 +112,7 @@ export default function Dashboard() {
     instances.forEach(loadStatus);
   };
   
-// [추가] 수동 새로고침 핸들러
+//   수동 새로고침 핸들러
   const handleManualRefresh = async () => {
     if (refreshing) return;
     setRefreshing(true); // 버튼만 뱅글뱅글 돌게 함
@@ -284,8 +282,6 @@ export default function Dashboard() {
           >
             <RefreshIcon spin={refreshing} />
           </button>
-          <LangToggle /> 
-          <ThemeToggle />
 		  <button
             onClick={handleImageMngClick}
             className="px-4 py-2 bg-indigo-600 rounded hover:bg-indigo-500 text-white font-bold shadow" >
