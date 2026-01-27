@@ -293,12 +293,6 @@ export default function Dashboard() {
           >
             + {t("btninstance")}
           </button>
-          <button
-            onClick={logout}
-            className="px-4 py-2 bg-red-600 rounded hover:bg-red-500 text-white shadow"
-          >
-            {t("btnlogout")}
-          </button>
 		  <button
 			  onClick={() => setVersionModal({ open: true, mode: "update-all", target: null}) }
 			  className="px-4 py-2 bg-green-700 rounded hover:bg-green-600 text-white shadow"
