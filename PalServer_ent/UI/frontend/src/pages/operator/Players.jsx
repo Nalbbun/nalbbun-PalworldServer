@@ -45,7 +45,7 @@ export default function Players() {
         <div>
           <button
             className="mb-4 px-4 py-2 rounded shadow-sm bg-white hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold transition-colors"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/operator")}
           >
              ← {t("btndashboard")}
           </button>

@@ -65,7 +65,7 @@ export default function Config() {
       setLoading(true);
       await api.post(`/config/apply/${instance}`);
       alert(t("msgServerRestarted"));
-      navigate("/", { replace: true });
+      navigate("/operator", { replace: true });
     } finally {
       setLoading(false);
     }
