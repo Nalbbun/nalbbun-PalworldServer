@@ -82,8 +82,7 @@ export default function Config() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">
           <span className="text-blue-600 dark:text-blue-400">{instance}</span> : {t("labConfig")}
-        </h1>
-        <LangToggle />
+        </h1> 
       </div>
 
       <button

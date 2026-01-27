@@ -74,7 +74,6 @@ export default function Config() {
         <h1 className="text-3xl font-bold">
           <span className="text-blue-600 dark:text-blue-400">{instance}</span> : {t("labConfig")}
         </h1>
-        <LangToggle />
       </div>
 
       <button

@@ -47,7 +47,7 @@ export default function ImageManageModal({ open, onClose }) {
 
     setLoading(true);
 
-    setMsg(`${t("msgBuilding")} (${t("msgBuildingDesc")})`);
+    setMsg(`${t("msgImgBuilding")} (${t("msgBuildingDesc")})`);
 
     try {
 

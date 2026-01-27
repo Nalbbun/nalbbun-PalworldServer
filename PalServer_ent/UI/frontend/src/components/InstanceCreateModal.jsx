@@ -67,13 +67,11 @@ export default function InstanceCreateModal({ open, onClose, onCreated }) {
     if (exists && !overwrite) {
       alert(t("msgNoOverwrite"));
       return;
-    }
-
-    const chk = await api.get(`/instance/exists/${name}`);
+    } 
+    
     let overwrite = false; 
-
     if (!name || !port|| !version|| !query) 
-		return alert(`{t("msginsCreatInfo")}`);
+	    return alert(`{t("msginsCreatInfo")}`); 
 
     await api.post("/instance/create", { name, port , query , version, overwrite });
     onCreated();

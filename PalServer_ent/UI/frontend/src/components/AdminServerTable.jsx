@@ -44,7 +44,7 @@ function normalizePorts(ports = []) {
 }
 
 
-export default function ServerTable({
+export default function AdminServerTable({
   instances,
   status,
   loading,

@@ -1,6 +1,6 @@
 import { useEffect, useRef,useState } from "react";
 import { useNavigate } from "react-router-dom";  
-import ServerTable from "../../components/ServerTable";
+import ServerTable from "../../components/AdminServerTable";
 import VersionSelectModal from "../../components/VersionSelectModal";
 import InstanceCreateModal from "../../components/InstanceCreateModal";
 import BlockingModal from "../../components/BlockingModal";

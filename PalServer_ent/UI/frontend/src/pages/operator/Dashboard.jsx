@@ -1,6 +1,6 @@
 import { useEffect, useRef,useState } from "react";
 import { useNavigate } from "react-router-dom";  
-import ServerTable from "../../components/ServerTable";
+import ServerTable from "../../components/OperatorServerTable";
 import VersionSelectModal from "../../components/VersionSelectModal"; 
 import BlockingModal from "../../components/BlockingModal";
 import LoadingOverlay from "../../components/LoadingOverlay";
@@ -295,8 +295,6 @@ export default function Dashboard() {
         onStart={startInstance}
         onStop={stopInstance}
         onBackup={backupInstance}
-        onUpdate={(cfg) => setVersionModal({ ...cfg, open: true })}
-		onDelete={deleteInstance}
 		onConfig={openConfigWithAuth}
 		onSvrSave={sumitServerSave}
       />
