@@ -17,7 +17,7 @@ export default function Login() {
     try {      
       const user = await login(id, pw);  
 
-      if (user.role === "op") {
+      if (user.role === "operator") {
         navigate("/operator", { replace: true });
       } else {
         navigate("/admin", { replace: true });
