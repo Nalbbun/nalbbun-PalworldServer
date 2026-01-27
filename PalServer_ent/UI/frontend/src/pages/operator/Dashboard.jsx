@@ -116,6 +116,7 @@ export default function Dashboard() {
     await refreshAllStatus(); // 상태 갱신
     setTimeout(() => setRefreshing(false), 500); // 너무 빨리 끝나면 어색하므로 0.5초 유지
   };
+  
   const openConfigWithAuth = (instance) => {
 	setConfirmConfig({ open: true, target: instance });
   };
@@ -128,16 +129,7 @@ export default function Dashboard() {
     refreshAllStatus();
     setLoading(false);
     setMessage("");
-  };
-  
-  const deleteInstance = async (n) => {
-	const ok = window.confirm(`⚠ ${t("msgConfirmInsDel")}`);
-	if (!ok) return;
-
-	await api.post(`/instance/${n}/delete`);
-	alert(t("msginstanceDeleted"));
-	loadInstances();  
-  };
+  }; 
 	  
   const startInstance = async (n) => {
 	const ok = window.confirm(` ${t("msgConfirmInsStart")}`);
