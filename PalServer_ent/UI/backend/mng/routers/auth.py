@@ -141,7 +141,9 @@ def login(data: dict, db: Session = Depends(get_db)):
     user_role = getattr(user, "role", "op") 
     if not user_role: 
         user_role = "op"
-        
+
+    log.debug(f"[Login] User '{username}' logged in as '{user_role}' ")
+
     return {
         "access_token": create_access_token(username),
         "refresh_token": create_refresh_token(username),
