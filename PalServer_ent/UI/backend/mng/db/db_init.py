@@ -47,7 +47,7 @@ def init_db(json_path: str = None):
             else:
                 log.info("[DB] Creating default admin user.")
                 create_user(db, "admin", "admin123!", role="admin")
-                create_user(db, "op", "op123!", role="op")
+                create_user(db, "op", "op123!", role="operator")
 
         db.close()
 

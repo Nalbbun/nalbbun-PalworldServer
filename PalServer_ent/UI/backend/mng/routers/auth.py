@@ -40,7 +40,7 @@ def _create_token(payload: dict, expires_delta: timedelta):
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
 
-def create_access_token(username: str, role: str = "op") -> str:
+def create_access_token(username: str, role: str) -> str:
     return _create_token(
         {"sub": username, "type": "access", "role": role}, 
         timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
@@ -138,9 +138,9 @@ def login(data: dict, db: Session = Depends(get_db)):
 
     log.info(f"[Login] User '{username}' logged in.")
     # role 정보가 있다면 반환, 없으면 기본값(op) 처리 (DB 스키마 확인 필요)
-    user_role = getattr(user, "role", "op") 
+    user_role = getattr(user, "role", "operator") 
     if not user_role: 
-        user_role = "op"
+        user_role = "operator"
 
     log.debug(f"[Login] User '{username}' logged in as '{user_role}' ")
 
