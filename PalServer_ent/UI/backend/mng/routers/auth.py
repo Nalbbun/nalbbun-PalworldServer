@@ -145,7 +145,7 @@ def login(data: dict, db: Session = Depends(get_db)):
     log.debug(f"[Login] User '{username}' logged in as '{user_role}' ")
 
     return {
-        "access_token": create_access_token(username),
+        "access_token": create_access_token(username, user_role),
         "refresh_token": create_refresh_token(username),
         "token_type": "bearer",
         "username": username,  
