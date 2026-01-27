@@ -149,7 +149,7 @@ def login(data: dict, db: Session = Depends(get_db)):
         "refresh_token": create_refresh_token(username),
         "token_type": "bearer",
         "username": username,  
-        "role": user_role      
+        "role": user_role 
     }
 
 
