@@ -43,6 +43,8 @@ export default function PasswordConfirmModal({ open, onClose, onSuccess }) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && submit()}
+          autoComplete="new-password"
+          name="confirm-password-field"
         />
 
         {error && (

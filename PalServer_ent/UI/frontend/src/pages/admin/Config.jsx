@@ -127,6 +127,8 @@ export default function Config() {
         {Object.entries(options).map(([k, v]) => {
           const type = detectType(v);
           const danger = isDangerOption(k);
+          const isPw = isPasswordField(k);
+
           return (
             <div key={k} className="flex flex-col gap-1">
               <label className="flex items-center gap-2 text-sm font-medium mb-1">
@@ -176,16 +178,18 @@ export default function Config() {
                 <div className="relative">
                   {/* 비밀번호 필드 여부에 따라 input type 결정 */}
                   <input
-                    type={isPasswordField(k) && !showPw[k] ? "password" : "text"} 
-                    className={`${getInputClass(danger)} ${isPasswordField(k) ? "pr-10" : ""}`} // 아이콘 공간 확보
+                    type={isPw && !showPw[k] ? "password" : "text"} 
+                    className={`${getInputClass(danger)} ${isPw ? "pr-10" : ""}`} // 아이콘 공간 확보
                     value={String(v)}
+                    autoComplete={isPw ? "new-password" : "off"}
+                    name={k} // 랜덤한 이름보다 명시적 이름이 낫지만 autocomplete가 중요함
                     onChange={(e) =>
                       setOptions({ ...options, [k]: e.target.value })
                     }
                   />
                   
                   {/* 비밀번호 필드일 경우에만 눈 아이콘 표시 */}
-                  {isPasswordField(k) && (
+                  {isPw && (
                     <button
                       type="button"
                       onClick={() => togglePw(k)}
