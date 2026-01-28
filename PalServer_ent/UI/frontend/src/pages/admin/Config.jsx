@@ -147,7 +147,7 @@ export default function Config() {
               {/* BOOLEAN */}
               {type === "boolean" && (
                 <select
-                  className={inputClass}
+                  className={baseInputClass}
                   value={v}
                   onChange={(e) =>
                     setOptions({ ...options, [k]: e.target.value })
@@ -162,7 +162,7 @@ export default function Config() {
               {type === "number" && (
                 <input
                   type="number"
-                  className={inputClass}
+                  className={baseInputClass}
                   value={v}
                   onChange={(e) =>
                     setOptions({ ...options, [k]: e.target.value })
@@ -175,8 +175,7 @@ export default function Config() {
                 <div className="relative">
                   {/* 비밀번호 필드 여부에 따라 input type 결정 */}
                   <input
-                    type={isPasswordField(k) && !showPw[k] ? "password" : "text"}
-                    disabled={danger}
+                    type={isPasswordField(k) && !showPw[k] ? "password" : "text"} 
                     className={`${getInputClass(danger)} ${isPasswordField(k) ? "pr-10" : ""}`} // 아이콘 공간 확보
                     value={String(v)}
                     onChange={(e) =>
