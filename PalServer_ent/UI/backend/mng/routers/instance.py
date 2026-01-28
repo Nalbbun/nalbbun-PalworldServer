@@ -277,7 +277,7 @@ def backup_instance(name: str, user=Depends(require_auth)):
     else:
         log.info(f"[backup] Instance {name} is stopped. Skipping memory save.")
 
-    # 2. [Shell] 파일 시스템 백업 실행
+    # 1. [Shell] 파일 시스템 백업 실행
     script = os.path.join(CONTROLLER_DIR, "backup.sh")
 
     # 쉘 스크립트에 인자 전달

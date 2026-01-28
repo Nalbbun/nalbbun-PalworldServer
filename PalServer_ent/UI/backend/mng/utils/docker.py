@@ -4,7 +4,7 @@ from mng.core.config import log
 
 
 def is_instance_running(name: str) -> bool:
-    out = run_cmd(f"docker inspect -f '{{{{.State.Running}}}}' {name} 2>/dev/null")
+    out = run_cmd(f"docker inspect -f '{{{{.State.Running}}}}' {name} 2>/dev/null || echo 'false'")
     return out.strip() == "true"
 
 
