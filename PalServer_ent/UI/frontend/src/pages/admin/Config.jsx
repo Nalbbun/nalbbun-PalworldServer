@@ -87,9 +87,19 @@ export default function Config() {
     return k.includes("password") || k.includes("pwd") || k.includes("secret") || k.includes("token");
   };  
   // [스타일 공통 클래스]
-  // 입력 필드: 라이트(흰색+테두리) / 다크(어두운회색+테두리)
-  const inputClass = "w-full p-2 rounded border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors";
-
+  // 기본 스타일
+  const baseInputClass = "w-full p-2 rounded border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors";
+  
+  // 활성/비활성 상태에 따른 스타일 분기
+  const getInputClass = (isDisabled) => {
+      if (isDisabled) {
+          // 비활성: 회색 배경, 커서 금지, 투명도 조절
+          return `${baseInputClass} bg-gray-200 dark:bg-gray-700 cursor-not-allowed opacity-60`;
+      }
+      // 활성: 흰색/검은색 배경
+      return `${baseInputClass} bg-white dark:bg-gray-800`;
+  };
+  
   return (
     // 배경: 라이트(gray-100) / 다크(gray-900)
     <div className="p-8 min-h-screen bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-200">
