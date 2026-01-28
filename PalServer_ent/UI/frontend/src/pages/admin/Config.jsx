@@ -87,10 +87,11 @@ export default function Config() {
     return k.includes("password") || k.includes("pwd") || k.includes("secret") || k.includes("token");
   };  
   // [스타일 공통 클래스]
-  // 기본 스타일
-  const baseInputClass = "w-full p-2 rounded border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors";
-  
+  // 기본 스타일  
+  const inputClass = "w-full p-2 rounded border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors";
+
   // 활성/비활성 상태에 따른 스타일 분기
+  const baseInputClass = "w-full p-2 rounded border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors";
   const getInputClass = (isDisabled) => {
       if (isDisabled) {
           // 비활성: 회색 배경, 커서 금지, 투명도 조절
@@ -147,7 +148,7 @@ export default function Config() {
               {/* BOOLEAN */}
               {type === "boolean" && (
                 <select
-                  className={baseInputClass}
+                  className={inputClass}
                   value={v}
                   onChange={(e) =>
                     setOptions({ ...options, [k]: e.target.value })
@@ -162,7 +163,7 @@ export default function Config() {
               {type === "number" && (
                 <input
                   type="number"
-                  className={baseInputClass}
+                  className={inputClass}
                   value={v}
                   onChange={(e) =>
                     setOptions({ ...options, [k]: e.target.value })
