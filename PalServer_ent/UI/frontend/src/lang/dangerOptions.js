@@ -5,6 +5,8 @@
 //  "bEnableFriendlyFire",
 
 export const BASE_DANGER_OPTIONS = [
+  "ServerName",
+  "ServerDescription",
   "ServerPassword",
   "AdminPassword",
   "bUseAuth",
