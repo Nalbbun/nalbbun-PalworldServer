@@ -70,19 +70,17 @@ export default function Config() {
   return (
     // [수정] 배경: 라이트(gray-100) / 다크(gray-900)
     <div className="p-8 min-h-screen bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-200">
+      <button
+        className="mb-6 px-4 py-2 rounded shadow-sm bg-white hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold transition-colors"
+        onClick={() => navigate("/admin")}
+      >
+      {t("btndashboard")}
+      </button>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">
           <span className="text-blue-600 dark:text-blue-400">{instance}</span> : {t("labConfig")}
         </h1>
       </div>
-
-      <button
-        className="mb-6 px-4 py-2 rounded shadow-sm bg-white hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold transition-colors"
-        onClick={() => navigate("/admin")}
-      >
-        ← {t("btndashboard")}
-      </button>
-
       {/* 기본 설정 로드 경고창: 노란색 계열 */}
       {isDefault && (
         <div className="mb-6 p-4 rounded text-sm font-semibold bg-yellow-100 text-yellow-800 border border-yellow-200 dark:bg-yellow-900/50 dark:text-yellow-200 dark:border-yellow-700">
@@ -104,7 +102,7 @@ export default function Config() {
 
                 {danger && (
                   <span className="text-xs bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-100 px-2 py-0.5 rounded border border-red-200 dark:border-red-700 font-bold">
-                    DANGER
+                    {t("labDanger")}
                   </span>
                 )}
                 <Tooltip

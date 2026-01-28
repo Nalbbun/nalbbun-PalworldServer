@@ -61,7 +61,8 @@ export default {
   labCurrentVersion: "Current version",
   labLatestUp: "Upload Version",
   labselectVersionDesc: "Select the PalWorld version to install on the server.",
-  labRepositoryList: "Repository List", 
+  labRepositoryList: "Repository List",
+  labDanger: "Danger",
 
   msgWellcome: "Welcome to Manager!",
   msgIntroduction: "The Nalbbun PalWorld Server Dashboard allows you to efficiently manage and monitor your server instances. Utilize various features to optimize server operations.",

@@ -1,8 +1,10 @@
 // 기본 위험 옵션 (기존 유지)
+
+//  "DeathPenalty",
+//  "bEnablePlayerToPlayerDamage", 
+//  "bEnableFriendlyFire",
+
 export const BASE_DANGER_OPTIONS = [
-  "DeathPenalty",
-  "bEnablePlayerToPlayerDamage",
-  "bEnableFriendlyFire",
   "ServerPassword",
   "AdminPassword",
   "bUseAuth",
@@ -17,6 +19,13 @@ export const EXTRA_DANGER_OPTIONS = [
   "bAllowClientMod",
   "RCONEnabled",
   "RESTAPIEnabled",
+  "PublicPort",
+  "PublicIP",
+  "RCONPort",
+  "Region",
+  "BanListURL",
+  "RESTAPIPort",
+  "BanListURL", 
 ];
 
 // 최종 병합 (중복 제거)

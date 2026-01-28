@@ -61,7 +61,8 @@ export default {
     labCurrentVersion: "현재 버전",
 	labLatestUp: "버전 최신 업데이트",
     labselectVersionDesc: "서버에 설치할 PalWorld 버전을 선택하세요.",
-    labRepositoryList: "저장소 목록", 
+    labRepositoryList: "저장소 목록",
+    labDanger: "위험",
 	
     msgWellcome: "관리 도구에 오신 것을 환영합니다!",
     msgIntroduction: "Nalbbun PalWorld Server 대시보드를 통해 서버 인스턴스를 효율적으로 관리하고 모니터링할 수 있습니다. 다양한 기능을 활용하여 서버 운영을 최적화하세요.",
