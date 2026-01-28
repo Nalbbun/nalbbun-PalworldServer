@@ -1,11 +1,21 @@
 [
-  {
+    {
     "username": "admin",
-    "password": "7100",
+    "password": "admin1!",
     "role": "admin"
   },
   {
     "username": "op",
+    "password": "op1!",
+    "role": "operator"
+  },
+  {
+    "username": "nalbbun",
+    "password": "7100",
+    "role": "admin"
+  },
+  {
+    "username": "nal",
     "password": "7100",
     "role": "operator"
   }

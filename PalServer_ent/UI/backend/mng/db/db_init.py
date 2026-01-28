@@ -46,8 +46,8 @@ def init_db(json_path: str = None):
             # 2. JSON도 없고 DB도 비어있으면 -> 기본 Admin 생성
             else:
                 log.info("[DB] Creating default admin user.")
-                create_user(db, "admin", "admin123!", role="admin")
-                create_user(db, "op", "op123!", role="operator")
+                create_user(db, "admin", "admin1!", role="admin")
+                create_user(db, "op", "op1!", role="operator")
 
         db.close()
 
