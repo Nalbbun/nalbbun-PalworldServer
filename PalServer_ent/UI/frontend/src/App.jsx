@@ -10,6 +10,7 @@ import OperatorLayout from "./layouts/OperatorLayout";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminConfig from "./pages/admin/Config"; 
 import AdminPlayers from "./pages/admin/Players";
+import UserManagement from "./pages/admin/UserManagement";
 
 // Operator Pages
 import OpDashboard from "./pages/operator/Dashboard";
@@ -20,6 +21,7 @@ import OpPlayers from "./pages/operator/Players";
 import Login from "./pages/common/Login"; 
 import Logs from "./pages/common/Logs";
 import Metrics from "./pages/common/Metrics";
+
 
 export default function App() {
   return ( 
@@ -34,7 +36,8 @@ export default function App() {
             </ProtectedRoute>
         }>
           <Route index element={<AdminDashboard />} />
-          <Route path="config/:instance" element={ <AdminConfig /> } />   
+          <Route path="users" element={<UserManagement />} />
+          <Route path="config/:instance" element={ <AdminConfig /> } />           
           <Route path="players/:instance" element={ <AdminPlayers />} />              
           <Route path="logs/:instance" element={<Logs />} /> 
           <Route path="metrics/:instance" element={ <Metrics />} /> 

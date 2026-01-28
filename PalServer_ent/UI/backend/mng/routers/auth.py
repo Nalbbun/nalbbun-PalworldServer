@@ -4,6 +4,7 @@ from jose import JWTError, jwt
 import json, os
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
+from typing import List, Optional 
 
 from mng.core.config import (
     log,
@@ -12,11 +13,24 @@ from mng.core.config import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     REFRESH_TOKEN_EXPIRE_DAYS,
 )
-from mng.db.database import get_db
-from mng.db.db_crud import get_user_by_username, verify_password
+from mng.db.database import get_db , User
+from mng.db import db_crud
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
+class UserCreateReq(BaseModel):
+    username: str
+    password: str
+    role: str = "operator"  # admin or operator
+
+class UserListResp(BaseModel):
+    id: int
+    username: str
+    role: str
+
+    class Config:
+        orm_mode = True
+        
 # =========================
 # JWT CONFIG (단일 소스)
 # =========================
@@ -195,3 +209,73 @@ def verify_password_api(
 def logout(user=Depends(require_auth)):
     log.info(f"[logout] User '{user}' logged out.")
     return {"status": "success"}
+
+
+# =========================
+# [추가] User Management API
+# =========================
+
+@router.post("/register")
+def register_user(
+    req: UserCreateReq,
+    current_user=Depends(require_auth),
+    db: Session = Depends(get_db)
+):
+    # 관리자만 생성 가능
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Permission denied")
+
+    # 중복 확인
+    existing = db_crud.get_user_by_username(db, req.username)
+    if existing:
+        raise HTTPException(status_code=400, detail="Username already exists")
+
+    # 해싱 및 저장
+    hashed_pw = db_crud.pwd_context.hash(req.password)
+    
+    # DB 모델 객체 생성 (프로젝트 구조에 맞게 수정 필요)
+    new_user = User(
+        username=req.username,
+        password=hashed_pw,
+        role=req.role
+    )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+
+    log.info(f"[UserMgmt] Admin '{current_user.username}' created user '{req.username}' ({req.role})")
+    return {"status": "success", "username": new_user.username}
+
+@router.get("/user")    
+def list_users(current_user=Depends(require_auth), db: Session = Depends(get_db)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Admin only")
+    
+    # crud 함수 호출
+    return db_crud.get_users(db)
+ 
+@router.delete("/delete/{username}")
+def delete_user_api(username: str, current_user=Depends(require_auth), db: Session = Depends(get_db)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Admin only")
+    
+    # crud 함수 호출
+    success = db_crud.delete_user(db, username)
+    if not success:
+        raise HTTPException(status_code=404, detail="User not found")
+        
+    return {"status": "deleted"}
+
+
+@router.get("/users", response_model=List[UserListResp])
+def get_all_users(
+    current_user=Depends(require_auth),
+    db: Session = Depends(get_db)
+):
+    # 관리자만 조회 가능
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Permission denied")
+     
+    # 혹은 Raw SQL 사용 가능
+    users = db.query(User).all()
+    return users

@@ -32,6 +32,15 @@ export default function AdminLayout() {
 
           {/* Right Controls */}
           <div className="flex items-center gap-3">
+            {/* [추가] 관리자일 때만 사용자 관리 버튼 노출 */}
+             {user && user.role === 'admin' && (
+                <Link 
+                  to="/admin/users"
+                  className="hidden md:inline-block px-3 py-1.5 text-sm font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition mr-2"
+                >
+                  👥 Users
+                </Link>
+             )}
              {/* 유저 이름 표시 */}
             {user && (
               <span className="hidden md:block text-sm font-medium text-gray-500 dark:text-gray-400 mr-2">
