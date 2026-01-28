@@ -40,23 +40,22 @@ export default function Dashboard() {
   const [message, setMessage] = useState("");
  
   const pollingRef = useRef(null); 
-  const [updating, setUpdating] = useState(false);
-  
-  const [updateMsg, setUpdateMsg] = useState(""); 
-  const [authForImg, setAuthForImg] = useState(false);  
-  
+  const [updating, setUpdating] = useState(false); 
+
+  const [updateMsg, setUpdateMsg] = useState("");  
+   // type: 'CONFIG' | 'UPDATE' | null
+  // data: instanceName (설정 이동 시 필요)
+  const [authPayload, setAuthPayload] = useState({
+    open: false,
+    type: null,
+    data: null, 
+  });
   const [versionModal, setVersionModal] = useState({
     open: false,
     mode: null,    // load | promote | update-instance | update-all
     target: null,  // instance name
     currentVersion: null,  // current Version
-  });
-  
-  const [confirmConfig, setConfirmConfig] = useState({
-	open: false,
-	target: null,
-  });
-
+  }); 
 
   /* ==================== LOAD ==================== */
 	const loadInstances = async () => {
@@ -115,11 +114,7 @@ export default function Dashboard() {
     await loadInstances();    // 인스턴스 목록 갱신
     await refreshAllStatus(); // 상태 갱신
     setTimeout(() => setRefreshing(false), 500); // 너무 빨리 끝나면 어색하므로 0.5초 유지
-  };
-  
-  const openConfigWithAuth = (instance) => {
-	setConfirmConfig({ open: true, target: instance });
-  };
+  }; 
 
   /* ==================== ACTIONS ==================== */
   const action = async (msg, fn) => {
@@ -201,7 +196,29 @@ export default function Dashboard() {
 		}, 1500);
 	  }
 	};
- 
+   // 1. 설정 버튼 클릭 시
+  const openConfigWithAuth = (instance) => {
+    setAuthPayload({ open: true, type: 'CONFIG', data: instance });
+  };
+    // 3. 서버 생성 클릭 시
+  const handleUpdateClick = () => {
+    setAuthPayload({ open: true, type: 'UPDATE', data: null });
+  }; 
+
+  // [통합] 인증 성공 시 분기 처리
+  const handleAuthSuccess = () => {
+    const { type, data } = authPayload;
+    
+    // 모달 닫기 및 초기화
+    setAuthPayload({ open: false, type: null, data: null });
+
+    // 타입에 따른 동작 수행
+    if (type === 'CONFIG') {
+      nav(`config/${data}`);
+    } else if (type === 'UPDATE') {
+      setVersionModal({ open: true, mode: "update-all", target: null});
+    }
+  };
   /* ==================== EFFECT ==================== */
   useEffect(() => {
 	  if (window.__ACTIVE_WS__) {
@@ -265,7 +282,7 @@ export default function Dashboard() {
             <RefreshIcon spin={refreshing} />
           </button>
 		  <button
-			  onClick={() => setVersionModal({ open: true, mode: "update-all", target: null}) }
+			  onClick={handleUpdateClick }
 			  className="px-4 py-2 bg-green-700 rounded hover:bg-green-600 text-white shadow"
 		  >
 		   {t("btnallupdate")}
@@ -301,32 +318,15 @@ export default function Dashboard() {
 			setVersionModal({ open: false, mode: null, target: null , currentVersion: null , })
 		  }
 		/>
-		<BlockingModal
-		  open={updating}
-		  message={updateMsg}
-		/>
-		
-       <LoadingOverlay 
-		  show={loading} 
-		  message={message}/>
+		<BlockingModal open={updating} message={updateMsg} />
+		<LoadingOverlay show={loading} message={message} />
 
-		<PasswordConfirmModal
-			open={confirmConfig.open}
-			onClose={() => setConfirmConfig({ open: false, target: null })}
-			onSuccess={() => {
-				nav(`config/${confirmConfig.target}`);
-				setConfirmConfig({ open: false, target: null });
-			}}
-		/>
-		{/* 1. 비밀번호 확인 모달 (이미지 관리용) */}
-		<PasswordConfirmModal
-			open={authForImg}
-			onClose={() => setAuthForImg(false)}
-			onSuccess={() => {
-				setAuthForImg(false); // 인증 모달 닫고
-				setImgMngOpen(true);  // 관리 모달 열기
-			}}
-		/> 
+		{/* [통합된 비밀번호 확인 모달] */} 
+	  <PasswordConfirmModal
+		open={authPayload.open}
+		onClose={() => setAuthPayload({ open: false, type: null, data: null })}
+		onSuccess={handleAuthSuccess}
+	  />
     </div>
   );
 }
