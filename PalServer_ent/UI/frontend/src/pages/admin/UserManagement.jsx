@@ -120,7 +120,7 @@ export default function UserManagement() {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-96 border border-gray-200 dark:border-gray-700">
-            <h2 className="text-xl font-bold mb-4">{t("tlAddUser") || "Add New User"}</h2>
+            <h2 className="text-xl font-bold mb-4">{t("labUser")}</h2>
             <form onSubmit={handleRegister} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-1">{t("labid")}</label>

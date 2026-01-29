@@ -34,7 +34,10 @@ export default {
   btnduplicateCheck: "Duplicate Check",
   btnImgMng: "Manage Images",
   btnImgBuild: "Build",
+  btnUser: "User",
+  btnAddUser: "Add User",
 
+  labUser: "User",
   labAdmin: "Admin",
   labOperator: "Operator",
   labid: "Username",

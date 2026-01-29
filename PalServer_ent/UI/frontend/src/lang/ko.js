@@ -34,7 +34,10 @@ export default {
     btnduplicateCheck: "중복 확인",
     btnImgMng: "이미지 관리",
     btnImgBuild: "빌드",
+    btnUser: "사용자",
+    btnAddUser: "사용자 추가",
 	
+    labUser: "사용자",
     labAdmin: "관리자",
     labOperator: "운영자",    
     labid: "아이디",

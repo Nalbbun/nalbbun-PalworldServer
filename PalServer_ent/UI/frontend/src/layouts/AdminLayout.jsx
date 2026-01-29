@@ -38,7 +38,7 @@ export default function AdminLayout() {
                   to="/admin/users"
                   className="hidden md:inline-block px-3 py-1.5 text-sm font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition mr-2"
                 >
-                  👥 Users
+                  👥 {t("btnUser")}
                 </Link>
              )}
              {/* 유저 이름 표시 */}
