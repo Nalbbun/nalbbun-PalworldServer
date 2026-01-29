@@ -145,7 +145,7 @@ export default function UserManagement() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Role</label>
+                <label className="block text-sm font-medium mb-1">{t("labRole")}</label>
                 <select
                   className="w-full p-2 rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
                   value={formData.role}
@@ -161,13 +161,13 @@ export default function UserManagement() {
                   onClick={() => setIsModalOpen(false)}
                   className="px-4 py-2 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 rounded"
                 >
-                  Cancel
+                  {t("btnCancel")}
                 </button>
                 <button
                   type="submit"
                   className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded"
                 >
-                  Create
+                  {t("btnCreate")}
                 </button>
               </div>
             </form>
