@@ -26,7 +26,7 @@ export default function UserManagement() {
       const res = await api.get("/auth/users");
       setUsers(res || []);
     } catch (e) {
-      console.error("Failed to load users", e);
+      console.error(t("msgFailedToLoadUsers"), e);
     }
   };
 
@@ -38,7 +38,7 @@ export default function UserManagement() {
       await api.delete(`/auth/delete/${username}`);
       await loadUsers();
     } catch (e) {
-      alert("Error deleting user");
+      alert(t("msgErrorDeletingUser"));
     } finally {
       setLoading(false);
     }
@@ -54,9 +54,9 @@ export default function UserManagement() {
       setIsModalOpen(false);
       setFormData({ username: "", password: "", role: "operator" }); // 초기화
       await loadUsers();
-      alert("User Created!");
+      alert(t("msgUserCreated"));
     } catch (e) {
-      alert("Failed to create user. (Duplicate ID?)");
+      alert(t("msgFailedToCreateUser"));
     } finally {
       setLoading(false);
     }
@@ -65,12 +65,12 @@ export default function UserManagement() {
   return (
     <div className="p-8 min-h-screen bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-200 animate-fade-in">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">{t("tlUserManagement") || "User Management"}</h1>
+        <h1 className="text-3xl font-bold">{t("tlUserManagement")}</h1>
         <button
           onClick={() => setIsModalOpen(true)}
           className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded shadow-sm transition"
         >
-          + {t("btnAddUser") || "Add User"}
+          + {t("btnAddUser")}
         </button>
       </div>
 
@@ -79,9 +79,9 @@ export default function UserManagement() {
         <table className="w-full text-left">
           <thead className="bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 uppercase text-xs font-bold">
             <tr>
-              <th className="p-4">Username</th>
-              <th className="p-4">Role</th>
-              <th className="p-4 text-right">Actions</th>
+              <th className="p-4">{t("labid")}</th>
+              <th className="p-4">{t("labRole")}</th>
+              <th className="p-4 text-right">{t("labActions")}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -103,14 +103,14 @@ export default function UserManagement() {
                       onClick={() => handleDelete(u.username)}
                       className="px-3 py-1 bg-red-100 text-red-600 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/50 rounded text-sm font-semibold transition"
                     >
-                      Delete
+                      {t("btnDelete")}
                     </button>
                   )}
                 </td>
               </tr>
             ))}
             {users.length === 0 && (
-                <tr><td colSpan="3" className="p-8 text-center text-gray-500">No users found.</td></tr>
+                <tr><td colSpan="3" className="p-8 text-center text-gray-500">{t("msgNoUsersFound")}</td></tr>
             )}
           </tbody>
         </table>
@@ -123,7 +123,7 @@ export default function UserManagement() {
             <h2 className="text-xl font-bold mb-4">{t("tlAddUser") || "Add New User"}</h2>
             <form onSubmit={handleRegister} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Username</label>
+                <label className="block text-sm font-medium mb-1">{t("labid")}</label>
                 <input
                   type="text"
                   required
@@ -134,7 +134,7 @@ export default function UserManagement() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Password</label>
+                <label className="block text-sm font-medium mb-1">{t("labpassword")}</label>
                 <input
                   type="password"
                   required
@@ -151,8 +151,8 @@ export default function UserManagement() {
                   value={formData.role}
                   onChange={e => setFormData({...formData, role: e.target.value})}
                 >
-                  <option value="operator">Operator</option>
-                  <option value="admin">Admin</option>
+                  <option value="operator">{t("labOperator")}</option>
+                  <option value="admin">{t("labAdmin")}</option>
                 </select>
               </div>
               <div className="flex justify-end gap-2 mt-4">

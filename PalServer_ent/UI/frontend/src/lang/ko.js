@@ -5,6 +5,7 @@ export default {
     tlImageMng: "인스턴스 이미지 관리",
     tlAdminDashboard: "Nalbbun PalWorld Server 관리자 대시보드",
     tlOperatorDashboard: "Nalbbun PalWorld Server 운영자 대시보드",
+    tlUserManagement: "사용자 관리",
 	
     btnlogin: "로그인",
     btndashboard: "대시보드",
@@ -37,6 +38,8 @@ export default {
     labAdmin: "관리자",
     labOperator: "운영자",    
     labid: "아이디",
+    labRole: "역할",
+    labAction: "기능",
     labConfig: "서버 설정 정보",
     lablogs: "로그 정보",
     labpassword: "비밀번호",
@@ -118,7 +121,7 @@ export default {
     msgNewImgConfirmBuild:  "새 이미지를 빌드하시겠습니까?",
     msgImgBuilding:  "이미지 빌드 중...",  
     msgNoImages: "이미지가 없습니다.",
-    msgImgBuildDesc: "* steamcmd로부터 새로운 도커 이미지를 빌드합니다. 몇 분 정도 소요될 수 있습니다.",
+    msgImgBuildDesc: "* steam 로부터 새로운 도커 이미지를 빌드합니다. 몇 분 정도 소요될 수 있습니다.",
     msgCreatImage :"새 이미지 생성",
     msgFailedToLoadImages: "이미지 불러오기 실패",
     msgImgConfirmDelete: "이 이미지를 삭제하시겠습니까?",
@@ -127,4 +130,11 @@ export default {
     msgBuildFailed: "빌드 실패. 서버 로그를 확인하세요.",
     msgDeleteFailed: "삭제 실패",
     msgUnAthorized: "접근 권한이 없습니다.",
+    msgFailedToLoadUsers: "사용자 불러오기 실패",
+    msgConfirmDelete: "삭제하시겠습니까?",
+    msgErrorDeletingUser: "사용자 삭제 중 오류 발생",
+    msgUserCreated: "사용자가 생성되었습니다 !",
+    msgFailedToCreateUser: "사용자 생성 실패. (중복된 ID?)",
+    msgNoUsersFound: "사용자를 찾을 수 없습니다.",
+
 };
