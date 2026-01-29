@@ -109,6 +109,21 @@ echo "[INFO] Source     -> $SOURCE_FILE"
 
 
 #############################################
+# 7. (선택) Palworld cmd 자동완성
+#############################################
+echo "----------------------------------------------"
+read -r -p "Do you want to Palworld cmd completion? (y/N): " CMD_COMP
+if [[ "$CMD_COMP" =~ ^[Yyyes]$ ]]; then
+  sudo cp "$BASE_DIR/cmm/completion/paladmin.bash" /etc/bash_completion.d/paladmin
+  sudo chmod 644 /etc/bash_completion.d/paladmin
+  source /etc/bash_completion
+
+  echo "[OK] Command completion installed."
+else
+  echo "[SKIP] Command completion skipped."
+fi
+
+#############################################
 # 6. (선택) Palworld 이미지 생성
 #############################################
 echo "----------------------------------------------"
@@ -205,20 +220,6 @@ echo "[DONE] Docker networks initialized successfully."
 echo "[INSTALL] Starting Web UI (Frontend + Backend)..." 
 docker compose -f "$BASE_DIR/UI/docker-compose.yml" up -d --build --force-recreate --remove-orphans
 
-#############################################
-# 7. (선택) Palworld cmd 자동완성
-#############################################
-echo "----------------------------------------------"
-read -r -p "Do you want to Palworld cmd completion? (y/N): " CMD_COMP
-if [[ "$CMD_COMP" =~ ^[Yyyes]$ ]]; then
-  sudo cp "$BASE_DIR/cmm/completion/paladmin.bash" /etc/bash_completion.d/paladmin
-  sudo chmod 644 /etc/bash_completion.d/paladmin
-  source /etc/bash_completion
-
-  echo "[OK] Command completion installed."
-else
-  echo "[SKIP] Command completion skipped."
-fi
 
 
 #############################################
