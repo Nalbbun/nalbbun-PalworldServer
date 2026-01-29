@@ -129,7 +129,7 @@ def require_auth(authorization: str = Header(None), db: Session = Depends(get_db
         log.warning("[AUTH] Token verification failed")
         raise HTTPException(status_code=401, detail="Invalid token")
 
-    user = get_user_by_username(db, userToken)
+    user = db_crud.get_user_by_username(db, userToken)
 
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
@@ -145,9 +145,9 @@ def login(data: dict, db: Session = Depends(get_db)):
     username = data.get("username")
     password = data.get("password")
 
-    user = get_user_by_username(db, username)
+    user = db_crud.get_user_by_username(db, username)
 
-    if not user or not verify_password(password, user.password):
+    if not user or not db_crud.verify_password(password, user.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     log.info(f"[Login] User '{username}' logged in.")
@@ -197,7 +197,7 @@ def verify_password_api(
     #    get_user_by_username()을 다시 호출할 필요가 없습니다. (코드 삭제)
 
     # 2. 바로 검증 수행 (user.password에는 DB의 해시값이 들어있습니다)
-    ok = verify_password(body.password, user.password)
+    ok = db_crud.verify_password(body.password, user.password)
 
     return {
         "verified": ok,
