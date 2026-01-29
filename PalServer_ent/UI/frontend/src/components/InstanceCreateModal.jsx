@@ -32,17 +32,17 @@ export default function InstanceCreateModal({ open, onClose, onCreated }) {
     setExists(false);
     setOverwrite(false);
   };
-    const checkDuplicate = async () => {
+
+  const checkDuplicate = async () => {
     if (!name) {
       alert(t("labinstanceName"));
       return;
     }
 
-    setChecking(true);
     try {
       const res = await api.get(`/instance/exists/${name}`);
-      setExists(res.exists);
-      setChecked(true);
+      setExists(res.exists); 
+      setChecking(true);
 
       if (res.exists) {
         const ok = window.confirm(

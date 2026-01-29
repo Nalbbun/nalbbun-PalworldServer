@@ -81,7 +81,7 @@ export default function UserManagement() {
             <tr>
               <th className="p-4">{t("labid")}</th>
               <th className="p-4">{t("labRole")}</th>
-              <th className="p-4 text-right">{t("labActions")}</th>
+              <th className="p-4 text-right">{t("labAction")}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
