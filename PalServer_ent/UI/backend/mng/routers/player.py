@@ -37,19 +37,14 @@ def execute_player_action(instance: str, action: str, payload: dict):
 
 def get_players_raw(instance: str):
     password = get_admin_password(instance)
-    url = get_pal_rest_url(instance, "players")
-    
-    log.debug(f"[--------] URL={url}")
+    url = get_pal_rest_url(instance, "players")     
     
     resp = requests.get(
         url,
         auth=HTTPBasicAuth(ADIM_USERNAME, password),
         headers={"Accept": "application/json"},
         timeout=3,
-    )
-    
-    log.debug(f"[======= ] = {resp}")
-    
+    ) 
     resp.raise_for_status()
     return resp.json()
 
