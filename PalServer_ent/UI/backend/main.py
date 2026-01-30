@@ -11,6 +11,7 @@ from mng.routers.instance import router as instance_router
 from mng.routers.server import router as server_router
 from mng.routers.images import router as images_router
 from mng.db.db_init import init_db
+from mng.routers import player
 
 app = FastAPI()
 
