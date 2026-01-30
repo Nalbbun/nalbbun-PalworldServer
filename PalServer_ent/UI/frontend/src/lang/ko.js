@@ -25,6 +25,7 @@ export default {
     btnCancel: "취소",
     btnDelete: "삭제",
     btnCreate: "생성",
+    btnEdit: "수정",
     btnOK: "확인",
     btnClose: "닫기",
     btnapply: "서버재시작",
@@ -137,7 +138,9 @@ export default {
     msgConfirmDelete: "삭제하시겠습니까?",
     msgErrorDeletingUser: "사용자 삭제 중 오류 발생",
     msgUserCreated: "사용자가 생성되었습니다 !",
+    msgUpdateUser: "사용자 정보가 업데이트 되었습니다 !",  
     msgFailedToCreateUser: "사용자 생성 실패. (중복된 ID?)",
+    msgFailedToProcessUser: "사용자 처리 실패",
     msgNoUsersFound: "사용자를 찾을 수 없습니다.",
 
 };

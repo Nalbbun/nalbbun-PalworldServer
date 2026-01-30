@@ -27,10 +27,13 @@ class UserListResp(BaseModel):
     id: int
     username: str
     role: str
+    
+class UserUpdateReq(BaseModel):
+    password: Optional[str] = None # 비워두면 변경 안 함
+    role: Optional[str] = None     # 비워두면 변경 안 함
 
-    class Config:
-        orm_mode = True
-        
+class Config:
+    orm_mode = True
 # =========================
 # JWT CONFIG (단일 소스)
 # =========================
@@ -243,7 +246,7 @@ def register_user(
     db.commit()
     db.refresh(new_user)
 
-    log.info(f"[UserMgmt] Admin '{current_user.username}' created user '{req.username}' ({req.role})")
+    log.debug(f"[UserMgmt] Admin '{current_user.username}' created user '{req.username}' ({req.role})")
     return {"status": "success", "username": new_user.username}
 
 @router.get("/user")    
@@ -278,4 +281,25 @@ def get_all_users(
      
     # 혹은 Raw SQL 사용 가능
     users = db.query(User).all()
-    return users
+    return users 
+
+@router.put("/update/{username}")
+def modify_user(
+    username: str,
+    req: UserUpdateReq,
+    current_user=Depends(require_auth),
+    db: Session = Depends(get_db)
+):
+    # 관리자만 수행 가능
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Permission denied")
+
+    # DB 업데이트 수행
+    result = db_crud.update_user(db, username, password=req.password, role=req.role)
+    
+    if not result:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    log.debug(f"[UserMgmt] Admin '{current_user.username}' updated user '{username}'")
+    
+    return {"status": "success", "username": username}

@@ -1,101 +1,87 @@
-Nalbbun PalServer  Manager (PalAdmin)
-PalServer 는 Docker 기반의 Palworld Dedicated Server를 웹 인터페이스에서 쉽고 강력하게 관리하기 위한 올인원 솔루션입니다.
+PalServer  Manager (Dev 3.0)
 
-여러 개의 서버 인스턴스를 생성하고, 시스템 리소스를 모니터링하며, 게임 설정을 GUI로 간편하게 수정할 수 있습니다.
+PalServer  Manager v3.0은 Palworld 전용 서버를 위한 도커 기반의 고급 관리 솔루션입니다.
+기존의 CLI 관리 기능을 포함하여, React와 FastAPI로 구축된 Web Dashboard를 통해 다중 인스턴스 관리, 실시간 모니터링, 그리고 역할 기반 접근 제어(RBAC)를 제공합니다.
 
-✨ 주요 기능 (Key Features)
-1. 🖥️ 서버 인스턴스 라이프사이클 관리
-멀티 인스턴스: 하나의 머신에서 여러 개의 팰월드 서버를 독립적으로 운영.
-제어: 웹 대시보드에서 서버 시작, 정지, 재시작, 삭제를 원클릭으로 수행.
-백업/복원: 서버 월드 데이터의 원클릭 백업 및 관리.
+🚀 v3.0 주요 변경 사항 (Key Features)
+    이번 Dev 3.0 업데이트는 보안과 운영 편의성에 중점을 두었습니다.
+    
+    역할 기반 접근 제어 (RBAC) 시스템 도입
+        Super Admin: 사용자 관리, 모든 서버 설정, 인스턴스 생성/삭제 권한.
+        Operator: 할당된 인스턴스의 모니터링, 시작/정지, 제한된 설정 변경 권한.
+        AdminLayout과 OperatorLayout을 분리하여 직관적인 UX 제공.모던 웹 대시보드 (Modern Web Dashboard)
+        Frontend: React + Vite + TailwindCSS 기반의 반응형 UI.
+        Backend: FastAPI 기반의 고성능 비동기 API 서버.
+    
+    다국어 지원 (한국어/영어) 및 다크 모드 지원.
 
-2. 📊 실시간 모니터링 및 로그
-리소스 차트: 각 인스턴스별 CPU 및 RAM 사용량을 실시간 그래프로 시각화.
-실시간 로그: WebSocket을 통해 서버의 콘솔 로그를 웹에서 실시간으로 스트리밍 확인.
-플레이어 관리: 현재 접속 중인 플레이어 목록 확인 및 관리.
+    강화된 보안 및 안정성
+        Nginx Reverse Proxy: SSL/TLS 인증서(selfsigned) 자동 적용 및 정적 자원 캐싱.
+        안전한 설정 변경: 위험한 설정(Danger Options) 변경 시 비밀번호 재확인 및 경고 표시.
+        JWT 인증: 안전한 로그인 및 세션 관리.
 
-3. ⚙️ 고급 설정 관리 (Config Editor)
-GUI 설정 편집: 복잡한 .ini 파일을 직접 수정할 필요 없이, 웹 폼(Form) 형태로 게임 옵션 변경.
-위험 옵션 감지: 서버 성능에 영향을 줄 수 있는 위험한 옵션(Danger Option)에 대한 경고 및 툴팁 제공.
+    강력한 인스턴스 관리Docker Compose를 활용한 독립적인 인스턴스 격리 환경.
 
-4. 🐳 도커 이미지 관리 (Image Builder)
-버전 관리: SteamCMD를 통해 특정 버전의 Palworld 서버 이미지를 직접 빌드하고 관리.
-오프라인 리포지토리: 빌드된 이미지를 로컬에 저장하여 인터넷 연결 없이도 인스턴스 생성 가능.
+    웹 GUI를 통한 버전 관리, 백업/롤백, 이미지 빌드 자동화.
 
-5. 🎨 사용자 경험 (UX)
-다크/라이트 모드: 눈이 편한 다크 모드와 가독성 높은 라이트 모드 지원.
-다국어 지원 (i18n): 한국어(KO) 및 영어(EN) 완벽 지원.
-반응형 디자인: Tailwind CSS 기반의 깔끔하고 현대적인 UI.
-
-🛠️ 기술 스택 (Tech Stack)
-
-구분	                    기술	                    설명
-Frontend	                React, Vite	                관리자 대시보드 UI 
-Style	                    Tailwind CSS	            반응형 디자인 및 테마 적용 
-Backend	                    Python FastAPI	            REST API 서버, Docker 제어, 시스템 관리  
-Database	                SQLite	                    사용자 정보 및 메타데이터 저장 
-Infrastructure	            Docker, Docker Compose	    서비스 컨테이너화 및 오케스트레이션
-Proxy	                    Nginx	                    리버스 프록시 및 정적 파일 서빙
-
-🚀 설치 및 실행 (Installation)
-이 프로젝트는 Linux 환경(Ubuntu/Debian 권장)에서 Docker가 설치된 환경을 기준으로 합니다.
-
-사전 요구사항
-Docker & Docker Compose
-
-Git
-
-1. 프로젝트 클론
-git clone https://github.com/your-repo/PalServer_ent.git
-cd PalServer_ent
-
-2. 설치 스크립트 실행
-자동화된 설치 스크립트를 통해 환경을 구성합니다.
-chmod +x install.sh
-./install.sh
-이 스크립트는 필요한 디렉토리를 생성하고, Docker 이미지를 빌드하며 서비스를 시작합니다
-
-3. 접속 방법
-설치가 완료되면 브라우저를 통해 대시보드에 접속합니다.
-URL: http://localhost (또는 서버 IP)
-기본 계정: 최초 실행 시 backend/mng/db/db_init.py에 의해 초기 관리자 계정이 생성됩니다 (보통 admin / admin 혹은 설치 시 설정).
+    실시간 로그(WebSocket) 및 서버 리소스(Metrics) 모니터링.
 
 📂 디렉토리 구조 (Directory Structure)
-Bash
 PalServer_ent/
-├── cmm/                    # 공통 관리 스크립트 및 툴
-│   ├── controllers/        # 백업, 업데이트 등 제어 스크립트
-│   └── make-pal-images/    # Palworld 도커 이미지 빌드 소스 
+├── install.sh              # 통합 설치 스크립트
+├── cmm/                    # CLI 관리 도구 (Command modules)
+│   ├── bin/                # 실행 바이너리 (paladmin.sh)
+│   └── controllers/        # 핵심 로직 (백업, 업데이트, 인스턴스 제어)
 ├── server/                 # 서버 데이터 저장소
-│   ├── instances/          # 생성된 인스턴스별 데이터
-│   └── repo/               # 빌드된 도커 이미지 저장소
-├── UI/                     # 웹 애플리케이션 소스
-│   ├── backend/            # FastAPI 백엔드 소스 
-│   │   ├── mng/routers/    # API 엔드포인트 정의 [cite: 12]
-│   │   └── mng/utils/      # Docker 및 Shell 유틸리티
-│   ├── frontend-admin/     # React 관리자 페이지 소스 
-│   └── proxy/              # Nginx 설정
-├── install.sh              # 전체 설치 스크립트
-└── docker-compose.yml      # 서비스 구동 정의
+│   ├── instances/          # 개별 인스턴스 설정 및 데이터
+│   └── backup/             # 백업 파일 보관소
+└── UI/                     # v3.0 Web Dashboard 소스
+    ├── backend/            # FastAPI 서버 (Python)
+    │   ├── mng/routers/    # API 엔드포인트 (Auth, Instance, Logs 등)
+    │   └── mng/db/         # SQLite DB 및 User 관리
+    ├── frontend/           # React 클라이언트
+    │   ├── src/pages/      # Admin/Operator/Common 페이지 분리
+    │   └── src/components/ # 재사용 UI 컴포넌트
+    └── proxy/              # Nginx 리버스 프록시 설정
 
+🛠️ 설치 및 실행 (Installation)
+    필수 요구 사항 (Prerequisites)
+        OS: Linux (Ubuntu 20.04+ 권장) 또는 WSL2
+        Docker: Docker Engine & Docker Compose (v2 이상)
+        Ports: 8000(API), 8443(HTTPS Web), 8211~(Game Ports)
 
-📝 사용 가이드 (Usage)
-이미지 빌드 (Image Build)
-대시보드의 "Manage Images" 메뉴 또는 쉘 스크립트를 통해 서버 버전을 관리할 수 있습니다.
-# 수동 빌드 예시
-cd cmm/make-pal-images
-./build.sh v0.0.1
+1. 설치 (Setup)
+    디렉토리의 install.sh를 실행하여 환경 변수 설정 및 도커 이미지를 빌드합니다.
+        Bashchmod +x install.sh
+        ./install.sh
+    참고: 윈도우에서 복사한 파일의 줄바꿈 문제가 발생할 경우 winTolinuxFile.sh를 먼저 실행하세요.
 
-인스턴스 생성
-대시보드 상단의 "+ Create Server" 버튼 클릭.
-서버 이름, 포트, 사용할 이미지 버전을 선택.
-생성 후 Start 버튼을 눌러 서버 구동.
+2. 웹 대시보드 실행설치가 완료되면 UI 디렉토리 내의 Docker Compose가 실행되며 서비스가 시작됩니다.
+    접속 주소: https://<SERVER_IP>:8443
+    초기 관리자 계정: admin / admin1! (최초 접속 후 변경 권장)
 
+3. CLI 도구 사용웹 인터페이스 외에도 터미널에서 직접 관리할 수 있습니다.
+    Bash# 명령어 자동완성 적용
+    source cmm/completion/paladmin.bash
 
-설정 변경
-인스턴스 카드의 Config 버튼을 눌러 PalWorldSettings.ini 값을 GUI 환경에서 안전하게 수정할 수 있습니다.
+    # 관리 도구 실행
+    ./cmm/bin/paladmin.sh help
 
-🔒 보안 (Security)
-JWT 인증: Access/Refresh Token 기반의 안전한 로그인 세션 관리.
-비밀번호 암호화: bcrypt를 사용하여 사용자 비밀번호를 안전하게 해싱 저장.
- 
+💻 기술 스택 (Tech Stack)
+ 구분                  기술                     비고
+Frontend            "React, Vite"       SPA Architecture
+Styling             Tailwind CSS        Responsive Design
+Backend             "Python, FastAPI"   "RESTful API, WebSocket"
+Database            SQLite              "database.py, SQLAlchemy"
+Proxy               Nginx (Alpine)      "SSL Termination, Static File Serving"
+Infra               Docker Compose      Container Orchestration
+Scripting           Bash Shell          System Control (cmm/controllers)
+
+⚠️ 주의 사항 (Notice)
+    인증서: 기본 제공되는 인증서는 사설 인증서(selfsigned)이므로 브라우저 접속 시 보안 경고가 뜰 수 있습니다.
+            UI/cert/generate-cert.sh를 통해 갱신 가능합니다.
+    포트 충돌: 기본 8000, 8443 포트가 사용 중인지 확인하십시오. UI/docker-compose.yml에서 변경 가능합니다.
+    데이터 보존: server/ 디렉토리는 게임 데이터가 저장되는 핵심 경로이므로 삭제하지 마십시오.
+
+📜 라이선스 (License)
+Copyright © 2026 PalServer  Team. All Rights Reserved.

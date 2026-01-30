@@ -69,6 +69,27 @@ def delete_user(db: Session, username: str):
         return True
     return False
 
+def update_user(db: Session, username: str, password: str = None, role: str = None):
+    """
+    사용자 정보 수정
+    - password가 있으면 해싱하여 변경
+    - role이 있으면 변경
+    """
+    user = get_user_by_username(db, username)
+    if not user:
+        return False
+        
+    if password:
+        user.password = get_password_hash(password)
+    
+    if role:
+        user.role = role
+        
+    db.commit()
+    db.refresh(user)
+    return user
+
+
 def update_last_login(db: Session, username: str):
     """
     [로그인 시] 마지막 로그인 시간 업데이트
@@ -78,3 +99,5 @@ def update_last_login(db: Session, username: str):
     if user:
         user.last_login = datetime.utcnow()
         db.commit()
+        
+    

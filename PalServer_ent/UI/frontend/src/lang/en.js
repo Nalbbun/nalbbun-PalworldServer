@@ -25,6 +25,7 @@ export default {
   btnCancel: "Cancel",
   btnDelete: "Delete",
   btnCreate: "Create",
+  btnEdit: "Edit",
   btnOK: "OK",
   btnClose: "Close",
   btnapply: "Restart Server",
@@ -144,6 +145,8 @@ export default {
   msgConfirmDelete: "Are you sure you want to delete?",
   msgErrorDeletingUser: "Error deleting user",
   msgUserCreated: "User Created !",
+  msgUpdateUser: "User Updated !",
   msgFailedToCreateUser: "Failed to create user. (Duplicate ID?)",
+  msgFailedToProcessUser: "Failed to process user",
   msgNoUsersFound: "No users found.",
 };

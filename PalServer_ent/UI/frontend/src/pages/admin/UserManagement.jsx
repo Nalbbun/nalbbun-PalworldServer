@@ -9,6 +9,7 @@ export default function UserManagement() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState("create");
 
   // 신규 등록 폼 상태
   const [formData, setFormData] = useState({
@@ -30,6 +31,23 @@ export default function UserManagement() {
     }
   };
 
+  //모달 열기 핸들러 (생성/수정 분기)
+  const openModal = (mode, user = null) => {
+    setModalMode(mode);
+    if (mode === "edit" && user) {
+      // 수정 모드: 기존 데이터 채우기 (비밀번호는 비워둠)
+      setFormData({
+        username: user.username,
+        password: "", 
+        role: user.role
+      });
+    } else {
+      // 생성 모드: 초기화
+      setFormData({ username: "", password: "", role: "operator" });
+    }
+    setIsModalOpen(true);
+  };
+
   const handleDelete = async (username) => {
     if (!window.confirm(`${t("msgConfirmDelete")} : ${username}?`)) return;
     
@@ -44,30 +62,41 @@ export default function UserManagement() {
     }
   };
 
-  const handleRegister = async (e) => {
+  //  폼 제출 핸들러 (생성/수정 분기)
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if(!formData.username || !formData.password) return;
+    
+    // 생성 시엔 필수, 수정 시엔 비밀번호 없어도 됨(변경 안 함)
+    if (modalMode === "create" && (!formData.username || !formData.password)) return;
 
     setLoading(true);
     try {
-      await api.post("/auth/register", formData);
+      if (modalMode === "create") {
+        await api.post("/auth/register", formData);
+        alert(t("msgUserCreated"));
+      } else {
+        // 수정 API 호출
+        await api.put(`/auth/update/${formData.username}`, {
+          password: formData.password || null, // 비어있으면 null 전송
+          role: formData.role
+        });
+        alert(t("msgUpdateUser"));
+      }
       setIsModalOpen(false);
-      setFormData({ username: "", password: "", role: "operator" }); // 초기화
       await loadUsers();
-      alert(t("msgUserCreated"));
     } catch (e) {
-      alert(t("msgFailedToCreateUser"));
+      alert(t("msgFailedToProcessUser"));
     } finally {
       setLoading(false);
     }
-  };
+  }; 
 
   return (
     <div className="p-8 min-h-screen bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-200 animate-fade-in">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">{t("tlUserManagement")}</h1>
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => openModal("create")}
           className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded shadow-sm transition"
         >
           + {t("btnAddUser")}
@@ -98,6 +127,12 @@ export default function UserManagement() {
                   </span>
                 </td>
                 <td className="p-4 text-right">
+                  <button
+                    onClick={() => openModal("edit", u)}
+                    className="px-3 py-1 bg-indigo-100 text-indigo-600 hover:bg-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300 rounded text-sm font-semibold transition"
+                  >
+                    {t("btnEdit")}  
+                  </button>
                   {u.username !== 'admin' && (
                     <button
                       onClick={() => handleDelete(u.username)}
@@ -127,6 +162,7 @@ export default function UserManagement() {
                 <input
                   type="text"
                   required
+                  disabled={modalMode === "edit"} 
                   className="w-full p-2 rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
                   value={formData.username}
                   onChange={e => setFormData({...formData, username: e.target.value})}
@@ -137,7 +173,7 @@ export default function UserManagement() {
                 <label className="block text-sm font-medium mb-1">{t("labpassword")}</label>
                 <input
                   type="password"
-                  required
+                  required={modalMode === "create"}
                   className="w-full p-2 rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
                   value={formData.password}
                   onChange={e => setFormData({...formData, password: e.target.value})}
