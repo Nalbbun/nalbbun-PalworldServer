@@ -64,11 +64,15 @@ def players(name: str, user=Depends(require_auth)):
         raw = get_players_raw(name)
         # raw["players"] 안에 name, accountName, ip, ping, location 등 모든 정보가 들어있음
         # 백엔드에서는 필터링 없이 그대로 전달
+        
+        log.debug(f"[sget_players_raw] = {raw})")
+                
         return {
             "status": "RUNNING",
             "count": len(raw.get("players", [])),
             "players": raw.get("players", []),
         }
+        
     except requests.exceptions.RequestException as e:
         # 서버 기동 직후에는 API가 응답하지 않을 수 있음
         return {"status": "RUNNING", "players": [], "error": str(e)}
