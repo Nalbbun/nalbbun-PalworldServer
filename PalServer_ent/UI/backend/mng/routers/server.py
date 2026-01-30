@@ -65,27 +65,6 @@ def get_notice(instance: str, message: str):
 
     return {"ok": True, "raw": resp.text}
 
-
-def get_players(instance: str):
-    password = get_admin_password(instance)
-    url = get_pal_rest_url(instance, "players")
-
-    log.debug(f"[players URL] = {url}")
-
-    resp = requests.get(
-        url,
-        auth=HTTPBasicAuth(ADIM_USERNAME, password),
-        headers={
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-        },
-        timeout=3,
-    )
-
-    resp.raise_for_status()
-    return resp.json()
-
-
 def get_server_info(instance: str):
     password = get_admin_password(instance)
     url = get_pal_rest_url(instance, "info")
@@ -136,28 +115,8 @@ def get_svrSave(instance: str):
 # API Endpoints
 # ==========================
 
-
-@router.get("/players/{name}")
-def players(name: str, user=Depends(require_auth)):
-    # 1. instance run?
-    if not is_instance_running(name):
-        return {"status": "STOPPED", "players": None}
-
-    # 2. call Palworld REST API
-    try:
-        raw = get_players(name)
-    except requests.exceptions.RequestException as e:
-        raise HTTPException(status_code=502, detail=f"Palworld REST API error: {e}")
-
-    return {
-        "status": "RUNNING",
-        "count": len(raw.get("players", [])),
-        "players": raw.get("players", []),
-    }
-
-
 @router.post("/notice/{name}")
-def players(name: str, body: NoticeRequest, user=Depends(require_auth)):
+def notice(name: str, body: NoticeRequest, user=Depends(require_auth)):
     # 1. instance run?
     if not is_instance_running(name):
         return {"status": "STOPPED", "message": None}

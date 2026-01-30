@@ -5,42 +5,111 @@ import { useLang } from "../../context/LangContext";
 
 export default function Players() {
   const { instance } = useParams();
-  const [players, setPlayers] = useState([]);
   const navigate = useNavigate();
   const { t } = useLang();
+  
+  const [players, setPlayers] = useState([]);
+  const [loading, setLoading] = useState(false);
 
+  // 데이터 로드
   const load = async () => {
     try {
       const data = await api.get(`/server/players/${instance}`);
-      // API 응답 구조에 따라 데이터 설정 로직이 다를 수 있음
-      // 기존 로직 유지: data.players가 있으면 사용, 없으면 raw 데이터 가공 시도
-      let playerList = data.players || [];
-
-      if (data.status === "RUNNING" && data.raw?.players) {
-        // 만약 data.raw.players가 존재하면 가공해서 덮어쓰기 (원본 코드 의도 반영)
-        playerList = data.raw.players.map(p => ({
-          name: p.name,
-          level: p.level ?? "-",
-          playtime: Math.round((p.playTimeSeconds ?? 0) / 60) + " min", // 분 단위 변환 및 단위 추가
+      
+      if (data.status === "RUNNING" && Array.isArray(data.players)) {
+        // 모든 필드 매핑
+        const mapped = data.players.map(p => ({
+          name: p.name || "Unknown",
+          accountName: p.accountName || "-",
+          playerId: p.playerId || "-",
+          userId: p.userId || "-",     // Kick/Ban 식별자
+          ip: p.ip || "-",
+          ping: p.ping ?? 0,
+          location_x: p.location_x ?? 0,
+          location_y: p.location_y ?? 0,
+          level: p.level ?? 1,
+          building_count: p.building_count ?? 0
         }));
+        setPlayers(mapped);
+      } else {
+        setPlayers([]);
       }
-      setPlayers(playerList);
-    } catch {
+    } catch (e) {
+      console.error("Load players failed", e);
       setPlayers([]);
     }
   };
 
   useEffect(() => {
     load();
-    const t = setInterval(load, 5000);
-    return () => clearInterval(t);
+    const interval = setInterval(load, 5000); // 5초 자동 갱신
+    return () => clearInterval(interval);
   }, [instance]);
 
+  /* --- Actions --- */
+  const handleKick = async (player) => {
+    const msg = prompt(`Kick '${player.name}'? Reason:`, "Kicked by Admin");
+    if (msg === null) return;
+    
+    setLoading(true);
+    try {
+      await api.post("/server/players/kick", {
+        instance,
+        userid: player.userId,
+        message: msg
+      });
+      alert(`Kicked: ${player.name}`);
+      load();
+    } catch (e) {
+      alert("Kick Failed: " + (e.response?.data?.detail || e.message));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBan = async (player) => {
+    if (!window.confirm(`WARNING: Ban '${player.name}'?`)) return;
+    const msg = prompt("Ban Reason:", "Banned by Admin");
+    if (msg === null) return;
+
+    setLoading(true);
+    try {
+      await api.post("/server/players/ban", {
+        instance,
+        userid: player.userId,
+        message: msg
+      });
+      alert(`Banned: ${player.name}`);
+      load();
+    } catch (e) {
+      alert("Ban Failed: " + (e.response?.data?.detail || e.message));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUnban = async () => {
+    const userid = prompt("Enter UserID (SteamID) to Unban:");
+    if (!userid) return;
+
+    setLoading(true);
+    try {
+      await api.post("/server/players/unban", {
+        instance,
+        userid: userid
+      });
+      alert(`Unbanned ID: ${userid}`);
+    } catch (e) {
+      alert("Unban Failed: " + (e.response?.data?.detail || e.message));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    // [수정] 배경: 라이트(gray-100) / 다크(gray-900)
     <div className="p-8 min-h-screen bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-200">
       
-      {/* Header Section */}
+      {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
           <button
@@ -53,43 +122,105 @@ export default function Players() {
             {t("labplayers")} : <span className="text-blue-600 dark:text-blue-400">{instance}</span>
           </h1>
         </div>
-        {/* LangToggle이 필요하다면 주석 해제하여 사용 */}
-        {/* <LangToggle /> */}
+        
+        <button
+          onClick={handleUnban}
+          className="px-4 py-2 bg-green-600 hover:bg-green-500 text-white font-bold rounded shadow transition"
+        >
+          Unban Player (ID)
+        </button>
       </div>
 
-      {/* [수정] 테이블 컨테이너: 흰색/어두운회색, 그림자 */}
+      {/* Players Table */}
       <div className="rounded-lg overflow-hidden shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 transition-colors">
-        <table className="w-full text-left">
-          <thead className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 uppercase text-xs tracking-wider border-b border-gray-200 dark:border-gray-600">
-            <tr>
-              <th className="p-4 font-bold">Name</th>
-              <th className="p-4 font-bold">Playtime</th>
-              <th className="p-4 font-bold">Level</th>
-            </tr>
-          </thead>
-
-          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-            {players.map((p, i) => (
-              <tr 
-                key={i} 
-                className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150"
-              >
-                <td className="p-4 font-medium text-gray-900 dark:text-gray-100">{p.name}</td>
-                <td className="p-4 text-gray-600 dark:text-gray-300">{p.playtime}</td>
-                <td className="p-4 text-gray-600 dark:text-gray-300">{p.level}</td>
-              </tr>
-            ))}
-
-            {players.length === 0 && (
+        <div className="overflow-x-auto">
+          <table className="w-full text-left whitespace-nowrap">
+            <thead className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 uppercase text-xs tracking-wider border-b border-gray-200 dark:border-gray-600">
               <tr>
-                <td colSpan="3" className="p-10 text-center text-gray-500 dark:text-gray-400">
-                  {t("msgNoPlayersOnline")} .....
-                </td>
+                <th className="p-4 font-bold">Identity (Name / Account / ID)</th>
+                <th className="p-4 font-bold">Network (IP / Ping)</th>
+                <th className="p-4 font-bold">Location (X, Y)</th>
+                <th className="p-4 font-bold">Stats (Lv / Build)</th>
+                <th className="p-4 font-bold text-right">Actions</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+              {players.map((p, i) => (
+                <tr key={i} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                  
+                  {/* 1. Identity */}
+                  <td className="p-4">
+                    <div className="font-bold text-lg text-blue-600 dark:text-blue-400">{p.name}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-300">Acct: {p.accountName}</div>
+                    <div className="text-xs text-gray-400 mt-1 font-mono">
+                      UID: {p.userId}<br/>
+                      PID: {p.playerId}
+                    </div>
+                  </td>
+
+                  {/* 2. Network */}
+                  <td className="p-4">
+                    <div className="text-sm">IP: {p.ip}</div>
+                    <div className={`text-sm mt-1 font-bold ${p.ping > 150 ? "text-red-500" : "text-green-500"}`}>
+                      Ping: {p.ping} ms
+                    </div>
+                  </td>
+
+                  {/* 3. Location */}
+                  <td className="p-4 font-mono text-sm text-gray-600 dark:text-gray-300">
+                    <div>X: {p.location_x?.toFixed(2)}</div>
+                    <div>Y: {p.location_y?.toFixed(2)}</div>
+                  </td>
+
+                  {/* 4. Stats */}
+                  <td className="p-4">
+                    <div className="inline-block px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded text-xs font-bold mb-1">
+                      LV. {p.level}
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      🏠 {p.building_count}
+                    </div>
+                  </td>
+                  
+                  {/* 5. Actions */}
+                  <td className="p-4 text-right">
+                    <div className="flex flex-col gap-2 items-end">
+                      <button
+                        onClick={() => handleKick(p)}
+                        className="px-3 py-1 bg-yellow-100 text-yellow-700 hover:bg-yellow-200 dark:bg-yellow-900/40 dark:text-yellow-200 rounded text-xs font-bold transition border border-yellow-200 dark:border-yellow-800 w-20"
+                      >
+                        Kick
+                      </button>
+                      <button
+                        onClick={() => handleBan(p)}
+                        className="px-3 py-1 bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/40 dark:text-red-200 rounded text-xs font-bold transition border border-red-200 dark:border-red-800 w-20"
+                      >
+                        Ban
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+
+              {players.length === 0 && (
+                <tr>
+                  <td colSpan="5" className="p-10 text-center text-gray-500 dark:text-gray-400">
+                    {t("msgNoPlayersOnline") || "No players online..."}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
+      
+      {/* Loading Overlay */}
+      {loading && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center backdrop-blur-sm">
+           <div className="text-white text-xl font-bold animate-pulse">Processing...</div>
+        </div>
+      )}
     </div>
   );
 }
