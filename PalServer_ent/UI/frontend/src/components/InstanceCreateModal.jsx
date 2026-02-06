@@ -40,11 +40,14 @@ export default function InstanceCreateModal({ open, onClose, onCreated }) {
     }
 
     try {
-      const res = await api.get(`/instance/exists/${name}`);
-      setExists(res.exists); 
       setChecking(true);
+      const res = await api.get(`/instance/exists/${name}`);
+      
+      const isExist = res.exists;
+      setExists(isExist);
+      setChecked(true); 
 
-      if (res.exists) {
+      if (isExist) {
         const ok = window.confirm(
           t("msgOverwriteConfirm")
         );
@@ -52,8 +55,11 @@ export default function InstanceCreateModal({ open, onClose, onCreated }) {
       } else {
         setOverwrite(false);
       }
+    } catch (e) {
+      console.error(e); 
+      setChecked(false);
     } finally {
-      setChecking(false);
+      setChecking(false); // 로딩 끝
     }
   };
 
@@ -68,14 +74,17 @@ export default function InstanceCreateModal({ open, onClose, onCreated }) {
       alert(t("msgNoOverwrite"));
       return;
     } 
-    
-    let overwrite = false; 
-    if (!name || !port|| !version|| !query) 
-	    return alert(`{t("msginsCreatInfo")}`); 
+     if (!name || !port || !version || !query) 
+      return alert(t("msginsCreatInfo"));  
 
-    await api.post("/instance/create", { name, port , query , version, overwrite });
-    onCreated();
-    onClose();
+    try {
+      // [수정] state에 있는 overwrite 값을 전송
+      await api.post("/instance/create", { name, port, query, version, overwrite });
+      onCreated();
+      onClose();
+    } catch (e) {
+      alert("Create failed: " + e.message);
+    } 
   }; 
 
   const inputClass = "w-full mb-3 p-2 rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-colors";
@@ -97,23 +106,25 @@ export default function InstanceCreateModal({ open, onClose, onCreated }) {
           className="w-full mb-3 px-3 py-2 bg-yellow-500 hover:bg-yellow-400 text-white font-bold rounded disabled:opacity-50 transition shadow-sm"
         > 
          {checking ?  t("msgConnectingDuplicate") : t("btnduplicateCheck")}
-        </button>        
-        {/* 중복 결과 표시 */}
-        {checked && !exists && (
-          <p className="text-green-400 text-sm mb-2">
-            {t("msgNameAvailable")}
-          </p>
-        )}
-
-        {checked && !exists && (
-          <p className="text-green-600 dark:text-green-400 text-sm mb-2 font-medium">{t("msgNameAvailable")}</p>
-        )}
-        {checked && exists && overwrite && (
-          <p className="text-yellow-600 dark:text-yellow-400 text-sm mb-2 font-medium">{t("msgOverwriteInstance")}</p>
-        )}
-        {checked && exists && !overwrite && (
-          <p className="text-red-600 dark:text-red-400 text-sm mb-2 font-medium">{t("msgNameExists")}</p>
-        )}
+        </button>    
+          {/* 결과 메시지 영역 */}
+        <div className="mb-4 min-h-[20px]">
+          {checked && !exists && (
+            <p className="text-green-600 dark:text-green-400 text-sm font-medium">
+              {t("msgNameAvailable")}
+            </p>
+          )}
+          {checked && exists && overwrite && (
+            <p className="text-yellow-600 dark:text-yellow-400 text-sm font-medium">
+              {t("msgOverwriteInstance")}
+            </p>
+          )}
+          {checked && exists && !overwrite && (
+            <p className="text-red-600 dark:text-red-400 text-sm font-medium">
+              {t("msgNameExists")}
+            </p>
+          )}
+        </div>
 
         <input
           className={inputClass}
