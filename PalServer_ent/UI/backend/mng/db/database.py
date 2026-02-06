@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import create_engine, Column, Integer, String, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, Boolean, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
@@ -30,8 +30,23 @@ class User(Base):
     username = Column(String, unique=True, index=True, nullable=False)
     password = Column(String, nullable=False)
     role = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.now)
     last_login = Column(DateTime, nullable=True)
+
+
+class PlayerEvent(Base):
+    __tablename__ = "player_events"
+
+    id = Column(Integer, primary_key=True, index=True)
+    instance = Column(String, index=True)  # 인스턴스 이름
+    userid = Column(String, index=True)  # SteamID
+    name = Column(String)  # 플레이어 이름 (기록용)
+    action = Column(String)  # "KICK", "BAN", "UNBAN"
+    reason = Column(String)  # 사유
+    timestamp = Column(DateTime, default=datetime.now)
+
+    # 밴의 경우 현재 유효한지 여부 (Unban하면 False로 변경)
+    is_active = Column(Boolean, default=True)
 
 
 # ---------------------------------------------------------

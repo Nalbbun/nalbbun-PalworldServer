@@ -1,17 +1,30 @@
 from fastapi import HTTPException, Depends, APIRouter
 from requests.auth import HTTPBasicAuth
 from pydantic import BaseModel
-from mng.core.config import log, INSTANCE_DIR, ADIM_USERNAME 
+from mng.core.config import log, INSTANCE_DIR, ADIM_USERNAME
 from mng.routers.server import get_admin_password, get_pal_rest_url, router
 from mng.utils.docker import is_instance_running
 from mng.routers.auth import require_auth
+from sqlalchemy.orm import Session
+from mng.db.database import get_db
+from mng.db.db_crud import (
+    log_player_action,
+    get_active_bans,
+    count_recent_kicks,
+)
 import requests
+
 
 # [요청 모델] Kick/Ban/Unban용
 class PlayerActionReq(BaseModel):
     instance: str
     userid: str
-    message: str = "Kicked by Admin"
+    name: str = "Unknown"
+    message: str = "Action by Admin"
+
+
+MAX_KICK_COUNT = 5
+
 
 # [공통 함수] Palworld API 호출
 def execute_player_action(instance: str, action: str, payload: dict):
@@ -30,27 +43,45 @@ def execute_player_action(instance: str, action: str, payload: dict):
             timeout=5,
         )
         resp.raise_for_status()
-        return resp.json()
+
+        # Palworld API는 성공 시 빈 문자열을 반환하는 경우가 많음
+        if resp.text.strip():
+            return resp.json()
+        # 내용이 없으면(성공했지만 빈 응답) 임의의 성공 메시지 반환
+        return {"status": "success", "message": f"{action} executed successfully"}
     except requests.exceptions.RequestException as e:
         log.error(f"[{action}] Failed: {e}")
-        raise HTTPException(status_code=500, detail=f"Palworld API Error: {str(e)}")
+        # Palworld API 에러 메시지가 있다면 포함
+        detail_msg = f"Palworld API Error: {str(e)}"
+        if hasattr(e, "response") and e.response is not None:
+            detail_msg += f" | Body: {e.response.text}"
+
+        raise HTTPException(status_code=500, detail=detail_msg)
+    except Exception as e:
+        # JSON 파싱 에러 등 기타 에러 잡기
+        log.error(f"[{action}] parsing error: {e}")
+        # 이미 raise_for_status()를 통과했다면 성공으로 간주할 수도 있음
+        return {"status": "success", "message": "Executed (Empty response)"}
+
 
 def get_players_raw(instance: str):
     password = get_admin_password(instance)
-    url = get_pal_rest_url(instance, "players")     
-    
+    url = get_pal_rest_url(instance, "players")
+
     resp = requests.get(
         url,
         auth=HTTPBasicAuth(ADIM_USERNAME, password),
         headers={"Accept": "application/json"},
         timeout=3,
-    ) 
+    )
     resp.raise_for_status()
     return resp.json()
+
 
 # --------------------------------------------------------------------------
 # Endpoints
 # --------------------------------------------------------------------------
+
 
 @router.get("/players/{name}")
 def players(name: str, user=Depends(require_auth)):
@@ -64,47 +95,103 @@ def players(name: str, user=Depends(require_auth)):
         raw = get_players_raw(name)
         # raw["players"] 안에 name, accountName, ip, ping, location 등 모든 정보가 들어있음
         # 백엔드에서는 필터링 없이 그대로 전달
-        
+
         log.debug(f"[sget_players_raw] = {raw})")
-                
+
         return {
             "status": "RUNNING",
             "count": len(raw.get("players", [])),
             "players": raw.get("players", []),
         }
-        
+
     except requests.exceptions.RequestException as e:
         # 서버 기동 직후에는 API가 응답하지 않을 수 있음
         return {"status": "RUNNING", "players": [], "error": str(e)}
 
 
 @router.post("/players/kick")
-def kick_player(req: PlayerActionReq, user=Depends(require_auth)):
+def kick_player(
+    req: PlayerActionReq, user=Depends(require_auth), db: Session = Depends(get_db)
+):
+
     if not is_instance_running(req.instance):
-        raise HTTPException(status_code=400, detail="Instance is not running")
-    
-    return execute_player_action(req.instance, "kick", {
-        "userid": req.userid,
-        "message": req.message
-    })
+        raise HTTPException(status_code=400, detail="Instance stopped")
+
+    # 1. Palworld API 호출 (실제 킥)
+    result = execute_player_action(
+        req.instance, "kick", {"userid": req.userid, "message": req.message}
+    )
+
+    # 2. DB에 KICK 기록
+    log_player_action(db, req.instance, req.userid, req.name, "KICK", req.message)
+
+    # 3. [자동 밴 로직] 최근 킥 횟수 확인
+    kick_count = count_recent_kicks(db, req.instance, req.userid)
+
+    if kick_count >= MAX_KICK_COUNT:
+        log.warning(f"[AutoBan] {req.name} kicked {kick_count} times. Executing BAN.")
+
+        # 자동 밴 실행 (Palworld API)
+        execute_player_action(
+            req.instance,
+            "ban",
+            {"userid": req.userid, "message": f"Auto-banned after {kick_count} kicks."},
+        )
+        # DB에 BAN 기록
+        log_player_action(
+            db, req.instance, req.userid, req.name, "BAN", "Auto-ban: Too many kicks"
+        )
+
+        return {
+            "status": "success",
+            "message": f"Kicked & Auto-Banned ({kick_count}/{MAX_KICK_COUNT})",
+        }
+
+    return {"status": "success", "message": f"Kicked ({kick_count}/{MAX_KICK_COUNT})"}
 
 
 @router.post("/players/ban")
-def ban_player(req: PlayerActionReq, user=Depends(require_auth)):
+def ban_player(
+    req: PlayerActionReq, user=Depends(require_auth), db: Session = Depends(get_db)
+):
+
     if not is_instance_running(req.instance):
-        raise HTTPException(status_code=400, detail="Instance is not running")
-    
-    return execute_player_action(req.instance, "ban", {
-        "userid": req.userid,
-        "message": req.message
-    })
+        raise HTTPException(status_code=400, detail="Instance stopped")
+
+    # 1. Palworld API 호출
+    result = execute_player_action(
+        req.instance, "ban", {"userid": req.userid, "message": req.message}
+    )
+
+    # 2. DB에 BAN 기록
+    log_player_action(db, req.instance, req.userid, req.name, "BAN", req.message)
+
+    return result
 
 
 @router.post("/players/unban")
-def unban_player(req: PlayerActionReq, user=Depends(require_auth)):
+def unban_player(
+    req: PlayerActionReq, user=Depends(require_auth), db: Session = Depends(get_db)
+):
+
     if not is_instance_running(req.instance):
-        raise HTTPException(status_code=400, detail="Instance is not running")
-    
-    return execute_player_action(req.instance, "unban", {
-        "userid": req.userid
-    })
+        raise HTTPException(status_code=400, detail="Instance stopped")
+
+    # 1. Palworld API 호출
+    result = execute_player_action(req.instance, "unban", {"userid": req.userid})
+
+    # 2. DB 업데이트 (Active Ban 해제)
+    log_player_action(
+        db, req.instance, req.userid, req.name, "UNBAN", "Unbanned by Admin"
+    )
+
+    return result
+
+
+#  밴 리스트 조회 API
+@router.get("/banlist/{instance}")
+def get_ban_list(
+    instance: str, user=Depends(require_auth), db: Session = Depends(get_db)
+):
+    bans = get_active_bans(db, instance)
+    return bans  # JSON으로 직렬화되어 반환됨
