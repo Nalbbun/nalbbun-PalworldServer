@@ -32,7 +32,7 @@ export default function Players() {
 
   useEffect(() => {
     load();
-    const t = setInterval(load, 5000);
+    const t = setInterval(load, 60000);
     return () => clearInterval(t);
   }, [instance]);
 
